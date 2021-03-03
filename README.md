@@ -204,7 +204,7 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 Focntions pour ecrire un client et serveur TCP
 
 
-### socket()
+### :white_small_square: socket()
 
 ```
 #include <sys/types.h>
@@ -253,7 +253,7 @@ _Protocole_ - utiliser un specifiaque protocole en dessous, ou 0 pour selectionn
 
 
 
-### connect()
+### :white_small_square: connect()
 
 Utilisé par le TCP client pour se connecter au TCP serveur
 
@@ -276,7 +276,7 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 - addrlen : sizeof(struct sockaddr)
 
 
-### bind()
+### :white_small_square: bind()
 
 Donne une address au socket
 
@@ -309,6 +309,6 @@ server.sin_addr.s_addr = INADDR_ANY;
 ```
 
 
-### listen()
+### :white_small_square: listen()
 
 https://www.tutorialspoint.com/unix_sockets/socket_core_functions.htm
