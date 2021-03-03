@@ -24,9 +24,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
     :heavy_check_mark: Créer un socket via le system call **socket()**
 
-
     :heavy_check_mark: Connecter le socket a l'adresse du serveur via **connect()**
-
 
     :heavy_check_mark: Envoyer la requête et recevoir les donner avec **read() write**
 
@@ -39,15 +37,11 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
     :heavy_check_mark: Créer un socket via le system call **socket()**
 
-
     :heavy_check_mark: Lie le socket a une adresse : **bind()**. Dans le cas d'un socket serveur sur internet, l'adresse correspond au port de la machine hôte.
-
 
     :heavy_check_mark: Se met sur écoute pour une nouvelle connexion : **listen()**
 
-
     :heavy_check_mark: Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
-
 
     :heavy_check_mark: Envoie et recooid les données via les system call **read() write**
 
@@ -56,3 +50,18 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 Diagram des interactions Client-Serveur
 
 ![alt text](https://www.tutorialspoint.com/unix_sockets/images/socket_client_server.gif)
+
+
+
+## Acces aux infos d'adressage et port
+
+Diverses structures seront utilisées.
+
+#### sockaddr - infos du socket
+
+```
+struct sockaddr {
+   unsigned short   sa_family;
+   char             sa_data[14];
+};
+```
