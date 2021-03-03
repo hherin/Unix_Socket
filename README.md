@@ -70,3 +70,108 @@ struct sockaddr {
 | --- | --- | ---| 
 |sa_family | AF_INET \| AF_UNIX \| AF_NS \| AF_IMPLINK | It represents an address family. In most of the Internet-based applications, we use AF_INET.
 | sa_data | Protocol-specific Address | The content of the 14 bytes of protocol specific address are interpreted according to the type of address. For the Internet family, we will use port number IP address, which is represented by sockaddr_in structure defined below. |
+
+
+
+
+#### sockaddr in - 
+
+Une aide pour faire reference aux elements du socket
+
+
+```
+struct sockaddr_in {
+   short int            sin_family;
+   unsigned short int   sin_port;
+   struct in_addr       sin_addr;
+   unsigned char        sin_zero[8];
+};
+```
+
+
+
+| Attribute | Values | Description |
+| --- | --- | ---| 
+|sa_family | AF_INET \| AF_UNIX \| AF_NS \| AF_IMPLINK | It represents an address family. In most of the Internet-based applications, we use AF_INET.
+| sin_port | Service Port | A 16-bit port number in Network Byte Order. |
+| sin_addr | IP Address | A 32-bit IP address in Network Byte Order. |
+| sin_zero | Not Used | You just set this value to NULL as this is not being used. |
+
+
+
+#### in addr
+
+Utilisé dans la structure au dessus
+
+```
+struct in_addr {
+   unsigned long s_addr;
+};
+```
+
+
+
+| Attribute | Values | Description |
+| --- | --- | ---| 
+| s_addr | service port | A 32-bit IP address in Network Byte Order. |
+
+
+
+#### hostent
+
+Garde les infos de l'hôte.
+
+```
+struct hostent {
+   char *h_name; 
+   char **h_aliases; 
+   int h_addrtype;  
+   int h_length;    
+   char **h_addr_list
+	
+#define h_addr  h_addr_list[0]
+};
+```
+
+
+| Attribute | Values | Description |
+| --- | --- | ---| 
+| h_name | ti.com etc. | It is the official name of the host. For example, tutorialspoint.com, google.com, etc. |
+| h_aliases | TI | It holds a list of host name aliases. |
+| h_addrtype | AF_INET | It contains the address family and in case of Internet based application, it will always be AF_INET. |
+| h_length | 4 | It holds the length of the IP address, which is 4 for Internet Address. |
+| h_addr_list | in_addr| For Internet addresses, the array of pointers h_addr_list[0], h_addr_list[1], and so on, are points to structure in_addr. |
+
+>  h_addr is defined as h_addr_list\[0\] to keep backward compatibility.
+
+
+
+
+#### Servent
+
+Garde les informations reliées au service et ports associées
+
+
+```
+struct servent {
+   char  *s_name; 
+   char  **s_aliases; 
+   int   s_port;  
+   char  *s_proto;
+};
+```
+
+
+| Attribute | Values | Description |
+| --- | --- | ---| 
+| s_name | http | This is the official name of the service. For example, SMTP, FTP POP3, etc. |
+| s_aliases | ALIAS | It holds the list of service aliases. Most of the time this will be set to NULL. |
+| s_port | 80 | It will have associated port number. For example, for HTTP, this will be 80. |
+| s_proto | TCP \/ UDP | It is set to the protocol used. Internet services are provided using either TCP or UDP. |
+
+
+#### TIPS
+
+Ces structures sont une part integrante de tout _network program_. 
+
+Elles sont passées par reference (pointeurs) aux fonctions avec leur tailles.
