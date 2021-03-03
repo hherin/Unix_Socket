@@ -57,7 +57,7 @@ Diagram des interactions Client-Serveur
 
 Diverses structures seront utilisées.
 
-#### sockaddr - infos du socket
+### sockaddr - infos du socket
 
 ```
 struct sockaddr {
@@ -74,9 +74,7 @@ struct sockaddr {
 
 
 
-#### sockaddr in - 
-
-Une aide pour faire reference aux elements du socket
+### sockaddr in - Une aide pour faire reference aux elements du socket
 
 
 ```
@@ -99,9 +97,8 @@ struct sockaddr_in {
 
 
 
-#### in addr
+### in addr - Utilisé dans la structure au dessus
 
-Utilisé dans la structure au dessus
 
 ```
 struct in_addr {
@@ -117,9 +114,8 @@ struct in_addr {
 
 
 
-#### hostent
+### hostent - Garde les infos de l'hôte.
 
-Garde les infos de l'hôte.
 
 ```
 struct hostent {
@@ -147,9 +143,8 @@ struct hostent {
 
 
 
-#### Servent
+## Servent - Garde les informations reliées au service et ports associées
 
-Garde les informations reliées au service et ports associées
 
 
 ```
@@ -170,7 +165,7 @@ struct servent {
 | s_proto | TCP \/ UDP | It is set to the protocol used. Internet services are provided using either TCP or UDP. |
 
 
-#### TIPS
+### TIPS
 
 Ces structures sont une part integrante de tout _network program_. 
 
