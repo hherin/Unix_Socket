@@ -12,15 +12,30 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 2 des 4 types dont on va s'interesser:
-- _ _Stream sockets_ _ : ils utilisent le protocole TCP pour le transport des données. La livraison est toujours garantie.
-- _ _Datagram sockets_ _ : protocole UDP. Il n'y a pas de connexion eentre le serveur et le client et la livraison n'est pas garantie.
+- _Stream sockets_ : ils utilisent le protocole TCP pour le transport des données. La livraison est toujours garantie.
+- _Datagram sockets_ : ils utilisent le protocole UDP. Il n'y a pas de connexion eentre le serveur et le client et la livraison n'est pas garantie.
 
-DEmarrage -- prerequis
 
-auteurs - sources
+## COMMENT CREER UN PROCESS CLIENT
 
+- le client envoie une requete dans l'attente d'un retour du serveur.
+
+1. Créer un socket via le system call **socket()**
+2. Connecter le socket a l'adresse du serveur via **connect()**
+3. Envoyer la requête et recevoir les donner avec **read() write**
+
+## COMMENT CREER UN PROCESS SERVEUR
+
+- Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
+
+1. Créer un socket via le system call **socket()**
+2. Lie le socket a une adresse : **bind()**. Dans le cas d'un socket serveur sur internet, l'adresse correspond au port de la machine hôte.
+3. Se met sur écoute pour une nouvelle connexion : **listen()**
+4. Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
+5. Envoie et recooid les données via les system call **read() write**
 
 
 
 Diagram des interactions Client-Serveur
+
 ![alt text](https://www.tutorialspoint.com/unix_sockets/images/socket_client_server.gif)
