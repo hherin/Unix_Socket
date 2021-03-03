@@ -65,3 +65,8 @@ struct sockaddr {
    char             sa_data[14];
 };
 ```
+
+| Attribute | Values | Description |
+| --- | --- | ---| 
+|sa_family | AF_INET \| AF_UNIX \| AF_NS \| AF_IMPLINK | It represents an address family. In most of the Internet-based applications, we use AF_INET.
+| sa_data | Protocol-specific Address | The content of the 14 bytes of protocol specific address are interpreted according to the type of address. For the Internet family, we will use port number IP address, which is represented by sockaddr_in structure defined below. |
