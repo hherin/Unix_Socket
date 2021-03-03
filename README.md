@@ -23,7 +23,11 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
     :arrow_forward: Créer un socket via le system call **socket()**
+
+
     :arrow_forward: Connecter le socket a l'adresse du serveur via **connect()**
+
+
     :arrow_forward: Envoyer la requête et recevoir les donner avec **read() write**
 
 
@@ -34,9 +38,17 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
     :arrow_forward: Créer un socket via le system call **socket()**
+
+
     :arrow_forward: Lie le socket a une adresse : **bind()**. Dans le cas d'un socket serveur sur internet, l'adresse correspond au port de la machine hôte.
+
+
     :arrow_forward: Se met sur écoute pour une nouvelle connexion : **listen()**
+
+
     :arrow_forward: Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
+
+    
     :arrow_forward: Envoie et recooid les données via les system call **read() write**
 
 
