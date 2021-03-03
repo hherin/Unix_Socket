@@ -57,7 +57,7 @@ Diagram des interactions Client-Serveur
 
 Diverses structures seront utilisées.
 
-### sockaddr - infos du socket
+### > sockaddr - infos du socket
 
 ```
 struct sockaddr {
@@ -74,7 +74,7 @@ struct sockaddr {
 
 
 
-### sockaddr in - Une aide pour faire reference aux elements du socket
+### > sockaddr in - Une aide pour faire reference aux elements du socket
 
 
 ```
@@ -97,7 +97,7 @@ struct sockaddr_in {
 
 
 
-### in addr - Utilisé dans la structure au dessus
+### > in addr - Utilisé dans la structure au dessus
 
 
 ```
@@ -114,7 +114,7 @@ struct in_addr {
 
 
 
-### hostent - Garde les infos de l'hôte.
+### > hostent - Garde les infos de l'hôte.
 
 
 ```
@@ -143,7 +143,7 @@ struct hostent {
 
 
 
-### Servent - Garde les informations reliées au service et ports associées
+### > Servent - Garde les informations reliées au service et ports associées
 
 
 
