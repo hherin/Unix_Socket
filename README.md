@@ -5,7 +5,7 @@ Premiers pas vers la programmation Unix Socket.
 Source : [Tutoriel](https://www.tutorialspoint.com/unix_sockets/index.htm)
 
 
-## DEFINITION
+### Definition
 
 Les sockets permettent la **communication entre deux processus** sur une ou plusieurs machines
 
@@ -16,7 +16,9 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 - _Datagram sockets_ : ils utilisent le protocole UDP. Il n'y a pas de connexion eentre le serveur et le client et la livraison n'est pas garantie.
 
 
-## COMMENT CREER UN PROCESS CLIENT
+
+
+### Comment créer un process client
 
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
@@ -24,7 +26,10 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 2. Connecter le socket a l'adresse du serveur via **connect()**
 3. Envoyer la requête et recevoir les donner avec **read() write**
 
-## COMMENT CREER UN PROCESS SERVEUR
+
+
+
+### Comment créer un process serveur
 
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
