@@ -2,7 +2,7 @@
 
 Premiers pas vers la programmation Unix Socket.
 
-[Tutoriel](https://www.tutorialspoint.com/unix_sockets/index.htm)
+[TUTORIEL](https://www.tutorialspoint.com/unix_sockets/index.htm)
 
 
 ### Definition
@@ -143,7 +143,7 @@ struct hostent {
 
 
 
-## Servent - Garde les informations reliées au service et ports associées
+### Servent - Garde les informations reliées au service et ports associées
 
 
 
@@ -170,3 +170,30 @@ struct servent {
 Ces structures sont une part integrante de tout _network program_. 
 
 Elles sont passées par reference (pointeurs) aux fonctions avec leur tailles.
+
+
+
+## Ports et Services
+
+Quand un processus client cherche a se connecter au serveur, il doit avoir un moyen d'identifier celui-ci. 
+
+Meme si le client connait l'adresse ip du serveur, il doit aussi avoir connaissance du port.
+
+L'assignement des ports se situe dans le fichier /etc/services. => checker que le port ne soit pas assigné a un autre serveur.
+
+[Plus de detail ici](https://www.tutorialspoint.com/unix_sockets/ports_and_services.htm)
+
+
+
+## Fonction manipulation adresse IP
+
+```
+inet_addr(const char *strptr);
+```
+
+
+
+Converti la chaine de caractère en une adresse IP a point standardisée : xxx.xxx.xxx.xxx
+
+**Retour :** adresse 32-bit binary IPv4 en Network Byte Order (octet de gauche a droite) ou INADDR_NONE si erreur.
+
