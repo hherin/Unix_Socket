@@ -18,7 +18,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-## :black_circle: Comment créer un process client
+## :white_circle: Comment créer un process client
 
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
@@ -31,7 +31,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-## :black_circle:Comment créer un process serveur
+## :white_circle: Comment créer un process serveur
 
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
@@ -53,7 +53,7 @@ Diagram des interactions Client-Serveur
 
 
 
-## :black_circle: Acces aux infos d'adressage et port
+## :white_circle: Acces aux infos d'adressage et port
 
 Diverses structures seront utilisées.
 
@@ -173,7 +173,7 @@ Elles sont passées par reference (pointeurs) aux fonctions avec leur tailles.
 
 
 
-## :black_circle: Ports et Services
+## :white_circle: Ports et Services
 
 Quand un processus client cherche a se connecter au serveur, il doit avoir un moyen d'identifier celui-ci. 
 
@@ -185,7 +185,7 @@ L'assignement des ports se situe dans le fichier /etc/services. => checker que l
 
 
 
-## :black_circle: Fonction manipulation adresse IP
+## :white_circle: Fonction manipulation adresse IP
 
 ```
 inet_addr(const char *strptr);
@@ -199,7 +199,7 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 
 
 
-## :black_circle: Core Function
+## :white_circle: Core Function
 
 Focntions pour ecrire un client et serveur TCP
 
