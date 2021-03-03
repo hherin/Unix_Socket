@@ -18,7 +18,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-### Comment créer un process client
+## Comment créer un process client
 
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
@@ -33,7 +33,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-### Comment créer un process serveur
+## Comment créer un process serveur
 
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
@@ -48,7 +48,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
     :arrow_forward: Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
 
-    
+
     :arrow_forward: Envoie et recooid les données via les system call **read() write**
 
 
