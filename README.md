@@ -197,3 +197,116 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 
 **Retour :** adresse 32-bit binary IPv4 en Network Byte Order (octet de gauche a droite) ou INADDR_NONE si erreur.
 
+
+
+## Core Function
+
+Focntions pour ecrire un client et serveur TCP
+
+
+### socket()
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int socket (int family, int type, int protocol);
+```
+
+
+**Retour :** socket descriptor ou -1 si erreur
+
+
+**Paramètre :**
+
+_Family_ - specifie quel protocole est utilisée
+
+
+| Family | Descrition |
+| --- | --- |
+| AF_INET | IPv4 protocoles |
+| AF_INET6 | IPv6 protocoles |
+| AF_LOCAL | Unix domain protocoles |
+| AF_ROUTE | Routing Sockets |
+| AF_KEY | Ket socket |
+
+
+_Type_ - Spécifie quel type de socket on veut
+
+| Type | Descripption |
+| --- | --- |
+| SOCK_STREAM | Stream socket |
+| SOCK_DGRAM | Datagram socket |
+| SOCK_SEQPACKET | Sequenced packet socket |
+| SOCK_RAW | Raw socket |
+
+
+
+_Protocole_ - utiliser un specifiaque protocole en dessous, ou 0 pour selectionner celui par defaut en fonction de la combinaison famille et type
+
+| Protocole | Description |
+| --- | --- |
+| IPPROTO_TCP | TCP transport protocol |
+| IPPROTO_UDP | UDP transport protocol| 
+| IPPROTO_SCTP | SCTP transport protocol |
+
+
+
+
+### connect()
+
+Utilisé par le TCP client pour se connecter au TCP serveur
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
+```
+
+
+**Retour:** 0 si succes, -1 sinon
+
+**Paramètre :**
+
+- sockfd : socket descripteur
+
+- serv_addr : pointeur sur struct sockaddr (IP et port)
+
+- addrlen : sizeof(struct sockaddr)
+
+
+### bind()
+
+Donne une address au socket
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int bind(int sockfd, struct sockaddr *my_addr,int addrlen);
+```
+
+
+
+**Retour:** 0 si succes, sinon -1
+
+**Parameters:**
+
+- sockfd : socket descripteur
+
+- my_addr : pointeur sur sockaddr (IP et port)
+
+- addrlen : sizeof(struct sockaddr)
+
+
+
+Si le port = 0, le système a donc choisi un port aleatoire et INADDR_ANY est set sur l'IP (=> assignement aleatoire adresse IP)
+
+```
+server.sin_port = 0;  		     
+server.sin_addr.s_addr = INADDR_ANY;
+```
+
+
+### listen()
