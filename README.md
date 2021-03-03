@@ -18,7 +18,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-## Comment créer un process client
+## :black_circle: Comment créer un process client
 
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
@@ -31,7 +31,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-## Comment créer un process serveur
+## :black_circle:Comment créer un process serveur
 
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
@@ -53,11 +53,11 @@ Diagram des interactions Client-Serveur
 
 
 
-## Acces aux infos d'adressage et port
+## :black_circle: Acces aux infos d'adressage et port
 
 Diverses structures seront utilisées.
 
-### > sockaddr - infos du socket
+### :white_small_square: sockaddr - infos du socket
 
 ```
 struct sockaddr {
@@ -74,7 +74,7 @@ struct sockaddr {
 
 
 
-### > sockaddr in - Une aide pour faire reference aux elements du socket
+### :white_small_square: sockaddr in - Une aide pour faire reference aux elements du socket
 
 
 ```
@@ -97,7 +97,7 @@ struct sockaddr_in {
 
 
 
-### > in addr - Utilisé dans la structure au dessus
+### :white_small_square: in addr - Utilisé dans la structure au dessus
 
 
 ```
@@ -114,7 +114,7 @@ struct in_addr {
 
 
 
-### > hostent - Garde les infos de l'hôte.
+### :white_small_square: hostent - Garde les infos de l'hôte.
 
 
 ```
@@ -143,7 +143,7 @@ struct hostent {
 
 
 
-### > Servent - Garde les informations reliées au service et ports associées
+### :white_small_square: Servent - Garde les informations reliées au service et ports associées
 
 
 
@@ -173,7 +173,7 @@ Elles sont passées par reference (pointeurs) aux fonctions avec leur tailles.
 
 
 
-## Ports et Services
+## :black_circle: Ports et Services
 
 Quand un processus client cherche a se connecter au serveur, il doit avoir un moyen d'identifier celui-ci. 
 
@@ -185,7 +185,7 @@ L'assignement des ports se situe dans le fichier /etc/services. => checker que l
 
 
 
-## Fonction manipulation adresse IP
+## :black_circle: Fonction manipulation adresse IP
 
 ```
 inet_addr(const char *strptr);
@@ -199,7 +199,7 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 
 
 
-## Core Function
+## :black_circle: Core Function
 
 Focntions pour ecrire un client et serveur TCP
 
