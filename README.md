@@ -204,6 +204,8 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 Focntions pour ecrire un client et serveur TCP
 
 
+
+
 ### :white_small_square: socket()
 
 ```
@@ -276,6 +278,8 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 - addrlen : sizeof(struct sockaddr)
 
 
+
+
 ### :white_small_square: bind()
 
 Donne une address au socket
@@ -309,6 +313,8 @@ server.sin_addr.s_addr = INADDR_ANY;
 ```
 
 
+
+
 ### :white_small_square: listen()
 
 2 actions :
@@ -332,6 +338,7 @@ int listen(int sockfd,int backlog);
 
 
 
+
 ### :white_small_square: accept()
 
 Appelé par le server TCP, accepte la prochaine connexion dans la queue.
@@ -351,6 +358,8 @@ int accept (int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
 - addrlen : sizeof(struct sockaddr)
 
 
+
+
 ### :white_small_square: send()
 
 Utiliser pour envoyer des données a travers le stream socket
@@ -366,3 +375,8 @@ int send(int sockfd, const void *msg, int len, int flags);
 - msg : pointeur vers le msg qu'on veut envoyer
 - len : taille du message
 - flags : mis a 0
+
+
+
+
+### :white_small_square: 
