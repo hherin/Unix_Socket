@@ -26,7 +26,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
     :heavy_check_mark: Connecter le socket a l'adresse du serveur via **connect()**
 
-    :heavy_check_mark: Envoyer la requête et recevoir les donner avec **read() write**
+    :heavy_check_mark: Envoyer la requête et recevoir les donner avec **read() write()**
 
 
 
@@ -43,7 +43,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
     :heavy_check_mark: Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
 
-    :heavy_check_mark: Envoie et recooid les données via les system call **read() write**
+    :heavy_check_mark: Envoie et recooid les données via les system call **read() write()**
 
 
 
@@ -311,4 +311,58 @@ server.sin_addr.s_addr = INADDR_ANY;
 
 ### :white_small_square: listen()
 
-https://www.tutorialspoint.com/unix_sockets/socket_core_functions.htm
+2 actions :
+- converti le socket deconnecté en socket passif, le kernel doit donc acepter la prochane demande de connexion sur ce socket
+- le second argument de la fonction specifie le nombre max de connection le kernel doit aligner sur ce socket
+
+
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int listen(int sockfd,int backlog);
+```
+
+**Retour:** 0 si succes -1 sinon
+
+**Parametres:** 
+- sockfd : socket descripteur 
+- backlog : nbr de connexion autorisée
+
+
+
+### :white_small_square: accept()
+
+Appelé par le server TCP, accepte la prochaine connexion dans la queue.
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int accept (int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
+```
+
+**Retour:** positif descripteur si succes ou -1. Ce descripteur = socket descripteur du client vers lequel chaque operation ecriture-lecture seront opérées.
+
+**Parameteres:**
+- sockfd : socket descripteur 
+- cliaddr : pointeur vers la struct sockaddr (IP + port)
+- addrlen : sizeof(struct sockaddr)
+
+
+### :white_small_square: send()
+
+Utiliser pour envoyer des données a travers le stream socket
+
+```
+int send(int sockfd, const void *msg, int len, int flags);
+```
+
+**Retour:** le nombre d'0ctet envoyé ou -1
+
+**Parametre:**
+- sockfd : socket descripteur 
+- msg : pointeur vers le msg qu'on veut envoyer
+- len : taille du message
+- flags : mis a 0
