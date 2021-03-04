@@ -362,7 +362,7 @@ int accept (int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
 
 ### :white_small_square: send()
 
-Utiliser pour envoyer des données a travers le stream socket
+Utiliser pour envoyer des données a travers le stream socket. On peut aussi utiliser write() pour ecrire/envoyer 
 
 ```
 int send(int sockfd, const void *msg, int len, int flags);
@@ -379,4 +379,34 @@ int send(int sockfd, const void *msg, int len, int flags);
 
 
 
-### :white_small_square: 
+### :white_small_square: recv()
+
+Utlisée pour recevoir les données. On peut utiliser read() pour lire/recevoir les données
+
+```
+int recv(int sockfd, void *buf, int len, unsigned int flags);
+```
+
+**Retour:** nombre d'octet lu dans le buffer ou -1.
+
+**Parametres:** 
+- sockfd : socket descripteur 
+- buf : buffer ou les info seront lu
+- len :taille max du buffer
+- flags : mis a 0
+
+
+
+
+### :white_small_square: select()
+
+Cette fonction indique quel descripteur de fichier est pret pour la lecture ou l'ecriture ou s'il y a une erreur.
+
+A l'appel de cette fonction, un socket qui n'a pas de requete ne recevra pas immediatement les donnees d'un autre socket.
+
+
+```
+int select(int  nfds, fd_set  *readfds, fd_set  *writefds, fd_set *errorfds, struct timeval *timeout);
+```
+
+**Retour:** 0 si succes -1 sinon
