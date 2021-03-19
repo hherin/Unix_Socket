@@ -410,3 +410,5 @@ int select(int  nfds, fd_set  *readfds, fd_set  *writefds, fd_set *errorfds, str
 ```
 
 **Retour:** 0 si succes -1 sinon
+
+https://www.tutorialspoint.com/unix_sockets/socket_helper_functions.htm
