@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 13:53:22 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/01 14:43:46 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/01 14:56:55 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	Server::cliConnect()
 			}
 		
 		int selectval;
-		if ((selectval = select(FD_SETSIZE, &_readfd, &_writefd, NULL, setTimeval())) < 0){
+		// if ((selectval = select(FD_SETSIZE, &_readfd, &_writefd, NULL, setTimeval())) < 0){
+		if ((selectval = select(FD_SETSIZE, &_readfd, NULL, NULL, setTimeval())) < 0){
 			perror("ERROR on select");
 			exit(1);
 		}
@@ -120,14 +121,14 @@ void	Server::cliConnect()
 					else
 						printf("Here is the message: %s\n\n",buffer); // call function that process the request
 						
-					if (FD_ISSET(all_connections[i], &_writefd)){
+					// if (FD_ISSET(all_connections[i], &_writefd)){
 						n = send(all_connections[i],"I got your message\n",19, 0);	// send the result
 						if (n < 0) {
 							perror("ERROR writing to socket");
 							exit(1);
 						}
 						
-					}
+					// }
 					
 				}
 				selectval--;
