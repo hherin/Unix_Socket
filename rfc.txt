@@ -1,4 +1,0 @@
-RFC 7230
-
-
-Clients/server messaging
