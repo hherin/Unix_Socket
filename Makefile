@@ -6,7 +6,7 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/02 17:20:39 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/09 14:38:45 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS		=	main.cpp server.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 
-HDRS		=	server.hpp
+HDRS		=	includes/server.hpp
 
 CC			=	clang++
 

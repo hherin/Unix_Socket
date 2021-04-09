@@ -6,11 +6,11 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 13:53:22 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/02 18:02:20 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/09 14:42:19 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.hpp"
+#include "includes/server.hpp"
 
 Server::Server() : _port(3490) 
 {
@@ -97,7 +97,6 @@ void	Server::request_handler()
 {
 	for (int i = 1; i < MAX_CONNECTIONS; i++){
 		if (all_connections[i] > 0 && FD_ISSET(all_connections[i], &_readfd)){
-			printf("Returned fd is %d [index, i: %d]\n", all_connections[i], i);
 			bzero(buffer,256);
 			int n = recv(all_connections[i], buffer, 255, 0);
 			if (n == 0){
@@ -109,7 +108,7 @@ void	Server::request_handler()
 				exit(1);
 			}
 			else
-				printf("Here is the message:\n %s\n\n",buffer); // call function that process the request
+				printf("MESSAGE:\n %s\n\n",buffer); // call function that process the request
 
 			// send msg to the client
 			n = send(all_connections[i],"I got your message\n",19, 0);
@@ -164,7 +163,7 @@ void	Server::cliConnect()
 		for (int i = 0; i < MAX_CONNECTIONS; i++)
 			if (all_connections[i] >= 0)
 				FD_SET(all_connections[i], &_readfd);
-		
+		printf( "AVANT\n");
 		// if ((selectval = select(FD_SETSIZE, &_readfd, NULL, NULL, setTimeval())) < 0){
 		if ((selectval = select(FD_SETSIZE, &_readfd, NULL, NULL, NULL)) < 0){				// change SETSIZE for more efficiency
 			perror("ERROR on select");
@@ -175,7 +174,7 @@ void	Server::cliConnect()
 			exit(1);
 		}
 		else if (selectval >= 0){		 /* select() woke up. Identify the fd that has events */
-			printf("Server-select() is OK...\n");
+			printf("APRES\n");// printf("Server-select() is OK...\n");
 			if (add_client())
 				continue;				//go back to beginning of the loop - don't go to request_handler
 		}
