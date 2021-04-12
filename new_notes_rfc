@@ -88,4 +88,76 @@ ____________________________ 7231 _____________________________
 				>> reponse a config vite fait en focntion de l'extension du fichier
 
 3.1.4.2.  Content-Location [HEADER]
-	- PAGE 14 : a l'air d'etre principalement present dans la reponse
+	- PAGE 14 : a l'air d'etre principalement present dans la reponse, utilise par exemple dans
+				le cas d'un content negociation pour indiquer qu'une ressource a ete preferee
+
+3.4.1.  Proactive Negotiation
+	- PAGE 18 : utilisé dans le cas des headers accept languages etc 
+
+4.  Request Methods
+	- PAGE 20-21 : décrit les méthodes, + codes d'erreur quand methode pas implémentée
+	- PAGE 23-29 : HEAD GET POST PUT DELETE methodes
+
+5.3.1.  Quality Values
+	- PAGE 37 : decrit le parametre q qui peut accompagner les header accept-charset et accept-language
+
+5.3.3.  Accept-Charset [HEADER]
+	- PAGE 39 : decrit comment traiter le header accept-charset pour content negociation
+
+5.3.5.  Accept-Language [HEADER]
+	- PAGE 41-42 : decrit comment traiter le header accept-language pour content negociation
+
+5.5.2.  Referer [HEADER]
+	- PAGE 44 : semble un peu useless. Le server n'a l'air de pas avoir a forcement le traiter,
+				c'est surtout pour de l'opti etc
+
+5.5.3.  User-Agent [HEADER]
+	- PAGE 45 : semble useless aussi.
+
+6.  Response Status Codes
+	- PAGE 46-63 : tous les status codes. 100 info, 200 ok, 300 redirection, 400 erreur requete, 500 erreur serveur
+			>>>> PENSER A CHECKER LE CODE 304
+
+7.1.1.  Origination Date [HEADER]
+	- PAGE 64-66 : explique format date et quand renvoyer ce header.
+
+7.1.2.  Location [HEADER]
+	- PAGE 67 : header notamment utilisé pour la creation etc
+
+7.1.3.  Retry-After [HEADER]
+	- PAGE 68 : indique dans combien de temps le client peut refaire sa requete
+
+7.4.1.  Allow [HEADER]
+	- PAGE 71 : contient les methodes acceptées par le serveur
+
+7.4.2.  Server [HEADER]
+	- PAGE 72 : juste le nom du serveur.
+
+
+_______________________________________________________________
+____________________________ 7232 _____________________________
+
+2.2.  Last-Modified [HEADER]
+	- PAGE 6 : date de derniere modif du fichier qui est casi tout le temps renvoyée.
+	- PAGE 11 : quand inclure ce header
+
+
+_______________________________________________________________
+____________________________ 7235 _____________________________
+
+2.1.  Challenge and Response
+	- PAGE 3-4 : overview de la partie authorisation
+
+3.1.  401 Unauthorized
+	- PAGE 5 : indique que les credits utilises pour l'identification ne marchent pas
+
+4.1.  WWW-Authenticate [HEADER]
+	- PAGE 6 : explique la syntaxe attendue du header. Est dans la reponse, indique ce que
+				le client a fail il me semble
+
+4.2.  Authorization [HEADER]
+	- PAGE 7 : uniquement pour le client, lui permet de s'authentifier
+
+liens interessants pour comprendre l'authentification :
+https://developer.mozilla.org/fr/docs/Web/HTTP/Authentication
+https://www.tecmint.com/setup-nginx-basic-http-authentication/
