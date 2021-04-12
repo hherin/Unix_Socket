@@ -5,59 +5,65 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/31 15:48:52 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/02 17:43:25 by hherin           ###   ########.fr       */
+/*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
+/*   Updated: 2021/04/12 18:18:01 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include <sys/socket.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <strings.h>
-# include <unistd.h>
-# include <netinet/in.h>
-# include <arpa/inet.h> //inet itoa
-# include <sys/time.h>
+# include <vector>
 # include <string>
+# include <cstring>
 
-#define MAX_CONNECTIONS 10
-#define TIMEOUT 10
-
-
-class Server
+class server
 {
-	public:
-		Server();
-		
-		void	cliConnect();
-
-		~Server() { close(_sockfd);	}
-
 	private:
-		std::string const	&recv_timeout(int &fd);
-		void				request_handler();
-		int					add_client();
+		int _port;
+		std::vector<std::string> _names;
+		std::string _error_path;
+		std::vector<server> _root_path;
+
+		// std::vector<std::string> _method;
+		// std::string _default;
 		
-		struct sockaddr_in serv_addr, cli_addr;
-		int _port, _sockfd, _newsockfd;
-		unsigned int clilen;
-		char buffer[256];
-		int all_connections[MAX_CONNECTIONS];
-		fd_set _readfd;//, _writefd;
-		std::string bufRecv;
-		int selectval;
+	public:
+		server() {};
+		
+		~server() {};
+		
+		void	setServer(int nb, int const &pos, std::string const &buf);
+
+		int const &getPort() { return _port; }
+		
+		std::string const &getError() { return _error_path; }
+
+		std::vector<std::string> const &getNames() { return _names; }
+		
+	private:
+		void setPort(char const *p);
+
+		void setName(char const *n);
+		
+		void setError(char const *e);
+
+		void setRoot();
+		
 };
 
-
+// server
+//     allow_methods
+//     listen
+//     root
+//     server_name
+//     location
+//     index
+//     auth_basic
+//     auth_basic_user_file
+//     error_page
+//     client_max_body_size
+//     autoindex
+//     upload_store
 
 #endif
-
-//  loin de moi l'idée de graver dans le marbre de tailler dans une écorce d'arbre loin de moi l'idée de suggérer que 
-//  je m'en moque que je n'en ai rien à faire que guère je ne m'en soucie loin de moi ces folies mais je m'échine depuis 
-//  octobre et pourquoi donc depuis début octobre même et qui m'aime me suive depuis octobre depuis ce même dernier octobre 
-//  le trois du mois je crois depuis ce temps-là depuis trois mois depuis trois mois et une semaine je m'échine ailleurs et 
-//  le très long texte n'a pas avancé d'un poil pas beaucoup sans doute est-ce mon côté velléitaire 
-//  qui ne cesse de me jouer des tours et les méandres du très long texte se sont figés comme une gelée le long des parois 

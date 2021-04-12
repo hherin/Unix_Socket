@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
+/*   http.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 13:53:22 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/09 14:42:19 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/09 15:41:55 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/server.hpp"
+#include "includes/http.hpp"
 
-Server::Server() : _port(3490) 
+http::http() : _port(3490) 
 {
 	_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_sockfd < 0) {
 		perror("ERROR opening socket");
 		exit(1);
 	}
-	printf("Server-socket() is OK...\n");
+	printf("http-socket() is OK...\n");
 
 	int yes = true;
 	if(setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
 	{
-		perror("Server-setsockopt() error lol!");
+		perror("http-setsockopt() error lol!");
 		exit(1);
 	}
-	printf("Server-setsockopt() is OK...\n");
+	printf("http-setsockopt() is OK...\n");
 
 	
 	bzero((char *) &serv_addr, sizeof(serv_addr));
@@ -39,11 +39,11 @@ Server::Server() : _port(3490)
 		perror("ERROR on binding");
 		exit(1);
 	}
-	printf("Server-bind() is OK...\n");
+	printf("http-bind() is OK...\n");
 
 
 	listen(_sockfd,5);
-	printf("Server-listen() is OK...\n");
+	printf("http-listen() is OK...\n");
 }
 
 struct timeval*	setTimeval()
@@ -55,7 +55,7 @@ struct timeval*	setTimeval()
 }
 
 // try to loop in recv
-std::string const &Server::recv_timeout(int &fd)
+std::string const &http::recv_timeout(int &fd)
 {
 	char buffer[1000];
 	int recvVal, totLen = 0;
@@ -92,8 +92,8 @@ std::string const &Server::recv_timeout(int &fd)
 	return req;
 }
 
-/* Check if the fd with event is a non-server fd */
-void	Server::request_handler()
+/* Check if the fd with event is a non-http fd */
+void	http::request_handler()
 {
 	for (int i = 1; i < MAX_CONNECTIONS; i++){
 		if (all_connections[i] > 0 && FD_ISSET(all_connections[i], &_readfd)){
@@ -127,7 +127,7 @@ void	Server::request_handler()
 	}
 }
 
-int	Server::add_client()
+int	http::add_client()
 {
 	if (FD_ISSET(_sockfd, &_readfd)){
 		clilen = sizeof(cli_addr);
@@ -137,7 +137,7 @@ int	Server::add_client()
 			exit(1);
 		}
 		else{
-			printf("Server-accept() is OK...\n");
+			printf("http-accept() is OK...\n");
 			for (int i = 0; i < MAX_CONNECTIONS; i++){
 				if (all_connections[i] < 0){
 					all_connections[i] = _newsockfd;
@@ -151,7 +151,7 @@ int	Server::add_client()
 	return 0;
 }
 
-void	Server::cliConnect()
+void	http::cliConnect()
 {
 	for (int i = 0; i < MAX_CONNECTIONS; i++)
 		all_connections[i] = -1;
@@ -174,7 +174,7 @@ void	Server::cliConnect()
 			exit(1);
 		}
 		else if (selectval >= 0){		 /* select() woke up. Identify the fd that has events */
-			printf("APRES\n");// printf("Server-select() is OK...\n");
+			printf("APRES\n");// printf("http-select() is OK...\n");
 			if (add_client())
 				continue;				//go back to beginning of the loop - don't go to request_handler
 		}

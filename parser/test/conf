@@ -1,0 +1,11 @@
+server {
+	listen 	8080
+	error	./www/tester/error
+	server_name	server1 server2 server3
+}
+
+server {
+	listen 	8081
+	error	./www/tester/error2
+	server_name	server4 server5 server6
+}

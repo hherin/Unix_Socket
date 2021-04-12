@@ -6,17 +6,17 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/09 15:41:07 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/12 16:59:16 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	webserv
+NAME		=	parser
 
-SRCS		=	main.cpp http.cpp
+SRCS		=	main.cpp ../parser.cpp ../server.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 
-HDRS		=	includes/http.hpp
+HDRS		=	../../includes/parser.hpp ../../includes/server.hpp
 
 CC			=	clang++
 
@@ -29,7 +29,7 @@ all			:	${NAME}
 
 ${NAME}		:	${OBJS}
 				@${CC} ${FLAGS} -o ${NAME} ${OBJS}
-				@echo "webserv is ready";
+				@echo "parser is ready";
 
 %.o			:	%.cpp
 				@${CC} ${FLAGS} -o $@ -c $<
@@ -37,7 +37,7 @@ ${NAME}		:	${OBJS}
 ${OBJS}		:	${HDRS}
 
 clean		:
-				@rm -rf *.o
+				@rm -rf *.o ../*.o
 
 fclean		:	clean
 				@rm -rf ${NAME}

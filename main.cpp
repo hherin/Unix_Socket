@@ -6,15 +6,15 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/09 14:39:10 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/09 15:38:32 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/server.hpp"
+#include "includes/http.hpp"
 
 int main()
 {
-    Server server;
-    server.cliConnect();
+    http h;
+    h.cliConnect();
     return 0;
 }
