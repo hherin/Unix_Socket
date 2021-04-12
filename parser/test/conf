@@ -9,3 +9,10 @@ server {
 	error	./www/tester/error2
 	server_name	server4 server5 server6
 }
+
+server {
+	listen 	8082
+	error	./www/tester/error3
+	server_name	server7 server8 server9
+}
+

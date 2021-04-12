@@ -6,11 +6,21 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/12 18:10:12 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/12 18:30:08 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server.hpp"
+
+server::server() : _port(-1), _max_clients(5), _autoindex(0)  { }
+
+server::~server() { }
+
+int const &server::getPort() { return _port; }
+
+std::string const &server::getError() { return _error_path; }
+
+std::vector<std::string> const &server::getNames() { return _names; }
 
 #include <iostream>
 /**
