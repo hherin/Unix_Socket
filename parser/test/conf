@@ -2,10 +2,14 @@ server {
 	listen 	8080
 	error	./www/tester/error
 	server_name	server1 server2 server3
+	allow_method POST SELECT GET HEAD
+	index		index.html
 }
 
 server {
+	index		indexvdsvgropjaahjdihzdfizhf.html
 	listen 	8081
+	allow_method PIPI CACA PROUT
 	error	./www/tester/error2
 	server_name	server4 server5 server6
 }
@@ -13,6 +17,8 @@ server {
 server {
 	listen 	8082
 	error	./www/tester/error3
+	allow_method	GET POST NTM
+	index		
 	server_name	server7 server8 server9
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/12 18:14:11 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/13 11:53:09 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ void parser::newServer(void)
 			n_srv.setServer(1, pos, _buf.c_str() + pos + 5);
 		else if ( (pos = _buf.find("server_name")) != std::string::npos)
 			n_srv.setServer(2, pos, _buf.c_str() + pos + 11);
+		else if ( (pos = _buf.find("allow_method")) != std::string::npos)
+			n_srv.setServer(3, pos, _buf.c_str() + pos + 12);
+		else if ( (pos = _buf.find("index")) != std::string::npos)
+			n_srv.setServer(4, pos, _buf.c_str() + pos + 5);
+		else continue;
 	}
 	_srv.push_back(n_srv);
 }

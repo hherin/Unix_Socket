@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/12 18:12:41 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/13 12:01:25 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,19 @@ int main(int ac, char **av)
 		for (size_t i = 0; i < v0.size(); i++)
 			std::cout << v0[i] << " ";
 		std::cout << std::endl;
+
+		std::vector<std::string> v1 = mainsrv[j].getMethods();
+		std::cout << "METHODS : ";
+		for (size_t i = 0; i < v1.size(); i++)
+			std::cout << v1[i] << " ";
+		std::cout << std::endl;
+
+		std::vector<std::string> v2 = mainsrv[j].getIndex();
+		std::cout << "INDEX : ";
+		for (size_t i = 0; i < v2.size(); i++)
+			std::cout << v2[i] << " ";
+		std::cout << std::endl;
 		std::cout << "=====================================\n\n";
 	}
 
-	// for (std::vector<server>::iterator it = mainsrv.begin(); it != mainsrv.end(); it++){
-	// 	std::cout << "SERVER " << i << std::endl;
-	// 	std::cout << "PORT : " << (*it).getPort() << std::endl;
-	// 	std::cout << "ERROR : " << (*it).getError() << std::endl;
-
-	// 	std::vector<std::string> v0 = (*it).getNames();
-	// 	std::cout << "NAMES : ";
-	// 	for (std::vector<std::string>::iterator ite = v0.begin(); ite != v0.end(); it++)
-	// 		std::cout << (*ite) << " ";
-	// 	std::cout << std::endl;
-
-	// 	std::cout << "HOST : " << (*it).getHost() << std::endl;
-	// }
 }
