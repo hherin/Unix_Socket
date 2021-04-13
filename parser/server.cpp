@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/13 12:26:06 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/13 12:56:59 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 server::server() : _port(-1), _max_clients(5), _autoindex(0)  { }
 
 server::~server() { }
-
-int const &server::getPort() { return _port; }
 
 int const &server::getMaxClients() { return _max_clients; }
 
@@ -35,6 +33,8 @@ std::vector<std::string> const &server::getNames() { return _names; }
 std::vector<std::string> const &server::getMethods() { return _allow_methd; }
 
 std::vector<std::string> const &server::getIndex() { return _index; }
+
+std::vector<int> const &server::getPort() { return _port; }
 
 
 /**
@@ -58,8 +58,6 @@ void	server::setServer(int nb, int const &pos, std::string const &buf)
 	(this->*F[nb])(tmp + i);
 }
 
-void server::setPort(char const *p) { _port = atoi(p); }
-
 void server::setMaxClients(char const *m) { _max_clients = atoi(m); }
 
 void server::setAutoIndex(char const *i) { _autoindex = (!strncmp("on", i, 3)) ? 1 : 0; }
@@ -79,6 +77,8 @@ void server::setNames(char const *n) { setStringArray(n, _names); }
 void server::setMethods(char const *n) { setStringArray(n, _allow_methd); }
 
 void server::setIndex(char const *n) { setStringArray(n, _index); }
+
+void server::setPort(char const *p) { _port = atoi(p); }
 
 void server::setStringArray(char const *n, std::vector<std::string> &v) 
 {
