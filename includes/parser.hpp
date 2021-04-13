@@ -24,7 +24,6 @@ class parser
         std::string _conf;
         std::ifstream _file;
         std::string _buf;
-        // server srv;
         std::vector<server> _srv;
         int _in, _out;
         void newServer(void);
