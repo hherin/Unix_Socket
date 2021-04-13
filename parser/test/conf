@@ -4,21 +4,24 @@ server {
 	server_name	server1 server2 server3
 	allow_method POST SELECT GET HEAD
 	index		index.html
-}
 
-server {
-	index		indexvdsvgropjaahjdihzdfizhf.html
-	listen 	8081
-	allow_method PIPI CACA PROUT
-	error	./www/tester/error2
-	server_name	server4 server5 server6
-}
-
-server {
-	listen 	8082
-	error	./www/tester/error3
-	allow_method	GET POST NTM
-	index		
-	server_name	server7 server8 server9
+    location / 		{
+        root	./www/perso
+		index	index.html
+		allow_method GET POST HEAD OPTIONS PUT
+		cgi_path 	./www/CGI/ubuntu_cgi_tester
+    }
+    location /test	{
+        root    ./www/perso/test
+		index	index.html
+		auto_index	0
+		allow_method GET POST HEAD OPTIONS PUT
+    }
+    location /auto_index	{
+        root    ./www/perso/vide
+		index	videvidevide
+		auto_index	1
+		allow_method GET POST OPTIONS
+    }
 }
 

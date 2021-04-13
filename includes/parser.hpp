@@ -27,6 +27,7 @@ class parser
         std::vector<server> _srv;
         int _in, _out;
         void newServer(void);
+        void newLocation(server &);
 
         // std::map<>
         

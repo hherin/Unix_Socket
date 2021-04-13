@@ -6,17 +6,19 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/13 12:56:59 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/13 16:45:29 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server.hpp"
 
-server::server() : _port(-1), _max_clients(5), _autoindex(0)  { }
+server::server() : _max_clients(5), _autoindex(0)  { }
 
 server::~server() { }
 
-int const &server::getMaxClients() { return _max_clients; }
+int const &server::getMaxClientsBS() { return _max_clients; }
+
+bool const &server::getAutoIndex() { return _autoindex; }
 
 std::string const &server::getError() { return _error_path; }
 
@@ -36,6 +38,8 @@ std::vector<std::string> const &server::getIndex() { return _index; }
 
 std::vector<int> const &server::getPort() { return _port; }
 
+std::vector<server> const &server::getLocation() { return _location; }
+
 
 /**
 ** set variable inside server object
@@ -46,7 +50,7 @@ void	server::setServer(int nb, int const &pos, std::string const &buf)
 {
 	typedef void (server::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &server::setPort, &server::setError, &server::setNames, &server::setMethods, &server::setIndex,
-                        &server::setAuthBasic, &server::setAuthBasicFile, &server::setMaxClients, &server::setAutoIndex,
+                        &server::setAuthBasic, &server::setAuthBasicFile, &server::setMaxClientsBS, &server::setAutoIndex,
                         &server::setUploadStore };
                         
     const char *tmp = buf.c_str() + pos;
@@ -58,7 +62,12 @@ void	server::setServer(int nb, int const &pos, std::string const &buf)
 	(this->*F[nb])(tmp + i);
 }
 
-void server::setMaxClients(char const *m) { _max_clients = atoi(m); }
+void server::setLocation(server &l)
+{
+    _location.push_back(l);
+}
+
+void server::setMaxClientsBS(char const *m) { _max_clients = atoi(m); }
 
 void server::setAutoIndex(char const *i) { _autoindex = (!strncmp("on", i, 3)) ? 1 : 0; }
 
@@ -78,7 +87,17 @@ void server::setMethods(char const *n) { setStringArray(n, _allow_methd); }
 
 void server::setIndex(char const *n) { setStringArray(n, _index); }
 
-void server::setPort(char const *p) { _port = atoi(p); }
+void server::setPort(char const *p) 
+{
+    char *tmp = strdup(p);
+    char *token = strtok(tmp, "\t\v\f\r ");
+
+    while (token){
+        _port.push_back(atoi(token));
+        token = strtok(NULL, "\t\v\f\r ");
+    }
+    delete tmp; 
+}
 
 void server::setStringArray(char const *n, std::vector<std::string> &v) 
 {

@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/13 12:59:42 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/13 16:45:43 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class server
 		std::vector<std::string> _allow_methd;	//
 		std::vector<std::string> _index;		//
 		std::vector<int> _port;					//
-		std::vector<server> _location;
+		std::vector<server> _location;			//
 		
 
 	public:
@@ -39,9 +39,9 @@ class server
 		
 		~server();
 		
-		int const &getMaxClients();	
+		int const &getMaxClientsBS();	
 
-		int const &getAutoIndex();
+		bool const &getAutoIndex();
 
 		std::string const &getError();
 
@@ -60,11 +60,15 @@ class server
 		std::vector<std::string> const &getIndex();
 		
 		std::vector<int> const &getPort();
+
+		std::vector<server> const &getLocation();
 		
 		void setServer(int, int const&, std::string const&);
+
+		void setLocation(server &);
 		
 	private:
-		void setMaxClients(char const*);
+		void setMaxClientsBS(char const*);
 
 		void setAutoIndex(char const*);
 
@@ -86,9 +90,7 @@ class server
 		
 		void setPort(char const*);
 		
-		void setStringArray(char const *n, std::vector<std::string> &v);
-
-		
+		void setStringArray(char const *n, std::vector<std::string> &v);		
 };
 
 
