@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/13 16:45:29 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/14 12:34:36 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ std::vector<int> const &server::getPort() { return _port; }
 
 std::vector<server> const &server::getLocation() { return _location; }
 
-
 /**
 ** set variable inside server object
 ** param nb is which method of the object is choosen
@@ -51,7 +50,7 @@ void	server::setServer(int nb, int const &pos, std::string const &buf)
 	typedef void (server::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &server::setPort, &server::setError, &server::setNames, &server::setMethods, &server::setIndex,
                         &server::setAuthBasic, &server::setAuthBasicFile, &server::setMaxClientsBS, &server::setAutoIndex,
-                        &server::setUploadStore };
+                        &server::setUploadStore, &server::setRoot };
                         
     const char *tmp = buf.c_str() + pos;
 	int i = 0;
