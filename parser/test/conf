@@ -1,0 +1,101 @@
+server {
+    listen 	8080
+    error	./www/tester/error
+	server_name	server1
+	host	localhost
+
+    location /  {
+		allow_method	    GET
+        root	    ./www/tester
+		index	    getindex.html
+		cgi			.bla
+		cgi_path 	./www/CGI/ubuntu_cgi_tester
+    }
+    location /put_test  {
+		allow_method 	    PUT
+		root 		./www/tester
+	}
+    location /post_body {
+		allow_method 	    POST
+		root 		./www/tester
+		index 		index.html
+		cgi			.bla
+		max_body	100
+	}
+    location /directory {
+		cgi			.bla
+		allow_method 	    GET POST
+		root 		./www/tester/YoupiBanane
+		index 		youpi.bad_extension
+		
+		cgi_path 	./www/CGI/ubuntu_cgi_tester
+	}
+}
+
+server {
+    listen 	8081
+    error	./www/perso/error
+	server_name	server2
+	host	localhost
+	
+    location / 		{
+        root	./www/perso
+		index	index.html
+		allow_method	GET POST HEAD OPTIONS PUT
+		cgi_path 	./www/CGI/ubuntu_cgi_tester
+    }
+    location /test	{
+        root    ./www/perso/test
+		index	index.html
+		auto_index	0
+		allow_method	GET POST HEAD OPTIONS PUT
+    }
+    location /auto_index	{
+        root    ./www/perso/vide
+		index	videvidevide
+		auto_index	1
+		allow_method	GET POST OPTIONS
+    }
+    location /no_auto_index	{
+        root    ./www/perso/vide
+		index	videvidevide
+		auto_index	0
+		allow_method	GET POST HEAD OPTIONS PUT
+    }
+    location /delete {
+        root    	./www/perso/delete
+		index		to_delete
+		allow_method		OPTIONS DELETE
+	}
+    location /put_test  {
+		allow_method 	    PUT
+		root 		./www/tester
+	}
+    location /auth  {
+		allow_method 	    PUT
+		root 		./www/tester
+		auth 		user:pass
+	}
+    location /maxbody  {
+		allow_method 	    PUT
+		root 		./www/tester
+		index		index.html
+		max_body	100
+	}
+}
+
+server {
+    listen 	8082
+    error	./www/perso/error
+	server_name	post_server
+	host	localhost
+	
+    location /	{
+    	root    	./www/methods/post
+		index		index.html
+		allow_method	    POST GET TRACE CONNECT
+		cgi_path 	./www/CGI/ubuntu_cgi_tester
+		cgi			.cgi
+    }
+}
+
