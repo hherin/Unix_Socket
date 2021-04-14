@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.hpp                                         :+:      :+:    :+:   */
+/*   htpp.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 15:48:52 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/02 17:43:25 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/09 15:38:15 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef http_HPP
+# define http_HPP
 
 # include <sys/socket.h>
 # include <stdlib.h>
@@ -27,14 +27,14 @@
 #define TIMEOUT 10
 
 
-class Server
+class http
 {
 	public:
-		Server();
+		http();
 		
 		void	cliConnect();
 
-		~Server() { close(_sockfd);	}
+		~http() { close(_sockfd);	}
 
 	private:
 		std::string const	&recv_timeout(int &fd);
