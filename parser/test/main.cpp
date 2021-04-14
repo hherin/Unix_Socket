@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 12:12:58 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/14 14:04:47 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,16 @@ int main(int ac, char **av)
 	p.getfile();
 
 	std::vector<server> mainsrv = p.getServer();
-	std::cout << "ici\n";
 	
 	for(size_t j = 0; j < mainsrv.size(); j++){
 		std::cout << "=========  SERVER " << j << " ============" << std::endl;
-		std::cout << "error : " << mainsrv[j].getError() << std::endl;
+		(mainsrv[j].getError().size()) ? std::cout << "error : " << mainsrv[j].getError() << std::endl : 0;
 
 		std::vector<std::string> v0 = mainsrv[j].getNames();
-		std::cout << "names : ";
+		(mainsrv[j].getNames().size()) ? std::cout << "names : " : 0;
 		for (size_t i = 0; i < v0.size(); i++)
 			std::cout << v0[i] << " ";
-		std::cout << std::endl;
+		(mainsrv[j].getNames().size()) ? std::cout << std::endl : 0;
 
 		std::vector<std::string> v1 = mainsrv[j].getMethods();
 		std::cout << "methods : ";
@@ -86,6 +85,12 @@ int main(int ac, char **av)
 			for (size_t i = 0; i < v3.size(); i++)
 				std::cout << v3[i] << " ";
 			(loc[i].getPort().size()) ? std::cout << std::endl : 0;
+			
+			// std::vector<std::string> v4 = loc[i].getRoot();
+			// (loc[i].getRoot().size()) ? std::cout << "root : " : 0;
+			// for (size_t i = 0; i < v4.size(); i++)
+			// 	std::cout << v4[i] << " ";
+			// (loc[i].getRoot().size()) ? std::cout << std::endl : 0;
 			
 			std::cout << "autoindex : " << loc[i].getAutoIndex() << "\n\n";
 		}

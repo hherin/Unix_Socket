@@ -1,22 +1,22 @@
 server {
     listen 	8080
     error	./www/tester/error
-	name	server1
+	server_name	server1
 	host	localhost
 
     location /  {
-		method	    GET
+		allow_method	    GET
         root	    ./www/tester
 		index	    getindex.html
 		cgi			.bla
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
     }
     location /put_test  {
-		method 	    PUT
+		allow_method 	    PUT
 		root 		./www/tester
 	}
     location /post_body {
-		method 	    POST
+		allow_method 	    POST
 		root 		./www/tester
 		index 		index.html
 		cgi			.bla
@@ -24,7 +24,7 @@ server {
 	}
     location /directory {
 		cgi			.bla
-		method 	    GET POST
+		allow_method 	    GET POST
 		root 		./www/tester/YoupiBanane
 		index 		youpi.bad_extension
 		
@@ -35,49 +35,49 @@ server {
 server {
     listen 	8081
     error	./www/perso/error
-	name	server2
+	server_name	server2
 	host	localhost
 	
     location / 		{
         root	./www/perso
 		index	index.html
-		method	GET POST HEAD OPTIONS PUT
+		allow_method	GET POST HEAD OPTIONS PUT
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
     }
     location /test	{
         root    ./www/perso/test
 		index	index.html
 		auto_index	0
-		method	GET POST HEAD OPTIONS PUT
+		allow_method	GET POST HEAD OPTIONS PUT
     }
     location /auto_index	{
         root    ./www/perso/vide
 		index	videvidevide
 		auto_index	1
-		method	GET POST OPTIONS
+		allow_method	GET POST OPTIONS
     }
     location /no_auto_index	{
         root    ./www/perso/vide
 		index	videvidevide
 		auto_index	0
-		method	GET POST HEAD OPTIONS PUT
+		allow_method	GET POST HEAD OPTIONS PUT
     }
     location /delete {
         root    	./www/perso/delete
 		index		to_delete
-		method		OPTIONS DELETE
+		allow_method		OPTIONS DELETE
 	}
     location /put_test  {
-		method 	    PUT
+		allow_method 	    PUT
 		root 		./www/tester
 	}
     location /auth  {
-		method 	    PUT
+		allow_method 	    PUT
 		root 		./www/tester
 		auth 		user:pass
 	}
     location /maxbody  {
-		method 	    PUT
+		allow_method 	    PUT
 		root 		./www/tester
 		index		index.html
 		max_body	100
@@ -87,13 +87,13 @@ server {
 server {
     listen 	8082
     error	./www/perso/error
-	name	post_server
+	server_name	post_server
 	host	localhost
 	
     location /	{
     	root    	./www/methods/post
 		index		index.html
-		method	    POST GET TRACE CONNECT
+		allow_method	    POST GET TRACE CONNECT
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
 		cgi			.cgi
     }

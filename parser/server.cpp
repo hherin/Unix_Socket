@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 12:34:36 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/14 14:02:52 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	server::setServer(int nb, int const &pos, std::string const &buf)
 	while (isspace(tmp[i]))
         i++;
 
+    
 	(this->*F[nb])(tmp + i);
 }
 

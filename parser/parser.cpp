@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 12:44:01 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/14 14:05:24 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void parser::newLocation(server &srv)
 		else if (!_buf.compare(0, 12, "upload_store"))
 			n_loc.setServer(9, 12, _buf);
 		else if (!_buf.compare(0, 4, "root"))
-			n_loc.setServer(9, 4, _buf);
+			n_loc.setServer(10, 4, _buf);
 		else continue;
 	}
 	_out++;
@@ -134,7 +134,7 @@ void parser::newServer(void)
 		else if (!_buf.compare(0, 12, "upload_store"))
 			n_srv.setServer(9, 12, _buf);
 		else if (!_buf.compare(0, 4, "root"))
-			n_srv.setServer(9, 4, _buf);
+			n_srv.setServer(10, 4, _buf);
 		else continue;		// BIG ERROR TO DO
 	}
 	_srv.push_back(n_srv);
