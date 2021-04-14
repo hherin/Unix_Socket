@@ -8,6 +8,12 @@ visible [USASCII] character).
 As a convention, ABNF rule names prefixed with "obs-" denote
 "obsolete" grammar rules that appear for historical reasons.
 
+>>>> 1) Receive la requete correctement en fonction des headers
+>>>> 2) Check si la requete est correcte au niveau du parsing (peut se faire au fur et à mesure)
+>>>> 3) Pour GET: voir si la requete est authorizee, puis content negociation
+>>>> 4) Ajout des Headers
+>>>> 5) envoi
+
 _______________________________________________________________
 ____________________________ 7230 _____________________________
 

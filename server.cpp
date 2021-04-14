@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 13:53:22 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/02 18:02:20 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/14 11:59:19 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ void	Server::cliConnect()
 			if (all_connections[i] >= 0)
 				FD_SET(all_connections[i], &_readfd);
 		
-		// if ((selectval = select(FD_SETSIZE, &_readfd, NULL, NULL, setTimeval())) < 0){
 		if ((selectval = select(FD_SETSIZE, &_readfd, NULL, NULL, NULL)) < 0){				// change SETSIZE for more efficiency
 			perror("ERROR on select");
 			exit(1);
