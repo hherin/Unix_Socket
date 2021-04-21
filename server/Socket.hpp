@@ -36,11 +36,14 @@ class Socket
 
 	public:
 
+		// Initialize variables
 		Socket(int port, int maxClient);
 		~Socket();
 		
+		// Return socket id
 		int getAcceptSocketFd() const;
 		
+		// Create a TCP socket listening on a specific port for x clients
 		void createSocket();
 
 }; // class Socket

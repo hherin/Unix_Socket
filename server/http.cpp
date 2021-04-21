@@ -6,11 +6,12 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 13:53:22 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 14:17:02 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/21 16:08:54 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/http.hpp"
+#include <iostream>
 
 http::http() : _port(3490) 
 {
@@ -160,6 +161,8 @@ void	http::cliConnect()
 	while (true){
 		FD_ZERO(&_readfd);
 		
+		// std::cout << "socket = " << _sockfd << "\n";
+
 		for (int i = 0; i < MAX_CONNECTIONS; i++)
 			if (all_connections[i] >= 0)
 				FD_SET(all_connections[i], &_readfd);

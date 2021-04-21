@@ -17,7 +17,7 @@ Socket::Socket(int port, int maxClient) :
 
 Socket::~Socket() {}
 	
-int Socket::getAcceptSocketFd() { return _acceptFd; }
+int Socket::getAcceptSocketFd() const { return _acceptFd; }
 
 void Socket::createSocket()
 {

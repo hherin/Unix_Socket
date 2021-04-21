@@ -6,7 +6,7 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/14 16:45:54 by llefranc         ###   ########.fr        #
+#    Updated: 2021/04/21 15:54:54 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,6 @@ HDRS		=	includes/http.hpp server/HttpServer.hpp server/Socket.hpp
 CC			=	clang++
 
 FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
-
-
 
 
 all			:	${NAME}
