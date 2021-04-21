@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/21 16:23:13 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/21 16:24:50 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void HttpServer::requestHandler()
 		if (FD_ISSET(*it, &_readFds))
 		{
 			std::cout << "request handler\n";
-			char buffer[256];
-			bzero(buffer, 256);
-			int n = recv(*it, buffer, 255, 0);
+			char buffer[2];
+			bzero(buffer, 2);
+			int n = recv(*it, buffer, 1, 0);
 
 			if (n < 0)
 				throw "Error on recv function\n";
@@ -77,7 +77,7 @@ void HttpServer::requestHandler()
 				continue ;
 			}
 
-			std::cout << "message is: " << buffer << "\n\n";
+			std::cout << "message is: " << static_cast<int>(buffer[0]) << "\n\n";
 		}
 	}
 }
