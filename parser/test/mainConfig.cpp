@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   mainConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 17:17:03 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/22 12:40:11 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,14 @@ int main(int ac, char **av)
 		exit(0);
 	}
 
-	FileParser p(av[1]);
+	FileParser config(av[1]);
 	
-	p.getfile();
+	FileParser outFile("./Makefile");
 
-	std::map<int, std::vector<ServerInfo> > map = p.getMapServer();
+	std::cout << "FILE " << outFile.getOutputFile() << std::endl;
 	
+	std::map<int, std::vector<ServerInfo> > map = config.getConfig();
+ 	
 	for (std::map<int, std::vector<ServerInfo> >::iterator it = map.begin(); it != map.end(); it++){
 		std::cout << "===========================================================\n";
 		std::cout << "=========================== " << it->first << " =========================\n";

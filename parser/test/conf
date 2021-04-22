@@ -28,6 +28,9 @@ server {
 		root 		./www/tester/YoupiBanane
 		index 		youpi.bad_extension
 
+
+
+
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
 	}
 }

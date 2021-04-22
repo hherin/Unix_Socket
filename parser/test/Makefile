@@ -6,40 +6,59 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/14 17:17:47 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/22 14:28:55 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	parser
+NAMEConfig		=	parserConfig
 
-SRCS		=	main.cpp ../FileParser.cpp ../ServerInfo.cpp
+NAMEfile		=	parserFile
 
-OBJS		=	${SRCS:.cpp=.o}
+SRCS			=	../ServerInfo.cpp ../FileParser.cpp
 
-HDRS		=	../../includes/FileParser.hpp ../../includes/ServerInfo.hpp
+SRCSCONF		=	mainConfig.cpp
 
-CC			=	clang++
+SRCSFILE		=	mainFile.cpp
 
-FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
+OBJS			=	${SRCS:.cpp=.o}
+
+OBJSCONF		=	${SRCSCONF:.cpp=.o}
+
+OBJSFILE		=	${SRCSFILE:.cpp=.o}
+
+HDRS			=	../../includes/FileParser.hpp ../../includes/ServerInfo.hpp
+
+CC				=	clang++
+
+FLAGS			=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 
-all			:	${NAME}
+all				:	${NAMEconfig} ${NAMEfile}
 
-${NAME}		:	${OBJS}
-				@${CC} ${FLAGS} -o ${NAME} ${OBJS}
-				@echo "parser is ready";
+config			:	${NAMEconfig}
 
-%.o			:	%.cpp
-				@${CC} ${FLAGS} -o $@ -c $<
+file			:	${NAMEfile}
 
-${OBJS}		:	${HDRS}
+%.o				:	%.cpp
+					${CC} ${FLAGS} -o $@ -c $<
 
-clean		:
-				@rm -rf *.o ../*.o
+${NAMEconfig}	:	${OBJS} ${OBJSCONF}
+					@${CC} ${FLAGS} -o ${NAMEconfig} ${OBJSCONF} ${OBJS}
+					@echo "parserConfig is ready";
 
-fclean		:	clean
-				@rm -rf ${NAME}
+${NAMEfile}		:	${OBJSFILE} ${OBJS} 
+					${CC} ${FLAGS} -o ${NAMEfile} ${OBJSFILE} ${OBJS}
+					@echo "parserFile is ready";
 
-re			:	fclean all
 
-.PHONY		:	all clean fclean re
+${OBJS}			:	${HDRS}
+
+clean			:
+					@rm -rf *.o ../*.o
+
+fclean			:	clean
+					@rm -rf ${NAMEconfig} ${NAMEfile}
+
+re				:	fclean all
+
+.PHONY			:	all clean fclean re

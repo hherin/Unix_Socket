@@ -4,35 +4,36 @@
 # include <fstream>
 # include <string>
 # include <map>
-# include "ServerInfo.hpp"
-
 # include <cctype>  // function isspace
 # include <iostream>
+# include "ServerInfo.hpp"
+
 
 class FileParser 
 {
     public:
-        FileParser(char*);
+        FileParser(const char*);
 
         ~FileParser();
 
-        void getfile();
+        void parseConfigFile();
 
-        std::vector<ServerInfo> const &getServer() { return _srv; }
-        std::map<int, std::vector<ServerInfo> > const &getMapServer() { return _m_srv; }
+        void parseOutputFile();
+        
+        std::string const& getOutputFile();
+
+        std::map<int, std::vector<ServerInfo> > const &getConfig();
 
     private:
-        std::string _conf;
         std::ifstream _file;
         std::string _buf;
-        std::vector<ServerInfo> _srv;
-        int _in, _out;
+        int _bracket;
+        std::map<int, std::vector<ServerInfo> > _m_srv;
+        std::string _outputFile;
+
         void newServer(void);
         void newLocation(ServerInfo &);
         void addNewServerToMap(ServerInfo &);
-        std::map<int, std::vector<ServerInfo> > _m_srv;
-        
-
 };
 
 
