@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Socket.cpp                                      :+:      :+:    :+:   */
+/*   ServerSocket.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,24 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Socket.hpp"
+#include "ServerSocket.hpp"
 
-Socket::Socket(int port, int maxClient) :
+ServerSocket::ServerSocket(int port, int maxClient) :
 	_port(port), _maxClient(maxClient) {}
 
-Socket::~Socket() {}
+ServerSocket::~ServerSocket() {}
 	
-int Socket::getAcceptSocketFd() const { return _acceptFd; }
+ServerSocket::ServerSocket(const ServerSocket& copy) :
+		_fd(copy._fd) {}
 
-void Socket::createSocket()
+ServerSocket& ServerSocket::operator=(ServerSocket assign)
+{
+	swap(assign, *this);
+	return *this;
+}
+	
+int ServerSocket::getFd() const { return _fd; }
+
+void ServerSocket::createSocket()
 {
 	// Creating a TCP socket
-	if ((_acceptFd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	if ((_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		throw "Error initialization socket\n";
 
 	// Setting its options
 	int yes = true;
-	if (setsockopt(_acceptFd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
+	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
 		throw "Error setting socket option\n";
 	
 	// Initializing structure for socket information (IP, port..)
@@ -38,10 +47,16 @@ void Socket::createSocket()
 	socketAddr.sin_port = htons(_port);
 	
 	// Binding the socket to a port
-	if (bind(_acceptFd, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) < 0)
+	if (bind(_fd, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) < 0)
 		throw "Error during bind function\n";
 
-	listen(_acceptFd, _maxClient);
+	listen(_fd, _maxClient);
 	std::cout << "http-socket() succesfully created on port " << _port << "\n";
 }
 
+//private
+
+void swap(ServerSocket& a, ServerSocket& b)
+{
+	std::swap(a._fd, b._fd);
+}

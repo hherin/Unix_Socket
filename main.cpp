@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/21 16:09:29 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/22 15:07:44 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 //     return 0;
 // }
 
-#include "server/Socket.hpp"
+#include "server/ServerSocket.hpp"
 #include "server/HttpServer.hpp"
 
 #include <vector>
@@ -39,7 +39,7 @@ int main()
 	try
 	{
 		for (int i = 0; i < 1; ++i)
-			server.addAcceptSocket(Socket(sockArray[i], 5));
+			server.addAcceptSocket(ServerSocket(sockArray[i], 5));
 	}
 	catch (const char* msg)
 	{
@@ -56,7 +56,7 @@ int main()
 
 int main()
 {
-	Socket s1(port, max client);
+	ServerSocket s1(port, max client);
 
 	s1.create();
 
