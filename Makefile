@@ -6,7 +6,7 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/22 15:05:42 by llefranc         ###   ########.fr        #
+#    Updated: 2021/04/22 15:49:09 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ ${NAME}		:	${OBJS}
 ${OBJS}		:	${HDRS}
 
 clean		:
-				@rm -rf *.o
+				@rm -rf 
 
 fclean		:	clean
 				@rm -rf ${NAME}
