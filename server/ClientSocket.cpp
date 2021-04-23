@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/23 15:26:00 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/23 18:15:40 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ ClientSocket& ClientSocket::operator=(ClientSocket assign)
 
 int ClientSocket::getFd() const { return _fd; }
 
-const std::string& ClientSocket::getRequest() const { return _request; }
+const Request& ClientSocket::getRequest() const { return _request; }
 
 const std::string& ClientSocket::getResponse() const { return _response; }
 
@@ -39,6 +39,8 @@ const std::string& ClientSocket::getResponse() const { return _response; }
 int ClientSocket::receiveRequest(const char* buffer)
 {
 	_request += buffer;
+	_request.parsingCheck();
+
 	return 0;
 }
 

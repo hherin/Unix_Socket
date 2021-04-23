@@ -17,11 +17,11 @@ As a convention, ABNF rule names prefixed with "obs-" denote
 _______________________________________________________________
 ____________________________ 7230 _____________________________
 
-2.6.  Protocol Versioning
+>> 2.6.  Protocol Versioning
 	- PAGE 13 : clarifie comment il doit etre ecrit
 	- PAGE 14 : erreur 505 explique si mauvais Protocol
 
-2.7.  Uniform Resource Identifiers (URI)
+>> 2.7.  Uniform Resource Identifiers (URI)
 	- PAGE 16 : bref explication sur comment est un uri
 
 2.7.1.  http URI Scheme
@@ -30,34 +30,34 @@ ____________________________ 7230 _____________________________
 2.7.3.  http and https URI Normalization and Comparison
 	- PAGE 18 : explication sur les URI qui se ressemble (avec hexa par ex)
 
-3.  Message Format
+>> 3.  Message Format
 	- PAGE 19 : decrit la structure d'un Message
 
-3.1.  Start Line
+>> 3.1.  Start Line
 	- PAGE 20,21 : decrit la structure de la start line (request line / status line)
 
-3.2.  Header Fields
+>> 3.2.  Header Fields
 	- PAGE 22-26 : decrit la structure d'un Header
 
-3.3.  Message Body
+>> 3.3.  Message Body
 	- PAGE 27 : quelques regles sur le Body
 
-3.3.1.  Transfer-Encoding [HEADER]
+>> 3.3.1.  Transfer-Encoding [HEADER]
 	- PAGE 27-28 : requete >> explique les body chunk
 					reponse >> comment le server doit parfois inclure ce header ou non
 	- PAGE 35-36 : plus d'info sur comment sont fait les chunks
 
-3.3.2.  Content-Length [HEADER]
+>> 3.3.2.  Content-Length [HEADER]
 	- PAGE 29-30 : requete >> explique quand celui-ci doit etre present ou non, 
 					son role et quand renvoyer une erreur
 					reponse >> indique les cas ou le srveur doit inclure ou non celui-ci
 	- PAGE 35-36 : informations additionnelles sur les erreurs que peut generer le server vis-a-vis
 					ce header et la taille du body
 
-3.4.  Handling Incomplete Messages
+>> 3.4.  Handling Incomplete Messages
 	- PAGE 33 : cas des erreurs dans le cas ou la requete est Incomplete
 
-3.5.  Message Parsing Robustness
+>> 3.5.  Message Parsing Robustness
 	- PAGE 34 : serveur doit renvoyer erreur 400 si parsing requete faux
 
 5.3.  Request Target
@@ -71,7 +71,7 @@ ____________________________ 7230 _____________________________
 	- PAGE 44 : explique comment reconstruire l'URI qui va etre utilisé pour la recherche
 				>> URI + config file + header Host
 
-7.  ABNF List Extension: #rule
+>> 7.  ABNF List Extension: #rule
 	- PAGE 58-59 : explique le format attendu pour la liste d'elements qui peuvent etre present dans les headers
 
 

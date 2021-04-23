@@ -6,19 +6,19 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/22 15:49:30 by llefranc         ###   ########.fr        #
+#    Updated: 2021/04/23 18:14:03 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	webserv
 
 SRCS		=	main.cpp server/HttpServer.cpp parser/server.cpp parser/parser.cpp \
-				server/ServerSocket.cpp server/ClientSocket.cpp
+				server/ServerSocket.cpp server/ClientSocket.cpp server/Request.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 
 HDRS		=	includes/http.hpp server/HttpServer.hpp server/ServerSocket.hpp \
-				server/ClientSocket.hpp
+				server/ClientSocket.hpp server/Request.hpp
 
 CC			=	clang++
 
