@@ -6,14 +6,14 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/22 15:34:00 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/23 15:26:00 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientSocket.hpp"
 
 ClientSocket::ClientSocket(int fd) :
-		_fd(fd) {}
+		_fd(fd), _request(), _response() {}
 
 ClientSocket::~ClientSocket() {}
 
@@ -26,7 +26,21 @@ ClientSocket& ClientSocket::operator=(ClientSocket assign)
 	return *this;
 }
 
+// Getters
+
 int ClientSocket::getFd() const { return _fd; }
+
+const std::string& ClientSocket::getRequest() const { return _request; }
+
+const std::string& ClientSocket::getResponse() const { return _response; }
+
+// Methods
+
+int ClientSocket::receiveRequest(const char* buffer)
+{
+	_request += buffer;
+	return 0;
+}
 
 //private
 

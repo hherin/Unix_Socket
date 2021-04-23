@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/22 15:31:41 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/23 15:25:38 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,14 @@ class ClientSocket
 
 		// Return socket id
 		int getFd() const;
+
+		// Return request
+		const std::string& getRequest() const;
+
+		// Return response
+		const std::string& getResponse() const;
+	
+		int receiveRequest(const char* buffer);
 	
 	private:
 
