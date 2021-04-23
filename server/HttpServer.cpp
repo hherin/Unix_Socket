@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/22 15:43:51 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/22 15:51:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,6 @@ void HttpServer::requestHandler()
 		}
 	}
 }
-
-// void HttpServer::addSocketsToFdSet(std::list<int>& sockets)
-// {
-// 	for (std::list<int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
-// 		FD_SET(*it, &_readFds);
-// }
 
 void HttpServer::connectNewClients()
 {
