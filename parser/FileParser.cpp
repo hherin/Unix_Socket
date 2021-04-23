@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fileParser.cpp                                     :+:      :+:    :+:   */
+/*   FileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/22 14:32:29 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/23 15:48:00 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/FileParser.hpp"
+#include "FileParser.hpp"
 
 FileParser::FileParser(const char *filepath) : _bracket(0) { _file.open(filepath); }
 

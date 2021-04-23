@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   serverInfo.cpp                                     :+:      :+:    :+:   */
+/*   ServerInfo.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 17:19:08 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/23 15:48:08 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ServerInfo.hpp"
+#include "ServerInfo.hpp"
 
 ServerInfo::ServerInfo() : _max_clients(5), _autoindex(0)  { }
 
