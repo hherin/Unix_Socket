@@ -3,26 +3,26 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
+#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/14 17:17:22 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/23 15:11:57 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	webserv
 
-SRCS		=	main.cpp server/http.cpp parser/ServerInfo.cpp parser/FileParser.cpp
+SRCS		=	main.cpp server/HttpServer.cpp parser/server.cpp parser/parser.cpp \
+				server/ServerSocket.cpp server/ClientSocket.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 
-HDRS		=	includes/http.hpp
+HDRS		=	includes/http.hpp server/HttpServer.hpp server/ServerSocket.hpp \
+				server/ClientSocket.hpp
 
 CC			=	clang++
 
 FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
-
-
 
 
 all			:	${NAME}
@@ -37,7 +37,7 @@ ${NAME}		:	${OBJS}
 ${OBJS}		:	${HDRS}
 
 clean		:
-				@rm -rf *.o
+				@rm -rf $(OBJS) 
 
 fclean		:	clean
 				@rm -rf ${NAME}
