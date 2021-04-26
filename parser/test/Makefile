@@ -6,42 +6,59 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/12 16:59:16 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/22 14:28:55 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	parser
+NAMEConfig		=	parserConfig
 
-SRCS		=	main.cpp ../parser.cpp ../server.cpp
+NAMEfile		=	parserFile
 
-OBJS		=	${SRCS:.cpp=.o}
+SRCS			=	../ServerInfo.cpp ../FileParser.cpp
 
-HDRS		=	../../includes/parser.hpp ../../includes/server.hpp
+SRCSCONF		=	mainConfig.cpp
 
-CC			=	clang++
+SRCSFILE		=	mainFile.cpp
 
-FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
+OBJS			=	${SRCS:.cpp=.o}
+
+OBJSCONF		=	${SRCSCONF:.cpp=.o}
+
+OBJSFILE		=	${SRCSFILE:.cpp=.o}
+
+HDRS			=	../../includes/FileParser.hpp ../../includes/ServerInfo.hpp
+
+CC				=	clang++
+
+FLAGS			=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
 
+all				:	${NAMEconfig} ${NAMEfile}
+
+config			:	${NAMEconfig}
+
+file			:	${NAMEfile}
+
+%.o				:	%.cpp
+					${CC} ${FLAGS} -o $@ -c $<
+
+${NAMEconfig}	:	${OBJS} ${OBJSCONF}
+					@${CC} ${FLAGS} -o ${NAMEconfig} ${OBJSCONF} ${OBJS}
+					@echo "parserConfig is ready";
+
+${NAMEfile}		:	${OBJSFILE} ${OBJS} 
+					${CC} ${FLAGS} -o ${NAMEfile} ${OBJSFILE} ${OBJS}
+					@echo "parserFile is ready";
 
 
-all			:	${NAME}
+${OBJS}			:	${HDRS}
 
-${NAME}		:	${OBJS}
-				@${CC} ${FLAGS} -o ${NAME} ${OBJS}
-				@echo "parser is ready";
+clean			:
+					@rm -rf *.o ../*.o
 
-%.o			:	%.cpp
-				@${CC} ${FLAGS} -o $@ -c $<
+fclean			:	clean
+					@rm -rf ${NAMEconfig} ${NAMEfile}
 
-${OBJS}		:	${HDRS}
+re				:	fclean all
 
-clean		:
-				@rm -rf *.o ../*.o
-
-fclean		:	clean
-				@rm -rf ${NAME}
-
-re			:	fclean all
-
-.PHONY		:	all clean fclean re
+.PHONY			:	all clean fclean re

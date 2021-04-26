@@ -1,5 +1,5 @@
 server {
-    listen 	8080
+	listen 	8080
     error	./www/tester/error
 	server_name	server1
 	host	localhost
@@ -27,10 +27,14 @@ server {
 		allow_method 	    GET POST
 		root 		./www/tester/YoupiBanane
 		index 		youpi.bad_extension
-		
+
+
+
+
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
 	}
 }
+
 
 server {
     listen 	8081
@@ -82,6 +86,14 @@ server {
 		index		index.html
 		max_body	100
 	}
+}
+
+server {
+	listen 	8080
+    error	./www/tester/paco
+	server_name	sbfg
+	host	localhostl
+
 }
 
 server {

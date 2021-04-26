@@ -1,63 +1,83 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.cpp                                         :+:      :+:    :+:   */
+/*   fileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 14:05:24 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/22 14:32:29 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/FileParser.hpp"
 
-#include "../includes/parser.hpp"
+FileParser::FileParser(const char *filepath) : _bracket(0) { _file.open(filepath); }
 
-parser::parser(char *filepath) : _conf(filepath), _in(0), _out(0) { _file.open(_conf.c_str()); }
+FileParser::~FileParser() { _file.close(); }
 
-parser::~parser() { _file.close(); }
-
-int	blockRegulator(int &in, int &out, std::string const &buf)
+int	bracketRegulator(int &bracket, std::string const &buf)
 {
 	size_t pos = -1; 
 	while ( (pos = buf.find_first_of('{', pos + 1)) != std::string::npos) 
-		in++;
+		bracket++;
 	
 	pos = -1;
 	while ( (pos = buf.find_first_of('}', pos + 1)) != std::string::npos)
-		out++;
+		bracket--;
 	return 1;
 }
 
-void parser::getfile()
+void FileParser::parseOutputFile()
+{
+	while (std::getline(_file, _buf))
+		_outputFile.append(_buf + "\n");
+}
+
+std::string const& FileParser::getOutputFile() { parseOutputFile(); return _outputFile; }
+
+void FileParser::parseConfigFile()
 {
 	while (std::getline(_file, _buf)){
 		if (_buf.find_first_of("server") != std::string::npos){
-			_in = 0; _out = 0;
-			blockRegulator(_in, _out, _buf);
+			_bracket = 0;
+			bracketRegulator(_bracket, _buf);
 			newServer();
 		}
+		else continue; // ERREUR 
 	}
 }
 
-void parser::newLocation(server &srv)
+int	cleanLineFromSpaces(std::string &buf)
 {
-	server n_loc;
-	int inL = 0, outL = 0;
+	int i = 0;
+	while (isspace(buf[i]))
+		buf.erase(0, 1);
+
+	if (buf.size()){
+		i = buf.size() - 1;
+		while (isspace(buf[i]))
+			buf.erase(i, 1);
+	}
+	return 0;
+}
+
+// check bracket la ou il faut pas
+void FileParser::newLocation(ServerInfo &srv)
+{
+	ServerInfo n_loc;
+	int brack = 0;
 	
-	blockRegulator(inL, outL, _buf);
+	bracketRegulator(brack, _buf);
 	if (!_buf.compare(0, 8, "location")){
 		(!_buf.compare(_buf.size() - 1, 1, "{")) ? _buf.erase(_buf.size() - 1, 1) : 0;
 		n_loc.setServer(2, 8, _buf);
 	}
-	while (inL != outL)
+	while (brack > 0)
 	{
-		// std::cout << "LINELOC " << _buf << "\n";
 		std::getline(_file, _buf);
-		int i = 0;
-		while (isspace(_buf[i]))
-			_buf.erase(0, 1);
-		blockRegulator(inL, outL, _buf);
+		cleanLineFromSpaces(_buf);
+		bracketRegulator(brack, _buf);
 		
 		if (!_buf.compare(0, 6, "listen"))
 			n_loc.setServer(0, 6, _buf);
@@ -83,33 +103,19 @@ void parser::newLocation(server &srv)
 			n_loc.setServer(10, 4, _buf);
 		else continue;
 	}
-	_out++;
+	_bracket--;
 	srv.setLocation(n_loc);
 }
 
-void	cleanLineFromSpaces(std::string &buf)
+void FileParser::newServer(void)
 {
-	int i = 0;
-	while (isspace(buf[i]))
-		buf.erase(0, 1);
+	ServerInfo n_srv;
 
-	i = buf.size() - 1;
-	while (isspace(buf[i]))
-		buf.erase(i, 1);
-}
-
-
-void parser::newServer(void)
-{
-	server n_srv;
-
-	while (_in != _out)
+	while (_bracket > 0)
 	{
 		std::getline(_file, _buf);
-		int i = 0;
-		while (isspace(_buf[i]))
-			_buf.erase(0, 1);
-		blockRegulator(_in, _out, _buf);
+		cleanLineFromSpaces(_buf);
+		bracketRegulator(_bracket, _buf);
 
 		if (!_buf.compare(0, 8, "location"))	
 			newLocation(n_srv);
@@ -137,5 +143,23 @@ void parser::newServer(void)
 			n_srv.setServer(10, 4, _buf);
 		else continue;		// BIG ERROR TO DO
 	}
-	_srv.push_back(n_srv);
+	addNewServerToMap(n_srv);
 }
+
+void FileParser::addNewServerToMap(ServerInfo &srv)
+{
+	std::vector<int> s_port = srv.getPort();
+
+	for (size_t i = 0; i < s_port.size(); i++){
+		std::map<int, std::vector<ServerInfo> >::iterator it = _m_srv.find(s_port[i]);
+		
+		if (it == _m_srv.end()){
+			std::vector<ServerInfo> v_srv(1, srv);
+			_m_srv.insert(std::pair<int, std::vector<ServerInfo> >(s_port[i], v_srv));
+		}
+		else
+			it->second.push_back(srv);
+	}
+}
+
+std::map<int, std::vector<ServerInfo> > const &FileParser::getConfig() { parseConfigFile(); return _m_srv; }

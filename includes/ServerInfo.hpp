@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.hpp                                         :+:      :+:    :+:   */
+/*   serverInfo.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/13 16:45:43 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/14 17:14:58 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef SERVERINFO_HPP
+# define SERVERINFO_HPP
 
 # include <vector>
 # include <string>
 # include <cstring>
 
-class server
+class ServerInfo
 {
 	private:
 		int _max_clients;						//
@@ -31,13 +31,13 @@ class server
 		std::vector<std::string> _allow_methd;	//
 		std::vector<std::string> _index;		//
 		std::vector<int> _port;					//
-		std::vector<server> _location;			//
+		std::vector<ServerInfo> _location;		//
 		
 
 	public:
-		server();
+		ServerInfo();
 		
-		~server();
+		~ServerInfo();
 		
 		int const &getMaxClientsBS();	
 
@@ -61,11 +61,11 @@ class server
 		
 		std::vector<int> const &getPort();
 
-		std::vector<server> const &getLocation();
+		std::vector<ServerInfo> const &getLocation();
 		
 		void setServer(int, int const&, std::string const&);
 
-		void setLocation(server &);
+		void setLocation(ServerInfo &);
 		
 	private:
 		void setMaxClientsBS(char const*);

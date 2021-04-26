@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/23 16:04:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/26 11:07:24 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,30 @@
 
 #include "server/ServerSocket.hpp"
 #include "server/HttpServer.hpp"
-
+#include "includes/FileParser.hpp"
 #include <vector>
 #include <list>
 
-int main()
+int main(int ac, char **av)
 {
-
+    if (ac != 2)
+    {
+        std::cerr << "Wrong output\n";
+        exit(1);
+    }
+    
+    FileParser conf(av[1]);
+    
+    std::map<int, std::vector<ServerInfo> > m_srv = conf.getConfig();
 	// PARTIE PARSEUR
 
 	// boucle pour add tous les sockets >> ou les mettre dans la boucle en dessous ?
-	int sockArray[] = {3490, 3491};
+    std::vector<int> sockArray;
+    for (std::map<int, std::vector<ServerInfo> >::iterator it = m_srv.begin(); it != m_srv.end(); it++)
+        sockArray.push_back(it->first);
+    
+    std::cout << "NB socket " << sockArray.size() << "\n";
+	// int sockArray[] = {3490};
 
 	HttpServer server;
 
