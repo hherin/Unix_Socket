@@ -6,13 +6,13 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/22 14:38:42 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/22 14:40:01 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	webserv
 
-SRCS		=	main.cpp server/HttpServer.cpp parser/server.cpp parser/parser.cpp \
+SRCS		=	main.cpp server/HttpServer.cpp parser/FileParser.cpp parser/ServerInfo.cpp \
 				server/Socket.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
