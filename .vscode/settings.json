@@ -3,6 +3,7 @@
 		"exception": "cpp",
 		"system_error": "cpp",
 		"vector": "cpp",
-		"list": "cpp"
+		"list": "cpp",
+		"iosfwd": "cpp"
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/22 15:44:12 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/23 15:27:51 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ class HttpServer
 		~HttpServer();
 
 		// Create the socket and add socket id + socket fd
-		void addAcceptSocket(ServerSocket sock);
+		void addServerSocket(ServerSocket sock);
 		
 		// Store the client fd when a connection is etablished
-		void addClient(int fdNewClient);
+		void addClientSocket(int fdNewClient);
 		
 		// Infinite loop, sets fd_set with all fds for passive accept sockets + connected clients
 		void etablishConnection();

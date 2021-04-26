@@ -6,24 +6,25 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/22 15:51:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/23 16:29:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpServer.hpp"
 
-HttpServer::HttpServer() {}
+HttpServer::HttpServer() 
+	: _serverSocks(), _clientSocks(), _nbReadyFds() {}
 
 HttpServer::~HttpServer() {}
 
-void HttpServer::addAcceptSocket(ServerSocket sock)
+void HttpServer::addServerSocket(ServerSocket sock)
 {
 	// Creating the socket and binding it to a port
 	sock.createSocket();
 	_serverSocks.push_back(sock);
 }
 
-void HttpServer::addClient(int fdNewClient)
+void HttpServer::addClientSocket(int fdNewClient)
 {
 	_clientSocks.push_back(ClientSocket(fdNewClient));
 }
@@ -37,12 +38,14 @@ void HttpServer::etablishConnection()
 		addSocketsToFdSet<ServerSocket>(_serverSocks);
 		addSocketsToFdSet<ClientSocket>(_clientSocks);
 
-		std::cout << "avant select\n";
+		// Permet de read les requetes;
+		// for (std::pair<int, std::list<ClientSocket>::iterator> i(0, _clientSocks.begin());
+		// 		i.second != _clientSocks.end(); ++i.first, ++i.second)
+		// 	std::cout << "Client " << i.first << " request: " << i.second->getRequest() << "\n";
 		
+		// Waiting for incoming connections on server sockets / client sockets
 		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, NULL, NULL, NULL)) < 0)
 			throw "Error on select function\n";
-
-		std::cout << "select ok\n";
 
 		// If a passive socket was activated, creates a new client connection
 		connectNewClients();
@@ -56,7 +59,7 @@ void HttpServer::requestHandler()
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			std::cout << "request handler\n";
+			// std::cout << "request handler\n";
 			char buffer[2];
 			bzero(buffer, 2);
 			int n = recv(it->getFd(), buffer, 1, 0);
@@ -64,18 +67,20 @@ void HttpServer::requestHandler()
 			if (n < 0)
 				throw "Error on recv function\n";
 				
-			// Closing the connection
+			// Closing the connection (in client destructor)
 			else if (!n)
 			{
 				std::list<ClientSocket>::iterator tmp = ++it;
-				close(tmp->getFd());
 				_clientSocks.erase(tmp);
-				
 				continue ;
 			}
 
-			// reprendre ici
-			std::cout << "message is: " << static_cast<int>(buffer[0]) << "\n\n";
+			// Concatenate buffer to actual stored request
+			it->receiveRequest(buffer);
+
+			// Case no other sockets waiting
+			if (!--_nbReadyFds)
+				break;			
 		}
 	}
 }
@@ -86,8 +91,6 @@ void HttpServer::connectNewClients()
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			std::cout << "connect new clients\n";
-			
 			struct sockaddr_in addrCli;
 			int lenCli = sizeof(addrCli);
 			bzero((char *) &addrCli, sizeof(addrCli));
@@ -97,7 +100,7 @@ void HttpServer::connectNewClients()
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
 				throw "Error while trying to accept a new connection\n";
 			
-			addClient(newClient);
+			addClientSocket(newClient);
 			std::cout << "client succesfully added on fd " << newClient << "\n";
 
 			// Case no other sockets waiting

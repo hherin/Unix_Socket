@@ -1,0 +1,13 @@
+partie qui parse la requete:
+
+2.6.  Protocol Versioning
+2.7.  Uniform Resource Identifiers (URI)
+3.  Message Format
+3.1.  Start Line
+3.2.  Header Fields
+3.3.  Message Body
+3.3.1.  Transfer-Encoding [HEADER]
+3.3.2.  Content-Length [HEADER]
+3.4.  Handling Incomplete Messages
+3.5.  Message Parsing Robustness
+7.  ABNF List Extension: #rule

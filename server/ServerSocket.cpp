@@ -13,7 +13,7 @@
 #include "ServerSocket.hpp"
 
 ServerSocket::ServerSocket(int port, int maxClient) :
-	_port(port), _maxClient(maxClient) {}
+	_port(port), _maxClient(maxClient), _fd() {}
 
 ServerSocket::~ServerSocket() {}
 	

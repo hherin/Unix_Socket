@@ -31,8 +31,8 @@ class ServerSocket
 	private:
 
 		int _port;
-		int	_fd;
 		int _maxClient;
+		int	_fd;
 
 	public:
 
