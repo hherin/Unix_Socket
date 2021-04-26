@@ -6,7 +6,7 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/26 10:59:37 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/26 11:01:49 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRCS		=	main.cpp server/HttpServer.cpp parser/ServerInfo.cpp parser/FileParser.c
 
 OBJS		=	${SRCS:.cpp=.o}
 
-HDRS		=	includes/http.hpp server/HttpServer.hpp server/ServerSocket.hpp \
+HDRS		=	server/HttpServer.hpp server/ServerSocket.hpp \
 				server/ClientSocket.hpp
 
 CC			=	clang++
