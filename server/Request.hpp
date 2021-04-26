@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/23 18:23:18 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/26 13:53:14 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <cctype>
 #include <vector>
 
+#include "../includes/webserv.hpp"
+
 class Request
 {
 	private:
@@ -26,7 +28,8 @@ class Request
 		struct requestLine
 		{
 			int _method;
-			std::string _uri;
+			std::string _path;
+			std::string _query;
 		};
 
 		std::string _buffer;
@@ -50,7 +53,9 @@ class Request
 		friend void swap(Request& a, Request& b);
 
 		void parseStatusLine(size_t posCLRF);
-		void parseMethodToken(const std::string& token) const;
+		void parseMethodToken(const std::string& token);
+		void parseURI(const std::string& token);
+		void parseHTTPVersion(const std::string& token);
 		
 }; // class Request
 

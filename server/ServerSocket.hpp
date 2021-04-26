@@ -26,6 +26,8 @@
 #include <arpa/inet.h> //inet itoa
 #include <sys/time.h>
 
+#include "../includes/webserv.hpp"
+
 class ServerSocket
 {
 	private:

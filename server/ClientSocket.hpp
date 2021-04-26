@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/23 18:15:16 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/26 13:53:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <exception>
 
 #include "Request.hpp"
+#include "../includes/webserv.hpp"
 
 class ClientSocket
 {

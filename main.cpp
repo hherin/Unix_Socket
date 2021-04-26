@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/26 11:19:45 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/26 12:19:20 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int main(int ac, char **av)
 		std::cerr << msg;
 		exit(EXIT_FAILURE);
 	}
-	
 
     return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/23 15:27:51 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/26 13:53:21 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 #include "ServerSocket.hpp"
 #include "ClientSocket.hpp"
+#include "../includes/webserv.hpp"
 
 class ServerSocket;
 class ClientSocket;
