@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 14:02:17 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/26 14:52:56 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void Request::parseURI(const std::string& token)
 	if (querryChar != std::string::npos)
 	{
 		_reqLine._path = token.substr(0, querryChar);
-		_reqLine._query = token.substr(querryChar, token.size());
+		_reqLine._query = token.substr(querryChar + 1, token.size());
 	}
 
 	// Only path is the URI
