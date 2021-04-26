@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/26 13:50:57 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 18:58:31 by lucaslefran      ###   ########.fr       */
+/*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
+/*   Updated: 2021/04/26 19:01:49 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-#define WEBSERV_HPP
+#include "../includes/webserv.hpp"
 
-#include <algorithm>
-
-enum methods { GET, HEAD, PUT, POST, DELETE };
-
-#define MAX_URI_LEN 8000
-#define MAX_HEADER_LEN 8000
-
-char asciiToLower(char in);
-
-#endif
+char asciiToLower(char in)
+{
+    if (in >= 'A' && in <= 'Z')
+        return in + ('a' - 'A');
+    return in;
+}

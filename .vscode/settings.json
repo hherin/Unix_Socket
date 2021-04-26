@@ -1,9 +1,10 @@
 {
 	"files.associations": {
-		"exception": "cpp",
-		"system_error": "cpp",
-		"vector": "cpp",
-		"list": "cpp",
-		"iosfwd": "cpp"
-	}
+        "exception": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "list": "cpp",
+        "iosfwd": "cpp",
+        "algorithm": "cpp"
+    }
 }

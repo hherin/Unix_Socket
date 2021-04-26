@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 13:53:14 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/26 19:01:17 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <string>
 #include <cctype>
 #include <vector>
+#include <map>
 
 #include "../includes/webserv.hpp"
 
@@ -34,7 +35,11 @@ class Request
 
 		std::string _buffer;
 		size_t _index;
+        
 		struct requestLine _reqLine;
+        std::map<std::string, std::string> _headers;
+        bool _recvBody;
+        std::string _body;
 	
 	public:
 
@@ -52,10 +57,12 @@ class Request
 
 		friend void swap(Request& a, Request& b);
 
-		void parseStatusLine(size_t posCLRF);
+		void parseRequestLine(size_t posCLRF);
 		void parseMethodToken(const std::string& token);
-		void parseURI(const std::string& token);
+		void parseURI(std::string token);
 		void parseHTTPVersion(const std::string& token);
+        
+        void parseHeaderField(size_t posCLRF);
 		
 }; // class Request
 
