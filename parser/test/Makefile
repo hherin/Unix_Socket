@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
+#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/22 14:28:55 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/23 15:48:27 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJSCONF		=	${SRCSCONF:.cpp=.o}
 
 OBJSFILE		=	${SRCSFILE:.cpp=.o}
 
-HDRS			=	../../includes/FileParser.hpp ../../includes/ServerInfo.hpp
+HDRS			=	FileParser.hpp ServerInfo.hpp
 
 CC				=	clang++
 

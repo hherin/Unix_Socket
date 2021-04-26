@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Socket.hpp                                      :+:      :+:    :+:   */
+/*   ServerSocket.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SOCKET_HPP
-#define SOCKET_HPP
+#ifndef SERVERSOCKET_HPP
+#define SERVERSOCKET_HPP
 
 #include <iostream>
 #include <string>
@@ -26,26 +26,33 @@
 #include <arpa/inet.h> //inet itoa
 #include <sys/time.h>
 
-class Socket
+class ServerSocket
 {
 	private:
 
 		int _port;
-		int	_acceptFd;
+		int	_fd;
 		int _maxClient;
 
 	public:
 
 		// Initialize variables
-		Socket(int port, int maxClient);
-		~Socket();
+		ServerSocket(int port, int maxClient);
+		~ServerSocket();
+
+		ServerSocket(const ServerSocket& copy);
+		ServerSocket& operator=(ServerSocket assign);
 		
-		// Return socket id
-		int getAcceptSocketFd() const;
+		// Return socket file descriptor
+		int getFd() const;
 		
 		// Create a TCP socket listening on a specific port for x clients
 		void createSocket();
+	
+	private:
 
-}; // class Socket
+		friend void swap(ServerSocket& a, ServerSocket& b);
+
+}; // class ServerSocket
 
 #endif

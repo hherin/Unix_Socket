@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   mainFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 12:39:49 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/22 14:27:37 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/23 15:48:15 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/FileParser.hpp"
+#include "FileParser.hpp"
 #include <iostream>
 
 int main()

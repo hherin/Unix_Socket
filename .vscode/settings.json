@@ -2,6 +2,7 @@
 	"files.associations": {
 		"exception": "cpp",
 		"system_error": "cpp",
-		"vector": "cpp"
+		"vector": "cpp",
+		"list": "cpp"
 	}
 }

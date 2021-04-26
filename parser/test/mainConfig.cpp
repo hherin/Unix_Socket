@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   mainConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/22 12:40:11 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/23 15:48:20 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/FileParser.hpp"
+#include "FileParser.hpp"
 
 #include <iostream>
 
