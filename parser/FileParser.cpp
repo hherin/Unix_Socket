@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FileParser.cpp                                     :+:      :+:    :+:   */
+/*   fileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:11:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:34:40 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FileParser.hpp"
 
-FileParser::FileParser(const char *filepath) : _bracket(0), cli_srv(0) { _file.open(filepath); }
+FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePath(filepath) { _file.open(filepath); }
 
-FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), cli_srv(cli_srv) { _file.open(filepath); }
+FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
 
-FileParser::~FileParser() { (void)cli_srv; _file.close(); }
+FileParser::~FileParser() { _file.close(); }
 
 void FileParser::parseRequestFile()
 {
-	if (!cli_srv){
+	if (!_cli_srv){
 		std::cerr << "Wrong construteur\n";
 		exit(1);
+	}
+	std::vector<ServerInfo> loc = _cli_srv->getLocation();
+	for (size_t i = 0; i < loc.size(); i++){
+		std::vector<std::string > locName = loc[i].getNames();
+		for (size_t j = 0; j < locName.size(); j++){
+			if (locName[j] == _filePath){
+				
+			}
+		}
 	}
 	while (std::getline(_file, _buf))
 		_requestFile.append(_buf + "\n");
@@ -32,7 +41,7 @@ std::string const& FileParser::getRequestFile() { parseRequestFile(); return _re
 
 void FileParser::parseConfigFile()
 {
-	if (cli_srv){
+	if (_cli_srv){
 		std::cerr << "Wrong construteur\n";
 		exit(1);
 	}

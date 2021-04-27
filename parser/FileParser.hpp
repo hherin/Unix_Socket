@@ -26,7 +26,8 @@ class FileParser
         int _bracket;
         std::map<int, std::vector<ServerInfo> > _m_srv;
         std::string _requestFile;
-        ServerInfo *cli_srv;
+        ServerInfo *_cli_srv;
+        std::string _filePath;
 
         void newServer(void);
         void newLocation(ServerInfo &);
