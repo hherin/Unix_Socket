@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:39:09 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:59:59 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ class ClientSocket
 {
 	private:
 
-		int	_fd;
+		int						_fd;
 		std::vector<ServerInfo> _infoVirServs;
-		Request _request;
-		std::string _response;
+		
+		Request					_request;
+		std::string				_response;
 
 	public:
 
@@ -48,6 +49,7 @@ class ClientSocket
 		// Return response
 		const std::string& getResponse() const;
 	
+		// Add buffer into request, and request will parse the new line delimited by CRLF
 		int receiveRequest(const char* buffer);
 	
 	private:

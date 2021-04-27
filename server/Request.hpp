@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 19:01:17 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/04/27 13:58:47 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,21 @@ class Request
 			std::string _query;
 		};
 
-		std::string _buffer;
-		size_t _index;
+		std::string	_buffer;
+		size_t		_index;
         
-		struct requestLine _reqLine;
-        std::map<std::string, std::string> _headers;
-        bool _recvBody;
-        std::string _body;
+		struct requestLine					_reqLine;
+        std::map<std::string, std::string>	_headers;
+        bool								_recvBody;
+        std::string							_body;
 	
 	public:
 
 		Request();
+		Request(const Request& copy);
 		~Request();
 
-		Request(const Request& copy);
 		Request& operator=(Request assign);
-
 		Request& operator+=(const char* charBuffer);
 
 		void parsingCheck();

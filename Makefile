@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+         #
+#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/26 19:01:36 by lucaslefran      ###   ########.fr        #
+#    Updated: 2021/04/27 13:51:18 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		=	webserv
 
 SRCS		=	main.cpp server/HttpServer.cpp parser/ServerInfo.cpp parser/FileParser.cpp \
 				server/ServerSocket.cpp server/ClientSocket.cpp server/Request.cpp \
-				utils/utils.cpp
+				utils/utils.cpp parser/parserUtils.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 

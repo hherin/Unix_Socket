@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 19:04:07 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/04/27 14:04:06 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,16 @@ void Request::parsingCheck()
 
 // Private
 
-// GET HEAD POST PUT DELETE
 
 void Request::parseHeaderField(size_t posCLRF)
 {
     std::string headerLine = _buffer.substr(_index, posCLRF - _index);
     
-    if (headerLine.find_first_of("\r\n\t\v\f") != std::string::npos)
+    if (headerLine.find(":") == std::string::npos)
 		throw "Error 400: bad request: whitespaces not allowed\n";
 }
 
+// Parsing request line
 
 void Request::parseRequestLine(size_t posCLRF)
 {
@@ -109,7 +109,6 @@ void Request::parseRequestLine(size_t posCLRF)
 	if (tokens.size() != 3)
 		throw "Error 400: bad request: a field from request line is missing\n";
 
-	std::cout << "size = " << tokens.size() << "\n";
 
 	// Parsing the request line
 	parseMethodToken(tokens[0]);

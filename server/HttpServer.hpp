@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:31:01 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:53:06 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ class HttpServer
 {
 	private:
 
-		std::list<ServerSocket> _serverSocks;
+		std::list<ServerSocket>	_serverSocks;
 		std::list<ClientSocket>	_clientSocks;
-		fd_set				_readFds;
+		fd_set					_readFds;
 		// fd_set				_writeFds;
-		int					_nbReadyFds;
+		int						_nbReadyFds;
 
 	public:
 

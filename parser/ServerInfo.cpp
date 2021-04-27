@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerInfo.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 13:41:06 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 13:50:11 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,17 @@ void ServerInfo::setMethods(char const *n) { setStringArray(n, _allow_methd); }
 
 void ServerInfo::setIndex(char const *n) { setStringArray(n, _index); }
 
-void ServerInfo::setPort(char const *p) { _port = atoi(p); }
+void ServerInfo::setPort(char const *p) 
+{
+	char *tmp = strdup(p);
+    char *token = strtok(tmp, "\t\v\f\r ");
+
+    while (token){
+        _port.push_back(atoi(token));
+        token = strtok(NULL, "\t\v\f\r ");
+    }
+    delete tmp;
+}
 
 void ServerInfo::setStringArray(char const *n, std::vector<std::string> &v) 
 {
