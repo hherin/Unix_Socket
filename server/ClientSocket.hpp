@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 13:53:42 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:39:09 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,21 @@
 
 #include "Request.hpp"
 #include "../includes/webserv.hpp"
+#include "../parser/ServerInfo.hpp"
 
 class ClientSocket
 {
 	private:
 
 		int	_fd;
+		std::vector<ServerInfo> _infoVirServs;
 		Request _request;
 		std::string _response;
 
 	public:
 
 		// Initialize variables
-		ClientSocket(int fd);
+		ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs);
 		~ClientSocket();
 		
 		ClientSocket(const ClientSocket& copy);

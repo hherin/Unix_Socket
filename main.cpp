@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/26 12:19:20 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:22:07 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int main(int ac, char **av)
 		for (size_t i = 0; i < sockArray.size(); ++i)
 			server.addServerSocket(ServerSocket(sockArray[i], 5));
 			
-		server.etablishConnection();
+		server.etablishConnection(m_srv);
 	}
 	catch (const char* msg)
 	{

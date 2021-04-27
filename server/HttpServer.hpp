@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 13:53:21 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:31:01 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "ServerSocket.hpp"
 #include "ClientSocket.hpp"
 #include "../includes/webserv.hpp"
+#include "../parser/ServerInfo.hpp"
 
 class ServerSocket;
 class ClientSocket;
@@ -43,10 +44,10 @@ class HttpServer
 		void addServerSocket(ServerSocket sock);
 		
 		// Store the client fd when a connection is etablished
-		void addClientSocket(int fdNewClient);
+		void addClientSocket(int fdNewClient, int port, std::map<int, std::vector<ServerInfo> >& mSrv);
 		
 		// Infinite loop, sets fd_set with all fds for passive accept sockets + connected clients
-		void etablishConnection();
+		void etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv);
 
 	private:
 
@@ -59,7 +60,7 @@ class HttpServer
 		}
 
 		// Check all passive accept socket and if one is ready, create a new client connection
-		void connectNewClients();
+		void connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv);
 
 		// Checks all clients connections, and if one is communicating receive his request
 		void requestHandler();

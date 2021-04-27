@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 14:51:12 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:32:51 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void HttpServer::addServerSocket(ServerSocket sock)
 	_serverSocks.push_back(sock);
 }
 
-void HttpServer::addClientSocket(int fdNewClient)
+void HttpServer::addClientSocket(int fdNewClient, int port, std::map<int, std::vector<ServerInfo> >& mSrv)
 {
-	_clientSocks.push_back(ClientSocket(fdNewClient));
+	_clientSocks.push_back(ClientSocket(fdNewClient, mSrv.find(port)->second));
 }
 
-void HttpServer::etablishConnection()
+void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv)
 {
 	while (true)
 	{
@@ -48,7 +48,7 @@ void HttpServer::etablishConnection()
 			throw "Error on select function\n";
 
 		// If a passive socket was activated, creates a new client connection
-		connectNewClients();
+		connectNewClients(mSrv);
 		requestHandler();
 	}
 }
@@ -60,16 +60,9 @@ void HttpServer::requestHandler()
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
 			// std::cout << "request handler\n";
-			// char buffer[2];
-			// bzero(buffer, 2);
-			// int n = recv(it->getFd(), buffer, 1, 0);
-			char buffer[50000];
-			bzero(buffer, 50000);
-			int n = recv(it->getFd(), buffer, 49999, 0);
-			
-			// std::cout << buffer << "\n";
-			// exit(EXIT_FAILURE);
-			
+			char buffer[2];
+			bzero(buffer, 2);
+			int n = recv(it->getFd(), buffer, 1, 0);
 
 			if (n < 0)
 				throw "Error on recv function\n";
@@ -92,7 +85,7 @@ void HttpServer::requestHandler()
 	}
 }
 
-void HttpServer::connectNewClients()
+void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv)
 {
 	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end(); ++it)
 	{
@@ -107,7 +100,7 @@ void HttpServer::connectNewClients()
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
 				throw "Error while trying to accept a new connection\n";
 			
-			addClientSocket(newClient);
+			addClientSocket(newClient, it->getPort(), mSrv);
 			std::cout << "client succesfully added on fd " << newClient << "\n";
 
 			// Case no other sockets waiting

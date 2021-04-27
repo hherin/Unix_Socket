@@ -28,6 +28,8 @@ ServerSocket& ServerSocket::operator=(ServerSocket assign)
 	
 int ServerSocket::getFd() const { return _fd; }
 
+int ServerSocket::getPort() const { return _port; }
+
 void ServerSocket::createSocket()
 {
 	// Creating a TCP socket
