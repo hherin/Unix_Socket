@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 13:49:12 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 14:12:05 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class ServerInfo
 		
 		std::vector<std::string> const &getIndex();
 		
-		std::vector<int> const &getPort();
+		int const &getPort();
 
 		std::vector<ServerInfo> const &getLocation();
 		

@@ -6,11 +6,11 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/27 13:33:40 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/27 14:04:09 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAMEConfig		=	parserConfig
+NAMEconfig		=	parserConfig
 
 NAMEfile		=	parserFile
 
@@ -42,7 +42,7 @@ file			:	${NAMEfile}
 %.o				:	%.cpp
 					${CC} ${FLAGS} -o $@ -c $<
 
-${NAMEconfig}	:	${OBJS} ${OBJSCONF}
+${NAMEconfig}	:	${OBJSCONF} ${OBJS} 
 					@${CC} ${FLAGS} -o ${NAMEconfig} ${OBJSCONF} ${OBJS}
 					@echo "parserConfig is ready";
 

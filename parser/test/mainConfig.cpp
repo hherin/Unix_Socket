@@ -6,11 +6,11 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 11:58:52 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 14:08:55 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "FileParser.hpp"
+#include "../FileParser.hpp"
 
 #include <iostream>
 
@@ -22,10 +22,6 @@ int main(int ac, char **av)
 	}
 
 	FileParser config(av[1]);
-	
-	FileParser outFile("./Makefile");
-
-	std::cout << "FILE " << outFile.getRequestFile() << std::endl;
 	
 	std::map<int, std::vector<ServerInfo> > map = config.getConfigFile();
  	
@@ -55,11 +51,7 @@ int main(int ac, char **av)
 				std::cout << v2[i] << " ";
 			std::cout << std::endl;
 			
-			std::vector<int> v3 = it->second[j].getPort();
-			std::cout << "port : ";
-			for (size_t i = 0; i < v3.size(); i++)
-				std::cout << v3[i] << " ";
-			std::cout << std::endl;
+			std::cout << "port : " << it->second[j].getPort() << "\n";
 			
 			std::cout << "\n------- LOCATION ---------\n";
 			std::vector<ServerInfo> loc = it->second[j].getLocation();
@@ -86,17 +78,8 @@ int main(int ac, char **av)
 					std::cout << v2[i] << " ";
 				(loc[i].getIndex().size()) ? std::cout << std::endl : 0;
 				
-				std::vector<int> v3 = loc[i].getPort();
-				(loc[i].getPort().size()) ? std::cout << "port : " : 0;
-				for (size_t i = 0; i < v3.size(); i++)
-					std::cout << v3[i] << " ";
-				(loc[i].getPort().size()) ? std::cout << std::endl : 0;
+				(loc[i].getPort() >= 0) ? std::cout << "port : " << loc[i].getPort() << "\n" : 0;
 				
-				// std::vector<std::string> v4 = loc[i].getRoot();
-				// (loc[i].getRoot().size()) ? std::cout << "root : " : 0;
-				// for (size_t i = 0; i < v4.size(); i++)
-				// 	std::cout << v4[i] << " ";
-				// (loc[i].getRoot().size()) ? std::cout << std::endl : 0;
 				
 				std::cout << "autoindex : " << loc[i].getAutoIndex() << "\n\n";
 			}
