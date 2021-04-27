@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:12:05 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 14:12:49 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class ServerInfo
 		std::vector<std::string> _names;		//
 		std::vector<std::string> _allow_methd;	//
 		std::vector<std::string> _index;		//
-		std::vector<int> _port;					//
+		int _port;					//
 		std::vector<ServerInfo> _location;		//
 		
 

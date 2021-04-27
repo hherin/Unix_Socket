@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:11:52 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 14:15:14 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,17 +84,7 @@ void ServerInfo::setMethods(char const *n) { setStringArray(n, _allow_methd); }
 
 void ServerInfo::setIndex(char const *n) { setStringArray(n, _index); }
 
-void ServerInfo::setPort(char const *p) 
-{
-	char *tmp = strdup(p);
-    char *token = strtok(tmp, "\t\v\f\r ");
-
-    while (token){
-        _port.push_back(atoi(token));
-        token = strtok(NULL, "\t\v\f\r ");
-    }
-    delete tmp;
-}
+void ServerInfo::setPort(char const *p) { _port = atoi(p); }
 
 void ServerInfo::setStringArray(char const *n, std::vector<std::string> &v) 
 {
