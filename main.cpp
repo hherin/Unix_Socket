@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 11:58:42 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 13:46:07 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,13 @@ int main(int ac, char **av)
 		for (size_t i = 0; i < sockArray.size(); ++i)
 			server.addServerSocket(ServerSocket(sockArray[i], 5));
 			
-		server.etablishConnection();
+		server.etablishConnection(m_srv);
 	}
 	catch (const char* msg)
 	{
 		std::cerr << msg;
 		exit(EXIT_FAILURE);
 	}
-	
 
     return 0;
 }

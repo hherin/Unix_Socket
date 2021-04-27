@@ -6,14 +6,14 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/23 18:15:40 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 13:39:32 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientSocket.hpp"
 
-ClientSocket::ClientSocket(int fd) :
-		_fd(fd), _request(), _response() {}
+ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs) :
+		_fd(fd), _infoVirServs(infoVirServs), _request(), _response() {}
 
 ClientSocket::~ClientSocket() {}
 

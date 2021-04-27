@@ -26,6 +26,8 @@
 #include <arpa/inet.h> //inet itoa
 #include <sys/time.h>
 
+#include "../includes/webserv.hpp"
+
 class ServerSocket
 {
 	private:
@@ -45,6 +47,9 @@ class ServerSocket
 		
 		// Return socket file descriptor
 		int getFd() const;
+
+		// Return the port that the socket is listening
+		int getPort() const;
 		
 		// Create a TCP socket listening on a specific port for x clients
 		void createSocket();
