@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mainFile.cpp                                       :+:      :+:    :+:   */
+/*   parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/22 12:39:49 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 13:24:19 by hherin           ###   ########.fr       */
+/*   Created: 2021/04/27 13:30:15 by hherin            #+#    #+#             */
+/*   Updated: 2021/04/27 13:35:58 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../FileParser.hpp"
-#include <iostream>
+#ifndef PARSER_HPP
+# define PARSER_HPP
 
-int main()
-{
-	ServerInfo srv;
-	FileParser outFile("./Makefile");
+# include "ServerInfo.hpp"
+# include <string>
+# include <fstream>
+# include <map>
+# include <cctype>  // function isspace
+# include <iostream>
 
-	// std::cout << "FILE \n" << outFile.getConfigFile() << std::endl;
-	outFile.getConfigFile();
-	return 0;
-}
+int	cleanLineFromSpaces(std::string &buf);
+int	bracketRegulator(int &bracket, std::string const &buf);
+
+#endif

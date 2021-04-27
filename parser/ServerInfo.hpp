@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   serverInfo.hpp                                     :+:      :+:    :+:   */
+/*   ServerInfo.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/14 17:14:58 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 13:40:31 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class ServerInfo
 		std::vector<std::string> _names;		//
 		std::vector<std::string> _allow_methd;	//
 		std::vector<std::string> _index;		//
-		std::vector<int> _port;					//
+		int _port;					//
 		std::vector<ServerInfo> _location;		//
 		
 

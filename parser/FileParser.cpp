@@ -1,43 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FileParser.cpp                                     :+:      :+:    :+:   */
+/*   fileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/23 15:48:00 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/27 13:40:21 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FileParser.hpp"
 
-FileParser::FileParser(const char *filepath) : _bracket(0) { _file.open(filepath); }
+FileParser::FileParser(const char *filepath) : _bracket(0), cli_srv(0) { _file.open(filepath); }
 
-FileParser::~FileParser() { _file.close(); }
+FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), cli_srv(cli_srv) { _file.open(filepath); }
 
-int	bracketRegulator(int &bracket, std::string const &buf)
+FileParser::~FileParser() { (void)cli_srv; _file.close(); }
+
+void FileParser::parseRequestFile()
 {
-	size_t pos = -1; 
-	while ( (pos = buf.find_first_of('{', pos + 1)) != std::string::npos) 
-		bracket++;
-	
-	pos = -1;
-	while ( (pos = buf.find_first_of('}', pos + 1)) != std::string::npos)
-		bracket--;
-	return 1;
-}
-
-void FileParser::parseOutputFile()
-{
+	if (!cli_srv){
+		std::cerr << "Wrong construteur\n";
+		exit(1);
+	}
 	while (std::getline(_file, _buf))
-		_outputFile.append(_buf + "\n");
+		_requestFile.append(_buf + "\n");
 }
 
-std::string const& FileParser::getOutputFile() { parseOutputFile(); return _outputFile; }
+std::string const& FileParser::getRequestFile() { parseRequestFile(); return _requestFile; }
 
 void FileParser::parseConfigFile()
 {
+	if (cli_srv){
+		std::cerr << "Wrong construteur\n";
+		exit(1);
+	}
 	while (std::getline(_file, _buf)){
 		if (_buf.find_first_of("server") != std::string::npos){
 			_bracket = 0;
@@ -46,20 +44,6 @@ void FileParser::parseConfigFile()
 		}
 		else continue; // ERREUR 
 	}
-}
-
-int	cleanLineFromSpaces(std::string &buf)
-{
-	int i = 0;
-	while (isspace(buf[i]))
-		buf.erase(0, 1);
-
-	if (buf.size()){
-		i = buf.size() - 1;
-		while (isspace(buf[i]))
-			buf.erase(i, 1);
-	}
-	return 0;
 }
 
 // check bracket la ou il faut pas
@@ -110,7 +94,6 @@ void FileParser::newLocation(ServerInfo &srv)
 void FileParser::newServer(void)
 {
 	ServerInfo n_srv;
-
 	while (_bracket > 0)
 	{
 		std::getline(_file, _buf);
@@ -162,4 +145,4 @@ void FileParser::addNewServerToMap(ServerInfo &srv)
 	}
 }
 
-std::map<int, std::vector<ServerInfo> > const &FileParser::getConfig() { parseConfigFile(); return _m_srv; }
+std::map<int, std::vector<ServerInfo> > const &FileParser::getConfigFile() { parseConfigFile(); return _m_srv; }

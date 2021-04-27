@@ -1,40 +1,36 @@
-#ifndef PARSER_HPP
-# define PARSER_HPP
+#ifndef FILEPARSER_HPP
+# define FILEPARSER_HPP
 
-# include <fstream>
-# include <string>
-# include <map>
-# include <cctype>  // function isspace
-# include <iostream>
-# include "ServerInfo.hpp"
-
+# include "parser.hpp"
 
 class FileParser 
 {
     public:
         FileParser(const char*);
 
+        FileParser(const char*, ServerInfo *);
+
         ~FileParser();
 
         void parseConfigFile();
 
-        void parseOutputFile();
+        void parseRequestFile();
         
-        std::string const& getOutputFile();
+        std::string const& getRequestFile();
 
-        std::map<int, std::vector<ServerInfo> > const &getConfig();
+        std::map<int, std::vector<ServerInfo> > const &getConfigFile();
 
     private:
         std::ifstream _file;
         std::string _buf;
         int _bracket;
         std::map<int, std::vector<ServerInfo> > _m_srv;
-        std::string _outputFile;
+        std::string _requestFile;
+        ServerInfo *cli_srv;
 
         void newServer(void);
         void newLocation(ServerInfo &);
         void addNewServerToMap(ServerInfo &);
 };
-
 
 #endif

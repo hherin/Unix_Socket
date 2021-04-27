@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mainConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/23 15:48:20 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/27 11:58:52 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ int main(int ac, char **av)
 	
 	FileParser outFile("./Makefile");
 
-	std::cout << "FILE " << outFile.getOutputFile() << std::endl;
+	std::cout << "FILE " << outFile.getRequestFile() << std::endl;
 	
-	std::map<int, std::vector<ServerInfo> > map = config.getConfig();
+	std::map<int, std::vector<ServerInfo> > map = config.getConfigFile();
  	
 	for (std::map<int, std::vector<ServerInfo> >::iterator it = map.begin(); it != map.end(); it++){
 		std::cout << "===========================================================\n";

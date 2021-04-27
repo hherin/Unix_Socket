@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/26 11:19:45 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 11:58:42 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int main(int ac, char **av)
     
     FileParser conf(av[1]);
     
-    std::map<int, std::vector<ServerInfo> > m_srv = conf.getConfig();
+    std::map<int, std::vector<ServerInfo> > m_srv = conf.getConfigFile();
 	// PARTIE PARSEUR
 
 	// boucle pour add tous les sockets >> ou les mettre dans la boucle en dessous ?

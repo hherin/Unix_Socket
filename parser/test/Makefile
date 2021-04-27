@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
+#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/23 15:48:27 by heleneherin      ###   ########.fr        #
+#    Updated: 2021/04/27 13:33:40 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAMEConfig		=	parserConfig
 
 NAMEfile		=	parserFile
 
-SRCS			=	../ServerInfo.cpp ../FileParser.cpp
+SRCS			=	../ServerInfo.cpp ../FileParser.cpp ../parserUtils.cpp
 
 SRCSCONF		=	mainConfig.cpp
 
@@ -26,7 +26,7 @@ OBJSCONF		=	${SRCSCONF:.cpp=.o}
 
 OBJSFILE		=	${SRCSFILE:.cpp=.o}
 
-HDRS			=	FileParser.hpp ServerInfo.hpp
+HDRS			=	../FileParser.hpp ../ServerInfo.hpp ../parser.hpp
 
 CC				=	clang++
 
