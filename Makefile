@@ -3,47 +3,57 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/27 13:51:18 by llefranc         ###   ########.fr        #
+#    Updated: 2021/04/27 17:12:26 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	webserv
 
-SRCS		=	main.cpp server/HttpServer.cpp parser/ServerInfo.cpp parser/FileParser.cpp \
-				server/ServerSocket.cpp server/ClientSocket.cpp server/Request.cpp \
-				utils/utils.cpp parser/parserUtils.cpp
-
+SRCS		=	main.cpp 
+				
 OBJS		=	${SRCS:.cpp=.o}
 
-HDRS		=	server/HttpServer.hpp server/ServerSocket.hpp \
-				server/ClientSocket.hpp server/Request.hpp \
-				parser/FileParser.hpp parser/ServerInfo.hpp
+HDRS		=	includes/webserv.hpp
 
 CC			=	clang++
 
 FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
+LIBS		=	parser/lparser.a \
+				server/lserver.a \
+				utils/lutils.a
+
+LIBFLAG		= parser/lparser.a server/lserver.a utils/lutils.a
 
 all			:	${NAME}
 
-${NAME}		:	${OBJS}
-				@${CC} ${FLAGS} -o ${NAME} ${OBJS}
-				@echo "webserv is ready";
-
+%.a			:	sub_makefile
+				@make -C ${@D}
+				
 %.o			:	%.cpp
 				@${CC} ${FLAGS} -o $@ -c $<
+				
+${NAME}		:	${LIBS} ${OBJS}
+				@${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
+				@echo "webserv is ready";
 
 ${OBJS}		:	${HDRS}
 
 clean		:
+				@for lib in ${LIBS}; do \
+					make clean -C $$(dirname $$lib) ;\
+				done
 				@rm -rf $(OBJS) 
 
 fclean		:	clean
+				@for lib in ${LIBS}; do \
+					make fclean -C $$(dirname $$lib) ;\
+				done
 				@rm -rf ${NAME}
 
 re			:	fclean all
 
-.PHONY		:	all clean fclean re
+.PHONY		:	all clean fclean re sub_makefile
