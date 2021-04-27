@@ -6,19 +6,20 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 14:04:06 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:45:16 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 
-Request::Request()
-	: _buffer(), _index(), _reqLine(), _headers(), _recvBody(0), _body() {}
+Request::Request() :
+	_buffer(), _index(), _reqLine(), _headers(), _recvBody(0), _body() {}
 
 Request::~Request() {}
 
-Request::Request(const Request& copy)
-	: _buffer(copy._buffer) {}
+Request::Request(const Request& copy) :
+	_buffer(copy._buffer), _index(copy._index), _reqLine(copy._reqLine), 
+	_headers(copy._headers), _recvBody(copy._recvBody), _body(copy._body) {}
 
 Request& Request::operator=(Request assign)
 {
@@ -38,21 +39,21 @@ void Request::parsingCheck()
 	size_t posCLRF = _buffer.find("\r\n", _index);
 
     // Protecting against too long fields
-    if (!_reqLine._method && posCLRF > MAX_URI_LEN)
+    if (_reqLine._path.empty() && _buffer.size() - _index > MAX_URI_LEN)
         throw "Error 414: request URI too long\n";
-    else if (posCLRF - _index > MAX_HEADER_LEN)
+    else if (!_recvBody && _buffer.size() - _index > MAX_HEADER_LEN)
         throw "Error 431: request header fields too large\n";
 
 	else if (posCLRF == std::string::npos)
 		return ;
     
     // Treating request line
-	else if (!_reqLine._method)
+	else if (_reqLine._path.empty())
     {
 		parseRequestLine(posCLRF);
         _index += posCLRF + 2;
     }
-    
+
     // Treating header fields
     while ((posCLRF = _buffer.find("\r\n", _index)) != std::string::npos)
     {
@@ -63,23 +64,38 @@ void Request::parsingCheck()
             break;
         }
 
-        parseHeaderField(posCLRF);
-        _index += posCLRF + 2;
+        parseHeaderLine(posCLRF);
+        _index = posCLRF + 2;
     }
 }
 
 // Private
 
 
-void Request::parseHeaderField(size_t posCLRF)
+void Request::parseHeaderLine(size_t posCLRF)
 {
     std::string headerLine = _buffer.substr(_index, posCLRF - _index);
     
-    if (headerLine.find(":") == std::string::npos)
-		throw "Error 400: bad request: whitespaces not allowed\n";
+	size_t pos = headerLine.find(":");
+    if (pos == std::string::npos)
+		throw "Error 400: bad request: no semicolon\n";
+	
+	// Splitting field name and field value with first semicolon
+	std::pair<std::string, std::string> headerFieldValue(headerLine.substr(0, pos), 
+			headerLine.substr(pos + 1, std::string::npos));
+	
+	if (headerFieldValue.first.find_first_of("\r\n\t\v\f ") != std::string::npos)
+		throw "Error 400: bad request: no whitespaces before semicolon\n";
+	
+	// header field name is case insensitive, transforming it to lowercase
+    std::transform(headerFieldValue.first.begin(), headerFieldValue.first.end(), 
+			headerFieldValue.first.begin(), asciiToLower);
+	
+	if (!_headers.insert(headerFieldValue).second)
+		throw "Error 400: bad request: duplicated headers are not allowed\n";
 }
 
-// Parsing request line
+// PARSING REQUEST LINE
 
 void Request::parseRequestLine(size_t posCLRF)
 {
@@ -105,7 +121,6 @@ void Request::parseRequestLine(size_t posCLRF)
 		if (tokens.size() > 3)
 			throw "Error 400: bad request: too many spaces\n";
 	}
-
 	if (tokens.size() != 3)
 		throw "Error 400: bad request: a field from request line is missing\n";
 

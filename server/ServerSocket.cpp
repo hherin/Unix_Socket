@@ -18,7 +18,7 @@ ServerSocket::ServerSocket(int port, int maxClient) :
 ServerSocket::~ServerSocket() {}
 	
 ServerSocket::ServerSocket(const ServerSocket& copy) :
-		_fd(copy._fd) {}
+		_port(copy._port), _maxClient(copy._maxClient), _fd(copy._fd) {}
 
 ServerSocket& ServerSocket::operator=(ServerSocket assign)
 {

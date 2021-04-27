@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:15:14 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 16:05:41 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 ServerInfo::ServerInfo() : _max_clients(5), _autoindex(0), _port(-1)  { }
 
 ServerInfo::~ServerInfo() { }
+
+ServerInfo::ServerInfo(const ServerInfo& copy) :
+	_max_clients(copy._max_clients), _autoindex(copy._autoindex), _port(copy._port) {}
 
 int const &ServerInfo::getMaxClientsBS() { return _max_clients; }
 
