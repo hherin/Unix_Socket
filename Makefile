@@ -6,7 +6,7 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/27 17:12:26 by hherin           ###   ########.fr        #
+#    Updated: 2021/04/27 17:18:32 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,6 @@ FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 LIBS		=	parser/lparser.a \
 				server/lserver.a \
 				utils/lutils.a
-
-LIBFLAG		= parser/lparser.a server/lserver.a utils/lutils.a
 
 all			:	${NAME}
 
