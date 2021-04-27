@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 13:40:21 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 14:00:37 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,18 +131,17 @@ void FileParser::newServer(void)
 
 void FileParser::addNewServerToMap(ServerInfo &srv)
 {
-	std::vector<int> s_port = srv.getPort();
+	int s_port = srv.getPort();
 
-	for (size_t i = 0; i < s_port.size(); i++){
-		std::map<int, std::vector<ServerInfo> >::iterator it = _m_srv.find(s_port[i]);
+	std::map<int, std::vector<ServerInfo> >::iterator it = _m_srv.find(s_port);
 		
-		if (it == _m_srv.end()){
-			std::vector<ServerInfo> v_srv(1, srv);
-			_m_srv.insert(std::pair<int, std::vector<ServerInfo> >(s_port[i], v_srv));
-		}
-		else
-			it->second.push_back(srv);
+	if (it == _m_srv.end()){
+		std::vector<ServerInfo> v_srv(1, srv);
+		_m_srv.insert(std::pair<int, std::vector<ServerInfo> >(s_port, v_srv));
 	}
+	else
+		it->second.push_back(srv);
+	
 }
 
 std::map<int, std::vector<ServerInfo> > const &FileParser::getConfigFile() { parseConfigFile(); return _m_srv; }

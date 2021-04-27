@@ -6,13 +6,13 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 13:41:06 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/27 14:08:00 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerInfo.hpp"
 
-ServerInfo::ServerInfo() : _max_clients(5), _autoindex(0)  { }
+ServerInfo::ServerInfo() : _max_clients(5), _autoindex(0), _port(-1)  { }
 
 ServerInfo::~ServerInfo() { }
 
@@ -36,7 +36,7 @@ std::vector<std::string> const &ServerInfo::getMethods() { return _allow_methd; 
 
 std::vector<std::string> const &ServerInfo::getIndex() { return _index; }
 
-std::vector<int> const &ServerInfo::getPort() { return _port; }
+int const &ServerInfo::getPort() { return _port; }
 
 std::vector<ServerInfo> const &ServerInfo::getLocation() { return _location; }
 
