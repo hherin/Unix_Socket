@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 15:52:18 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:15:32 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ class Request
 			int			_method;
 			std::string _path;
 			std::string _query;
+
+			requestLine() : _method(), _path(), _query() {}
+			requestLine(const requestLine& c) :
+					_method(c._method), _path(c._path), _query(c._query) {}
+			~requestLine() {}
 		};
 
 		std::string	_buffer;

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 17:45:16 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:13:09 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,4 +181,14 @@ void Request::parseHTTPVersion(const std::string& token)
 void swap(Request& a, Request& b)
 {
 	std::swap(a._buffer, b._buffer);
+	std::swap(a._index, b._index);
+	
+	std::swap(a._reqLine._method, b._reqLine._method);
+	std::swap(a._reqLine._path, b._reqLine._path);
+	std::swap(a._reqLine._query, b._reqLine._query);
+
+	std::swap(a._headers, b._headers);
+
+	std::swap(a._recvBody, b._recvBody);
+	std::swap(a._body, b._body);
 }
