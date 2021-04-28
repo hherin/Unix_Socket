@@ -3,16 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   ServerInfo.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:15:14 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 13:24:04 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerInfo.hpp"
 
-ServerInfo::ServerInfo() : _max_clients(5), _autoindex(0), _port(-1)  { }
+ServerInfo::ServerInfo() : _max_clients(5), _autoindex(0), _port(-1) { }
+
+ServerInfo::ServerInfo(ServerInfo const &copy) : _max_clients(copy._max_clients),
+_autoindex(copy._autoindex), _error_path(copy._error_path), _root(copy._root), _auth_basic(copy._auth_basic),
+_auth_b_usr_file(copy._auth_b_usr_file), _upload_store(copy._upload_store), _names(copy._names),
+_allow_methd(copy._allow_methd), _index(copy._index), _port(copy._port), _location(copy._location)
+{}
+
+ServerInfo &ServerInfo::operator=(ServerInfo const &copy)
+{
+    ServerInfo tmp(copy);
+    std::swap(tmp, *this);
+    return *this;
+}
 
 ServerInfo::~ServerInfo() { }
 

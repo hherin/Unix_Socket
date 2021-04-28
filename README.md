@@ -6,6 +6,7 @@ Premiers pas vers la programmation Unix Socket.
 
 [Select()](http://codingbison.com/c/c-sockets-select.html)
 
+[Expect cmd](https://likegeeks.com/expect-command/)
 
 ### Definition
 <details>

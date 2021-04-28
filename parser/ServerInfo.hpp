@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerInfo.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:12:49 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 13:23:08 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <vector>
 # include <string>
 # include <cstring>
+# include <algorithm>
 
 class ServerInfo
 {
@@ -36,6 +37,10 @@ class ServerInfo
 
 	public:
 		ServerInfo();
+		
+		ServerInfo(ServerInfo const &);
+
+		ServerInfo &operator=(ServerInfo const &);
 		
 		~ServerInfo();
 		

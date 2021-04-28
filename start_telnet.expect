@@ -1,0 +1,31 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    start_telnet.expect                                :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/04/28 13:04:49 by heleneherin       #+#    #+#              #
+#    Updated: 2021/04/28 13:11:52 by heleneherin      ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#!/usr/bin/expect -f
+
+set timeout -1
+
+set ip_addr [lindex $argv 0]
+
+set port [lindex $argv 1]
+
+spawn telnet $ip_addr $port
+
+expect "Trying ::1...
+telnet: connect to address ::1: Connection refused
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.\r"
+
+send -- "HELLO\r"  
+
+expect eof

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fileParser.cpp                                     :+:      :+:    :+:   */
+/*   FileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 17:34:40 by hherin           ###   ########.fr       */
+/*   Updated: 2021/04/28 14:25:07 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,26 @@ FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePa
 
 FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
 
+FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
+_m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
+{
+	_file.open(_filePath);
+}
+
+FileParser &FileParser::operator=(FileParser const&copy)
+{
+	FileParser tmp(copy);
+
+	std::swap(tmp, *this);
+	return *this;
+}
+
 FileParser::~FileParser() { _file.close(); }
 
 void FileParser::parseRequestFile()
 {
 	if (!_cli_srv){
-		std::cerr << "Wrong construteur\n";
+		std::cerr << "NOT ALLOWED\n";
 		exit(1);
 	}
 	std::vector<ServerInfo> loc = _cli_srv->getLocation();
@@ -42,7 +56,7 @@ std::string const& FileParser::getRequestFile() { parseRequestFile(); return _re
 void FileParser::parseConfigFile()
 {
 	if (_cli_srv){
-		std::cerr << "Wrong construteur\n";
+		std::cerr << "NOT ALLOWED\n";
 		exit(1);
 	}
 	while (std::getline(_file, _buf)){
@@ -150,7 +164,6 @@ void FileParser::addNewServerToMap(ServerInfo &srv)
 	}
 	else
 		it->second.push_back(srv);
-	
 }
 
 std::map<int, std::vector<ServerInfo> > const &FileParser::getConfigFile() { parseConfigFile(); return _m_srv; }
