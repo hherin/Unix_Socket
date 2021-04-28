@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:58:47 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 15:52:18 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Request
 
 		struct requestLine
 		{
-			int _method;
+			int			_method;
 			std::string _path;
 			std::string _query;
 		};
@@ -61,7 +61,7 @@ class Request
 		void parseURI(std::string token);
 		void parseHTTPVersion(const std::string& token);
         
-        void parseHeaderField(size_t posCLRF);
+        void parseHeaderLine(size_t posCLRF);
 		
 }; // class Request
 

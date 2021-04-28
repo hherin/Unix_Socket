@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:39:32 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 16:01:10 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs) 
 ClientSocket::~ClientSocket() {}
 
 ClientSocket::ClientSocket(const ClientSocket& copy) :
-		_fd(copy._fd) {}
+		_fd(copy._fd), _infoVirServs(copy._infoVirServs), 
+		_request(copy._request), _response(copy._response) {}
 
 ClientSocket& ClientSocket::operator=(ClientSocket assign)
 {

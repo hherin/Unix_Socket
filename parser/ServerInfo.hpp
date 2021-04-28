@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/27 14:12:49 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 16:05:50 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ class ServerInfo
 		ServerInfo();
 		
 		~ServerInfo();
+
+		ServerInfo(const ServerInfo& copy);
 		
 		int const &getMaxClientsBS();	
 
