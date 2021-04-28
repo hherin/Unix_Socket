@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 13:50:57 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/26 18:58:31 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/04/27 17:30:35 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ enum methods { GET, HEAD, PUT, POST, DELETE };
 
 #define MAX_URI_LEN 8000
 #define MAX_HEADER_LEN 8000
+#define BUFFER_SIZE_REQUEST 5000
 
 char asciiToLower(char in);
 

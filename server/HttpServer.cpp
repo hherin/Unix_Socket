@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:32:51 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:31:04 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,25 @@ void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSr
 {
 	while (true)
 	{
-		// Setting readFd with all passive accept sockets and all clients previously connected
-		FD_ZERO(&_readFds);
-		addSocketsToFdSet<ServerSocket>(_serverSocks);
-		addSocketsToFdSet<ClientSocket>(_clientSocks);
+		try
+		{
+			// Setting readFd with all passive accept sockets and all clients previously connected
+			FD_ZERO(&_readFds);
+			addSocketsToFdSet<ServerSocket>(_serverSocks);
+			addSocketsToFdSet<ClientSocket>(_clientSocks);
 
-		// Permet de read les requetes;
-		// for (std::pair<int, std::list<ClientSocket>::iterator> i(0, _clientSocks.begin());
-		// 		i.second != _clientSocks.end(); ++i.first, ++i.second)
-		// 	std::cout << "Client " << i.first << " request: " << i.second->getRequest() << "\n";
-		
-		// Waiting for incoming connections on server sockets / client sockets
-		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, NULL, NULL, NULL)) < 0)
-			throw "Error on select function\n";
+			// Waiting for incoming connections on server sockets / client sockets
+			if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, NULL, NULL, NULL)) < 0)
+				throw "Error on select function\n";
 
-		// If a passive socket was activated, creates a new client connection
-		connectNewClients(mSrv);
-		requestHandler();
+			// If a passive socket was activated, creates a new client connection
+			connectNewClients(mSrv);
+			requestHandler();
+		}
+		catch (const char* error)
+		{
+			std::cerr << error;
+		}
 	}
 }
 
@@ -59,15 +61,14 @@ void HttpServer::requestHandler()
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			// std::cout << "request handler\n";
-			char buffer[2];
-			bzero(buffer, 2);
-			int n = recv(it->getFd(), buffer, 1, 0);
+			char buffer[BUFFER_SIZE_REQUEST + 1]; // CHANGER ICI LA TAILLE DU BUFFER
+			bzero(buffer, BUFFER_SIZE_REQUEST + 1);
+			int n = recv(it->getFd(), buffer, BUFFER_SIZE_REQUEST, 0);
 
 			if (n < 0)
 				throw "Error on recv function\n";
 				
-			// Closing the connection (in client destructor)
+			// Closing the connection (in ClientSocket destructor)
 			else if (!n)
 			{
 				std::list<ClientSocket>::iterator tmp = ++it;
@@ -89,8 +90,10 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 {
 	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end(); ++it)
 	{
-		if (FD_ISSET(it->getFd(), &_readFds))
+		try
 		{
+			if (FD_ISSET(it->getFd(), &_readFds))
+			{
 			struct sockaddr_in addrCli;
 			int lenCli = sizeof(addrCli);
 			bzero((char *) &addrCli, sizeof(addrCli));
@@ -106,6 +109,11 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)
 				break;
+			}	
+		}
+		catch(const char* error)
+		{
+			std::cerr << error;	
 		}
 	}
 }

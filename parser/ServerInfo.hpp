@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/28 13:23:08 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/28 14:27:10 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ class ServerInfo
 		ServerInfo &operator=(ServerInfo const &);
 		
 		~ServerInfo();
+
+		ServerInfo(const ServerInfo& copy);
 		
 		int const &getMaxClientsBS();	
 
