@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:59:59 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:04:10 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ class ClientSocket
 
 		// Initialize variables
 		ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs);
+		ClientSocket(const ClientSocket& copy);
 		~ClientSocket();
 		
-		ClientSocket(const ClientSocket& copy);
 		ClientSocket& operator=(ClientSocket assign);
 
 		// Return socket id

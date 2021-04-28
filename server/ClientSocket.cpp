@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 16:01:10 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:18:47 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,7 @@ int ClientSocket::receiveRequest(const char* buffer)
 void swap(ClientSocket& a, ClientSocket& b)
 {
 	std::swap(a._fd, b._fd);
+	std::swap(a._infoVirServs, b._infoVirServs);
+	std::swap(a._request, b._request);
+	std::swap(a._response, b._response);
 }

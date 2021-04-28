@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 13:53:06 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:04:18 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ class HttpServer
 	public:
 
 		HttpServer();
+		HttpServer(const HttpServer& copy);
 		~HttpServer();
+
+		HttpServer& operator=(HttpServer assign);
 
 		// Create the socket and add socket id + socket fd
 		void addServerSocket(ServerSocket sock);
@@ -64,6 +67,8 @@ class HttpServer
 
 		// Checks all clients connections, and if one is communicating receive his request
 		void requestHandler();
+
+		friend void swap(HttpServer& a, HttpServer& b);
 
 }; // class HttpServer
 

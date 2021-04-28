@@ -6,16 +6,26 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/27 17:31:04 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:20:17 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpServer.hpp"
 
 HttpServer::HttpServer() 
-	: _serverSocks(), _clientSocks(), _nbReadyFds() {}
+	: _serverSocks(), _clientSocks(), _readFds(), _nbReadyFds() {}
 
 HttpServer::~HttpServer() {}
+
+HttpServer::HttpServer(const HttpServer& copy) :
+	_serverSocks(copy._serverSocks), _clientSocks(copy._clientSocks),
+	_readFds(copy._readFds), _nbReadyFds(copy._nbReadyFds) {}
+
+HttpServer& HttpServer::operator=(HttpServer assign)
+{
+	swap(assign, *this);
+	return *this;
+}
 
 void HttpServer::addServerSocket(ServerSocket sock)
 {
@@ -116,4 +126,14 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			std::cerr << error;	
 		}
 	}
+}
+
+//private
+
+void swap(HttpServer& a, HttpServer& b)
+{
+	std::swap(a._serverSocks, b._serverSocks);
+	std::swap(a._clientSocks, b._clientSocks);
+	std::swap(a._readFds, b._readFds);
+	std::swap(a._nbReadyFds, b._nbReadyFds);
 }

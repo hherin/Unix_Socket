@@ -40,9 +40,9 @@ class ServerSocket
 
 		// Initialize variables
 		ServerSocket(int port, int maxClient);
+		ServerSocket(const ServerSocket& copy);
 		~ServerSocket();
 
-		ServerSocket(const ServerSocket& copy);
 		ServerSocket& operator=(ServerSocket assign);
 		
 		// Return socket file descriptor

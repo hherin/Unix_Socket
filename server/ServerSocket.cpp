@@ -60,5 +60,7 @@ void ServerSocket::createSocket()
 
 void swap(ServerSocket& a, ServerSocket& b)
 {
+	std::swap(a._port, b._port);
+	std::swap(a._maxClient, b._maxClient);
 	std::swap(a._fd, b._fd);
 }
