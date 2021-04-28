@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/28 14:27:00 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/04/28 14:29:45 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,6 @@ ServerInfo &ServerInfo::operator=(ServerInfo const &copy)
 }
 
 ServerInfo::~ServerInfo() { }
-
-ServerInfo::ServerInfo(const ServerInfo& copy) :
-	_max_clients(copy._max_clients), _autoindex(copy._autoindex), _port(copy._port) {}
 
 int const &ServerInfo::getMaxClientsBS() { return _max_clients; }
 
