@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    start_telnet.expect                                :+:      :+:    :+:    #
+#    telnet.expect                                      :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/28 13:04:49 by heleneherin       #+#    #+#              #
-#    Updated: 2021/04/28 13:11:52 by heleneherin      ###   ########.fr        #
+#    Updated: 2021/04/28 16:38:31 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,18 +14,16 @@
 
 set timeout -1
 
-set ip_addr [lindex $argv 0]
+set args [lrange $argv 0 end]
 
-set port [lindex $argv 1]
+set fd [open "request_input"]
+set requestLine [split [read $fd] "\n"]
+close $fd
 
-spawn telnet $ip_addr $port
+spawn telnet {*}$args
+    expect ".\r"
 
-expect "Trying ::1...
-telnet: connect to address ::1: Connection refused
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.\r"
-
-send -- "HELLO\r"  
-
-expect eof
+foreach req $requestLine {
+    send -- "$req\n\r"  
+}
+    expect eof
