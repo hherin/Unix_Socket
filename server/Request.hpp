@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/28 15:15:32 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/02 20:46:38 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,24 @@ class Request
 			~requestLine() {}
 		};
 
+		struct msgBody
+		{
+			bool								_recv;
+			size_t								_size;
+			std::string							_buff;
+
+			msgBody() : _recv(), _size(), _buff() {}
+			msgBody(const msgBody& c) :
+					_recv(c._recv), _size(c._size), _buff(c._buff) {}
+			~msgBody() {}
+		};
+
 		std::string	_buffer;
 		size_t		_index;
         
 		struct requestLine					_reqLine;
         std::map<std::string, std::string>	_headers;
-        bool								_recvBody;
-        std::string							_body;
+        struct msgBody						_body;
 	
 	public:
 
@@ -61,6 +72,8 @@ class Request
 
 		friend void swap(Request& a, Request& b);
 
+        bool newLineReceived(size_t posCLRF);
+
 		void parseRequestLine(size_t posCLRF);
 		void parseMethodToken(const std::string& token);
 		void parseURI(std::string token);
@@ -68,6 +81,7 @@ class Request
         
         void parseHeaderLine(size_t posCLRF);
 		
+		void parseBody();
 }; // class Request
 
 #endif

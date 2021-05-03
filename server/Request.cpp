@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/28 15:13:09 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/02 20:48:14 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 
 Request::Request() :
-	_buffer(), _index(), _reqLine(), _headers(), _recvBody(0), _body() {}
+	_buffer(), _index(), _reqLine(), _headers(), _body() {}
 
 Request::~Request() {}
 
 Request::Request(const Request& copy) :
 	_buffer(copy._buffer), _index(copy._index), _reqLine(copy._reqLine), 
-	_headers(copy._headers), _recvBody(copy._recvBody), _body(copy._body) {}
+	_headers(copy._headers),  _body(copy._body) {}
 
 Request& Request::operator=(Request assign)
 {
@@ -36,41 +36,75 @@ Request& Request::operator+=(const char* charBuffer)
 void Request::parsingCheck()
 {
     // Indicates end of request line / header line
-	size_t posCLRF = _buffer.find("\r\n", _index);
+	size_t posCLRF;
+	posCLRF = !_body._recv ? _buffer.find(CLRF, _index) : 0;
 
-    // Protecting against too long fields
-    if (_reqLine._path.empty() && _buffer.size() - _index > MAX_URI_LEN)
-        throw "Error 414: request URI too long\n";
-    else if (!_recvBody && _buffer.size() - _index > MAX_HEADER_LEN)
-        throw "Error 431: request header fields too large\n";
-
-	else if (posCLRF == std::string::npos)
-		return ;
-    
-    // Treating request line
-	else if (_reqLine._path.empty())
+    while (!_body._recv && newLineReceived(posCLRF))
     {
-		parseRequestLine(posCLRF);
-        _index += posCLRF + 2;
+        if (_reqLine._path.empty())
+            parseRequestLine(posCLRF);    
+        
+        // Double CRLF indicates end of headers
+        else if (!_body._recv && _index == posCLRF)
+		{
+			_index += CLRF_OCTET_SIZE;
+			
+			std::map<std::string, std::string>::iterator contLen = _headers.find("content-lenght");
+
+			if (contLen == _headers.end())
+				throw "Error 400: bad request: no content lenght header\n"; // rajouter trnafer encoding + head etc + get n'a pas de body ?
+            _body._recv = true;
+			_body._size = atol(contLen->second.c_str());
+		}
+            
+        else if (!_body._recv)
+            parseHeaderLine(posCLRF);
+            
+        _index = posCLRF + CLRF_OCTET_SIZE;
+        posCLRF = _buffer.find(CLRF, _index);
     }
 
-    // Treating header fields
-    while ((posCLRF = _buffer.find("\r\n", _index)) != std::string::npos)
-    {
-        // Double endLine indicates that request line + headers fields have been received
-        if (_buffer.find("\r\n", posCLRF + 2) == posCLRF + 2)
-        {
-            _recvBody = true;
-            break;
-        }
-
-        parseHeaderLine(posCLRF);
-        _index = posCLRF + 2;
-    }
+	if (_body._recv)
+		parseBody();
 }
 
 // Private
 
+void Request::parseBody()
+{
+	size_t lenToRead = _buffer.size() - _index;
+	
+	// Ignoring end of buffer if we received the amount of octets expected
+	if (lenToRead > _body._size)
+		lenToRead = _body._size;
+	
+	// Storing the part of body received until content-lenght octects are received
+	_body._buff.append(_buffer, _index, _body._size);
+	_index += lenToRead;
+	_body._size -= lenToRead;
+
+	if (!_body._size)
+	{
+		std::cerr << "\n" << _body._buff << "\n----------\n";
+		exit(EXIT_SUCCESS);
+		
+		// ICI LANCER SUREMENT LA REPONSE. REPRENDRE A CE STADE.
+	}
+}
+
+bool Request::newLineReceived(size_t posCLRF)
+{
+    // Protecting against too long fields
+    if (_reqLine._path.empty() && _buffer.size() - _index > MAX_URI_LEN)
+        throw "Error 414: request URI too long\n";
+    else if (!_body._recv && _buffer.size() - _index > MAX_HEADER_LEN)
+        throw "Error 431: request header fields too large\n";
+
+	else if (posCLRF == std::string::npos)
+		return false;
+
+    return true;
+}
 
 void Request::parseHeaderLine(size_t posCLRF)
 {
@@ -81,18 +115,24 @@ void Request::parseHeaderLine(size_t posCLRF)
 		throw "Error 400: bad request: no semicolon\n";
 	
 	// Splitting field name and field value with first semicolon
-	std::pair<std::string, std::string> headerFieldValue(headerLine.substr(0, pos), 
+	std::pair<std::string, std::string> headerField(headerLine.substr(0, pos), 
 			headerLine.substr(pos + 1, std::string::npos));
 	
-	if (headerFieldValue.first.find_first_of("\r\n\t\v\f ") != std::string::npos)
+	if (headerField.first.find_first_of("\r\n\t\v\f ") != std::string::npos)
 		throw "Error 400: bad request: no whitespaces before semicolon\n";
 	
-	// header field name is case insensitive, transforming it to lowercase
-    std::transform(headerFieldValue.first.begin(), headerFieldValue.first.end(), 
-			headerFieldValue.first.begin(), asciiToLower);
+	// Header field name is case insensitive, transforming it to lowercase
+    std::transform(headerField.first.begin(), headerField.first.end(), 
+			headerField.first.begin(), asciiToLower);
 	
-	if (!_headers.insert(headerFieldValue).second)
+	// Remove leading / trailing whitespaces in header field value
+	headerField.second.erase(0, headerField.second.find_first_not_of(" \t"));
+	headerField.second.erase(headerField.second.find_last_not_of(" \t") + 1, std::string::npos);
+	
+	if (!_headers.insert(headerField).second)
 		throw "Error 400: bad request: duplicated headers are not allowed\n";
+    
+    std::cerr << headerField.first << ":|" << headerField.second << "|\n"; // TEST
 }
 
 // PARSING REQUEST LINE
@@ -129,6 +169,9 @@ void Request::parseRequestLine(size_t posCLRF)
 	parseMethodToken(tokens[0]);
 	parseURI(tokens[1]);
 	parseHTTPVersion(tokens[2]);
+
+    std::cerr << _reqLine._method << " " << _reqLine._path; // TEST
+    _reqLine._query.empty() ? std::cerr << "\n" : std::cerr << "?" << _reqLine._query << "\n"; // TEST
 }
 
 void Request::parseMethodToken(const std::string& token)
@@ -189,6 +232,7 @@ void swap(Request& a, Request& b)
 
 	std::swap(a._headers, b._headers);
 
-	std::swap(a._recvBody, b._recvBody);
-	std::swap(a._body, b._body);
+	std::swap(a._body._recv, b._body._recv);
+	std::swap(a._body._size, b._body._size);
+	std::swap(a._body._buff, b._body._buff);
 }
