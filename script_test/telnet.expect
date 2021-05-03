@@ -6,7 +6,7 @@
 #    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/28 13:04:49 by heleneherin       #+#    #+#              #
-#    Updated: 2021/04/28 17:01:12 by heleneherin      ###   ########.fr        #
+#    Updated: 2021/05/03 14:57:49 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,15 +16,19 @@ set timeout -1
 
 set args [lrange $argv 0 end]
 
-set fd [open "request_input"]
-set requestLine [split [read $fd] "\n"]
+set fd [open "ls_files"]
+set filepath [split [read -nonewline $fd] "\n"]
 close $fd
 
-spawn telnet {*}$args
+
+foreach path $filepath {
+    spawn telnet {*}$args
     expect ".\r"
-sleep 2
-foreach req $requestLine {
-    send -- "$req\n\r"  
+    puts "$path"
+    set fdreq [open "$path"]
+    set request [read $fdreq]
+    close $fdreq
+    send -- "$request\r"  
     sleep 1
 }
-    expect eof
+expect eof

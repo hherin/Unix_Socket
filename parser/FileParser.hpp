@@ -17,7 +17,7 @@ class FileParser
     public:
         FileParser(const char*);
 
-        FileParser(const char*, ServerInfo *);
+        // FileParser(const char*, ServerInfo *);
 
         FileParser(FileParser const&);
 

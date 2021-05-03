@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/28 14:25:07 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/05/03 14:45:24 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePath(filepath) { _file.open(filepath); }
 
-FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
+// FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
 
 FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
 _m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
@@ -43,7 +43,9 @@ void FileParser::parseRequestFile()
 		std::vector<std::string > locName = loc[i].getNames();
 		for (size_t j = 0; j < locName.size(); j++){
 			if (locName[j] == _filePath){
-				
+				// if (locName[j].size() && _cli_srv-> ){
+					
+				// }
 			}
 		}
 	}
