@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/02 20:46:38 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/03 15:07:41 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 class Request
 {
 	private:
+
+		/* ------------------------------------------------------------- */
+		/* ------------------------- ATTRIBUTES ------------------------ */
 
 		struct requestLine
 		{
@@ -57,21 +60,30 @@ class Request
         std::map<std::string, std::string>	_headers;
         struct msgBody						_body;
 	
+	
 	public:
 
+		/* ------------------------------------------------------------- */
+		/* ------------------------ COPLIEN FORM ----------------------- */
+
 		Request();
-		Request(const Request& copy);
+		Request(const Request& c);
 		~Request();
+		Request& operator=(Request a);
+		
 
-		Request& operator=(Request assign);
+		/* ------------------------------------------------------------- */
+		/* --------------------------- METHODS ------------------------- */
+
 		Request& operator+=(const char* charBuffer);
-
 		void parsingCheck();
+		void clear();
 	
 	private:
 
-		friend void swap(Request& a, Request& b);
-
+		/* ------------------------------------------------------------- */
+		/* ------------------ PRIVATE MEMBER FUNCTIONS ----------------- */
+		
         bool newLineReceived(size_t posCLRF);
 
 		void parseRequestLine(size_t posCLRF);
@@ -82,6 +94,13 @@ class Request
         void parseHeaderLine(size_t posCLRF);
 		
 		void parseBody();
+		
+		
+		/* ------------------------------------------------------------- */
+		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
+		
+		friend void swap(Request& a, Request& b);
+		
 }; // class Request
 
 #endif

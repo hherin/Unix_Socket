@@ -12,23 +12,35 @@
 
 #include "ServerSocket.hpp"
 
+
+/* ------------------------------------------------------------- */
+/* ------------------------ COPLIEN FORM ----------------------- */
+
 ServerSocket::ServerSocket(int port, int maxClient) :
 	_port(port), _maxClient(maxClient), _fd() {}
 
-ServerSocket::~ServerSocket() {}
-	
-ServerSocket::ServerSocket(const ServerSocket& copy) :
-		_port(copy._port), _maxClient(copy._maxClient), _fd(copy._fd) {}
+ServerSocket::ServerSocket(const ServerSocket& c) :
+		_port(c._port), _maxClient(c._maxClient), _fd(c._fd) {}
 
-ServerSocket& ServerSocket::operator=(ServerSocket assign)
+ServerSocket::~ServerSocket() {}
+
+ServerSocket& ServerSocket::operator=(ServerSocket a)
 {
-	swap(assign, *this);
+	swap(a, *this);
 	return *this;
 }
-	
+
+
+/* ------------------------------------------------------------- */
+/* -------------------------- GETTERS -------------------------- */
+
 int ServerSocket::getFd() const { return _fd; }
 
 int ServerSocket::getPort() const { return _port; }
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- METHODS ------------------------- */
 
 void ServerSocket::createSocket()
 {
@@ -56,7 +68,9 @@ void ServerSocket::createSocket()
 	std::cout << "http-socket() succesfully created on port " << _port << "\n";
 }
 
-//private
+
+/* ------------------------------------------------------------- */
+/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(ServerSocket& a, ServerSocket& b)
 {

@@ -32,29 +32,47 @@ class ServerSocket
 {
 	private:
 
+		/* ------------------------------------------------------------- */
+		/* ------------------------- ATTRIBUTES ------------------------ */
+
 		int _port;
 		int _maxClient;
 		int	_fd;
 
+
 	public:
+
+		/* ------------------------------------------------------------- */
+		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		// Initialize variables
 		ServerSocket(int port, int maxClient);
 		ServerSocket(const ServerSocket& copy);
 		~ServerSocket();
-
 		ServerSocket& operator=(ServerSocket assign);
 		
+
+		/* ------------------------------------------------------------- */
+		/* -------------------------- GETTERS -------------------------- */
+
 		// Return socket file descriptor
 		int getFd() const;
 
 		// Return the port that the socket is listening
 		int getPort() const;
 		
+		
+		/* ------------------------------------------------------------- */
+		/* --------------------------- METHODS ------------------------- */
+		
 		// Create a TCP socket listening on a specific port for x clients
 		void createSocket();
 	
+	
 	private:
+
+		/* ------------------------------------------------------------- */
+		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 		friend void swap(ServerSocket& a, ServerSocket& b);
 

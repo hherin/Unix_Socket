@@ -6,26 +6,34 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/02 20:48:14 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/03 15:10:07 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
+
+
+/* ------------------------------------------------------------- */
+/* ------------------------ COPLIEN FORM ----------------------- */
 
 Request::Request() :
 	_buffer(), _index(), _reqLine(), _headers(), _body() {}
 
 Request::~Request() {}
 
-Request::Request(const Request& copy) :
-	_buffer(copy._buffer), _index(copy._index), _reqLine(copy._reqLine), 
-	_headers(copy._headers),  _body(copy._body) {}
+Request::Request(const Request& c) :
+	_buffer(c._buffer), _index(c._index), _reqLine(c._reqLine), 
+	_headers(c._headers),  _body(c._body) {}
 
-Request& Request::operator=(Request assign)
+Request& Request::operator=(Request a)
 {
-	swap(assign, *this);
+	swap(a, *this);
 	return *this;
 }
+	
+	
+/* ------------------------------------------------------------- */
+/* --------------------------- METHODS ------------------------- */
 	
 Request& Request::operator+=(const char* charBuffer)
 {
@@ -68,7 +76,22 @@ void Request::parsingCheck()
 		parseBody();
 }
 
-// Private
+void Request::clear()
+{
+	_reqLine._method = -1;
+	_reqLine._path.clear();
+	_reqLine._query.clear();
+
+	_headers.clear();
+	
+	_body._recv = false;
+	_body._size = 0;
+	_body._buff.clear();
+}
+
+
+/* ------------------------------------------------------------- */
+/* ------------------ PRIVATE MEMBER FUNCTIONS ----------------- */
 
 void Request::parseBody()
 {
@@ -220,6 +243,10 @@ void Request::parseHTTPVersion(const std::string& token)
 	else if (token.compare("HTTP/1.1"))
 		throw "Error 505: HTTP Version Not Supported\n";
 }
+
+
+/* ------------------------------------------------------------- */
+/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(Request& a, Request& b)
 {

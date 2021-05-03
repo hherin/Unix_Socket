@@ -3,29 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/28 15:20:17 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/03 15:06:51 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpServer.hpp"
+
+
+/* ------------------------------------------------------------- */
+/* ------------------------ COPLIEN FORM ----------------------- */
 
 HttpServer::HttpServer() 
 	: _serverSocks(), _clientSocks(), _readFds(), _nbReadyFds() {}
 
 HttpServer::~HttpServer() {}
 
-HttpServer::HttpServer(const HttpServer& copy) :
-	_serverSocks(copy._serverSocks), _clientSocks(copy._clientSocks),
-	_readFds(copy._readFds), _nbReadyFds(copy._nbReadyFds) {}
+HttpServer::HttpServer(const HttpServer& c) :
+	_serverSocks(c._serverSocks), _clientSocks(c._clientSocks),
+	_readFds(c._readFds), _nbReadyFds(c._nbReadyFds) {}
 
-HttpServer& HttpServer::operator=(HttpServer assign)
+HttpServer& HttpServer::operator=(HttpServer a)
 {
-	swap(assign, *this);
+	swap(a, *this);
 	return *this;
 }
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- METHODS ------------------------- */
 
 void HttpServer::addServerSocket(ServerSocket sock)
 {
@@ -64,6 +72,10 @@ void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSr
 		}
 	}
 }
+
+
+/* ------------------------------------------------------------- */
+/* ------------------ PRIVATE MEMBER FUNCTIONS ----------------- */
 
 void HttpServer::requestHandler()
 {
@@ -128,7 +140,9 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 	}
 }
 
-//private
+
+/* ------------------------------------------------------------- */
+/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(HttpServer& a, HttpServer& b)
 {
