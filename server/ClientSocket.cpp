@@ -3,31 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/28 15:18:47 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/03 15:06:39 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClientSocket.hpp"
+
+/* ------------------------------------------------------------- */
+/* ------------------------ COPLIEN FORM ----------------------- */
 
 ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs) :
 		_fd(fd), _infoVirServs(infoVirServs), _request(), _response() {}
 
 ClientSocket::~ClientSocket() {}
 
-ClientSocket::ClientSocket(const ClientSocket& copy) :
-		_fd(copy._fd), _infoVirServs(copy._infoVirServs), 
-		_request(copy._request), _response(copy._response) {}
+ClientSocket::ClientSocket(const ClientSocket& c) :
+		_fd(c._fd), _infoVirServs(c._infoVirServs), 
+		_request(c._request), _response(c._response) {}
 
-ClientSocket& ClientSocket::operator=(ClientSocket assign)
+ClientSocket& ClientSocket::operator=(ClientSocket a)
 {
-	swap(assign, *this);
+	swap(a, *this);
 	return *this;
 }
 
-// Getters
+
+/* ------------------------------------------------------------- */
+/* -------------------------- GETTERS -------------------------- */
 
 int ClientSocket::getFd() const { return _fd; }
 
@@ -35,7 +40,9 @@ const Request& ClientSocket::getRequest() const { return _request; }
 
 const std::string& ClientSocket::getResponse() const { return _response; }
 
-// Methods
+
+/* ------------------------------------------------------------- */
+/* --------------------------- METHODS ------------------------- */
 
 int ClientSocket::receiveRequest(const char* buffer)
 {
@@ -45,7 +52,9 @@ int ClientSocket::receiveRequest(const char* buffer)
 	return 0;
 }
 
-//private
+
+/* ------------------------------------------------------------- */
+/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(ClientSocket& a, ClientSocket& b)
 {

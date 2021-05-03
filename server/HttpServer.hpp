@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/04/28 15:04:18 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/03 15:06:17 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,30 @@ class HttpServer
 {
 	private:
 
+		/* ------------------------------------------------------------- */
+		/* ------------------------- ATTRIBUTES ------------------------ */
+
 		std::list<ServerSocket>	_serverSocks;
 		std::list<ClientSocket>	_clientSocks;
 		fd_set					_readFds;
 		// fd_set				_writeFds;
 		int						_nbReadyFds;
 
+
 	public:
 
+		/* ------------------------------------------------------------- */
+		/* ------------------------ COPLIEN FORM ----------------------- */
+		
 		HttpServer();
-		HttpServer(const HttpServer& copy);
+		HttpServer(const HttpServer& c);
 		~HttpServer();
+		HttpServer& operator=(HttpServer a);
 
-		HttpServer& operator=(HttpServer assign);
 
+		/* ------------------------------------------------------------- */
+		/* --------------------------- METHODS ------------------------- */
+		
 		// Create the socket and add socket id + socket fd
 		void addServerSocket(ServerSocket sock);
 		
@@ -52,8 +62,12 @@ class HttpServer
 		// Infinite loop, sets fd_set with all fds for passive accept sockets + connected clients
 		void etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv);
 
+
 	private:
 
+		/* ------------------------------------------------------------- */
+		/* ------------------ PRIVATE MEMBER FUNCTIONS ----------------- */
+		
 		// Set readfd with the content of a socket's list
 		template <typename T>
 		void addSocketsToFdSet(std::list<T>& sockets)
@@ -67,6 +81,10 @@ class HttpServer
 
 		// Checks all clients connections, and if one is communicating receive his request
 		void requestHandler();
+
+
+		/* ------------------------------------------------------------- */
+		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 		friend void swap(HttpServer& a, HttpServer& b);
 
