@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StatusLine.hpp                                     :+:      :+:    :+:   */
+/*   RequestLine.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/04 15:40:02 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 16:54:59 by lucaslefran      ###   ########.fr       */
+/*   Created: 2021/05/06 16:51:26 by lucaslefran       #+#    #+#             */
+/*   Updated: 2021/05/06 16:57:43 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STATUSLINE_HPP
-#define STATUSLINE_HPP
+#ifndef REQUESTLINE_HPP
+#define REQUESTLINE_HPP
 
 #include "../../includes/webserv.hpp"
-#include "iostream"
+#include <iostream>
 
-class StatusLine
+class RequestLine
 {
 	private:
 	
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 	
-		int			_code;
-		std::string _reason;
-		std::string _addInfos; // Additionnal informations if an error occured for developpment and debug
+		int			_method;
+		std::string _path;
+		std::string _query;
 
 
 	public:
@@ -33,13 +33,11 @@ class StatusLine
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		StatusLine() : _code(), _reason() {}
-		StatusLine(int code, const char* reason, const std::string& addInfos = "") :
-			_code(code), _reason(reason), _addInfos(addInfos) {}
-		StatusLine(const StatusLine& c) :
-				_code(c._code), _reason(c._reason), _addInfos(c._addInfos) {}
-		~StatusLine() {}
-		StatusLine& operator=(StatusLine a)
+		RequestLine() : _method(-1) {}
+		RequestLine(const RequestLine& c) :
+				_method(c._method), _path(c._path), _query(c._query) {}
+		~RequestLine() {}
+		RequestLine& operator=(RequestLine a)
 		{
 			swap(*this, a);
 			return *this;
@@ -49,35 +47,34 @@ class StatusLine
 		/* ------------------------------------------------------------- */
 		/* --------------------------- GETTERS ------------------------- */
 
-		int getCode() const { return _code; }
-		const std::string& getReason() const { return _reason; }
-		const std::string& getAdditionalInfo() const { return _addInfos; }
+		int getMethod() const { return _method; }
+		const std::string& getPath() const { return _path; }
+		const std::string& getQuery() const { return _query; }
 
 
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
-		friend void swap(StatusLine& a, StatusLine& b)
+		friend void swap(RequestLine& a, RequestLine& b)
 		{
-			std::swap(a._code, b._code);
-			std::swap(a._reason, b._reason);
-			std::swap(a._addInfos, b._addInfos);
+			std::swap(a._method, b._method);
+			std::swap(a._path, b._path);
+			std::swap(a._query, b._query);
 		}
 		
-}; // class StatusLine
+}; // class RequestLine
 
 
 /* ------------------------------------------------------------- */
 /* -------------------- OPERATOR OVERLOADS --------------------- */
 
-inline std::ostream& operator<<(std::ostream& stream, const StatusLine& staLine)
+inline std::ostream& operator<<(std::ostream& stream, const RequestLine& reqLine)
 {
-	stream << staLine.getCode() << ": " << staLine.getReason();
+	stream << "Method = " << reqLine.getMethod() << ", path = |" << reqLine.getPath() << "|";
 	
-	if (!staLine.getAdditionalInfo().empty())
-		stream << ": " << staLine.getAdditionalInfo();
+	if (!reqLine.getQuery().empty())
+		stream << ", query = |" << reqLine.getQuery() << "|";
 		
 	return stream;
 }
-
 #endif
