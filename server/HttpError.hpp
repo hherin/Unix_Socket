@@ -1,20 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.cpp                                          :+:      :+:    :+:   */
+/*   HttpError.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/04 14:20:37 by lucaslefran      ###   ########.fr       */
+/*   Created: 2021/05/04 12:32:17 by lucaslefran       #+#    #+#             */
+/*   Updated: 2021/05/04 14:06:46 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef HTTPERROR_HPP
+#define HTTPERROR_HPP
+
 #include "../includes/webserv.hpp"
 
-char asciiToLower(char in)
+class HttpError : public std::exception
 {
-    if (in >= 'A' && in <= 'Z')
-        return in + ('a' - 'A');
-    return in;
-}
+	private:
+
+		int		_code;
+
+	public:
+
+		HttpError(int code, const std::string& path) : std::runtime_error(path), _code(code) {};
+		virtual const char* what() const throw()
+		{
+			std::cerr << ""
+		}
+		
+}; // class HttpError
+
+#endif

@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/03 15:06:30 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 11:55:56 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
 
-Response::Response() :
-	Request(), _staLine(), _headers(), _body() {}
+Response::Response() {}
+
+Response::Response(const Request& req, const StatusLine& staLine) :
+	_req(req), _staLine(staLine) {}
+
+Response::Response(const Response& c) : 
+	_req(c._req), _staLine(c._staLine), _headers(c._headers), _body(c._body) {}
 
 Response::~Response() {}
-
-Response::Response(const Response& c) : Request(c), 
-	_staLine(c._staLine), _headers(c._headers), _body(c._body) {}
 
 Response& Response::operator=(Response a)
 {
@@ -32,16 +34,39 @@ Response& Response::operator=(Response a)
 
 
 /* ------------------------------------------------------------- */
+/* --------------------------- SETTERS ------------------------- */
+
+void Response::setRequest(const Request& req)
+{
+	_req = req;
+}
+
+void Response::setStatusLine(const StatusLine& staLine)
+{
+	_staLine = staLine;
+}
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- GETTERS ------------------------- */
+
+const StatusLine& Response::getStatusLine() const
+{
+	return _staLine;
+}
+
+int Response::getCode() const
+{
+	return _staLine.getCode();
+}
+
+
+/* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(Response& a, Response& b)
 {
-	swap(static_cast<Request&>(a), static_cast<Request&>(b));
-	
-	std::swap(a._staLine._code, b._staLine._code);
-	std::swap(a._staLine._reason, b._staLine._reason);
-
+	swap(a._staLine, b._staLine);
 	std::swap(a._headers, b._headers);
-	
 	std::swap(a._body, b._body);
 }

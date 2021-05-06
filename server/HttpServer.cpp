@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:06:51 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 10:51:59 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,18 @@ void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSr
 {
 	while (true)
 	{
-		try
-		{
-			// Setting readFd with all passive accept sockets and all clients previously connected
-			FD_ZERO(&_readFds);
-			addSocketsToFdSet<ServerSocket>(_serverSocks);
-			addSocketsToFdSet<ClientSocket>(_clientSocks);
+		// Setting readFd with all passive accept sockets and all clients previously connected
+		FD_ZERO(&_readFds);
+		addSocketsToFdSet<ServerSocket>(_serverSocks);
+		addSocketsToFdSet<ClientSocket>(_clientSocks);
 
-			// Waiting for incoming connections on server sockets / client sockets
-			if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, NULL, NULL, NULL)) < 0)
-				throw "Error on select function\n";
+		// Waiting for incoming connections on server sockets / client sockets
+		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, NULL, NULL, NULL)) < 0)
+			throw std::runtime_error("Fatal error: select function failed\n");
 
-			// If a passive socket was activated, creates a new client connection
-			connectNewClients(mSrv);
-			requestHandler();
-		}
-		catch (const char* error)
-		{
-			std::cerr << error;
-		}
+		// If a passive socket was activated, creates a new client connection
+		connectNewClients(mSrv);
+		requestHandler();
 	}
 }
 
@@ -88,7 +81,7 @@ void HttpServer::requestHandler()
 			int n = recv(it->getFd(), buffer, BUFFER_SIZE_REQUEST, 0);
 
 			if (n < 0)
-				throw "Error on recv function\n";
+				throw std::runtime_error("Fatal error: recv function failed\n"); // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 				
 			// Closing the connection (in ClientSocket destructor)
 			else if (!n)
@@ -112,10 +105,8 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 {
 	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end(); ++it)
 	{
-		try
+		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			if (FD_ISSET(it->getFd(), &_readFds))
-			{
 			struct sockaddr_in addrCli;
 			int lenCli = sizeof(addrCli);
 			bzero((char *) &addrCli, sizeof(addrCli));
@@ -123,7 +114,7 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			// Creates a new socket for a client connection
 			int newClient;
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
-				throw "Error while trying to accept a new connection\n";
+				throw std::runtime_error("Fatal error: accept function failed\n");  // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 			
 			addClientSocket(newClient, it->getPort(), mSrv);
 			std::cout << "client succesfully added on fd " << newClient << "\n";
@@ -131,12 +122,7 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)
 				break;
-			}	
-		}
-		catch(const char* error)
-		{
-			std::cerr << error;	
-		}
+		}	
 	}
 }
 

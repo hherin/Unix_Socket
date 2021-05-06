@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:07:41 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 11:13:50 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <map>
 
 #include "../includes/webserv.hpp"
+#include "msg_format/StatusLine.hpp"
 
 class Request
 {

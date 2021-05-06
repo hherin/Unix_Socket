@@ -15,6 +15,7 @@ class FileParser
         std::string _filePath;
 
     public:
+
         FileParser(const char*);
 
         FileParser(const char*, ServerInfo *);

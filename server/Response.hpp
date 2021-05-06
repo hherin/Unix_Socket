@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/03 14:42:28 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 12:03:44 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,21 @@
 #define RESPONSE_HPP
 
 #include "Request.hpp"
+#include "msg_format/StatusLine.hpp"
 
-class Response : public Request
+#include "../parser/FileParser.hpp"
+
+class Response
 {
-	
 	private:
 	
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		struct statusLine
-		{
-			int			_code;
-			std::string _reason;
+		// FileParser*							_readFile;
+		Request								_req;	// Request object when the request is fully received
 
-			statusLine() : _code(), _reason() {}
-			statusLine(const statusLine& copy) :
-					_code(copy._code), _reason(copy._reason) {}
-			~statusLine() {}
-		};
-
-		struct statusLine					_staLine;	// Fist line of http response
+		StatusLine							_staLine;	// Fist line of http response
 		std::map<std::string, std::string>	_headers;	// Headers of http response
 		std::string							_body;		// Body (= webpage content for example)
 	
@@ -45,11 +39,25 @@ class Response : public Request
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(const Response& copy);
+		Response(const Request& req, const StatusLine& staLine);
+		Response(const Response& c);
 		~Response();
-		Response& operator=(Response assign);
+		Response& operator=(Response a);
 
-	private:
+		
+		/* ------------------------------------------------------------- */
+		/* --------------------------- SETTERS ------------------------- */
+
+		void setRequest(const Request& req);
+		void setStatusLine(const StatusLine& staLine);
+
+
+		/* ------------------------------------------------------------- */
+		/* --------------------------- GETTERS ------------------------- */
+		
+		const StatusLine& getStatusLine() const;
+		int getCode() const;
+		
 
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */

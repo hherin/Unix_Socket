@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:06:02 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 11:29:04 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <exception>
 
 #include "Request.hpp"
+#include "Response.hpp"
+#include "msg_format/StatusLine.hpp"
 #include "../includes/webserv.hpp"
 #include "../parser/ServerInfo.hpp"
 
@@ -32,7 +34,7 @@ class ClientSocket
 		std::vector<ServerInfo> _infoVirServs;
 		
 		Request					_request;
-		std::string				_response;
+		Response				_response;
 
 	public:
 
@@ -56,7 +58,7 @@ class ClientSocket
 		const Request& getRequest() const;
 
 		// Return response
-		const std::string& getResponse() const;
+		const Response& getResponse() const;
 	
 	
 		/* ------------------------------------------------------------- */

@@ -6,7 +6,7 @@
 #    By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/05/03 15:10:33 by lucaslefran      ###   ########.fr        #
+#    Updated: 2021/05/06 11:12:13 by lucaslefran      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ HDRS		=	HttpServer.hpp \
 				ServerSocket.hpp \
 				ClientSocket.hpp \
 				Request.hpp \
-				Response.hpp
+				Response.hpp \
+				msg_format/StatusLine.hpp
 
 FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 

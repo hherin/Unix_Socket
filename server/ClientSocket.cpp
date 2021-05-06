@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:06:39 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 12:03:26 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /* ------------------------ COPLIEN FORM ----------------------- */
 
 ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs) :
-		_fd(fd), _infoVirServs(infoVirServs), _request(), _response() {}
+		_fd(fd), _infoVirServs(infoVirServs) {}
 
 ClientSocket::~ClientSocket() {}
 
@@ -38,7 +38,7 @@ int ClientSocket::getFd() const { return _fd; }
 
 const Request& ClientSocket::getRequest() const { return _request; }
 
-const std::string& ClientSocket::getResponse() const { return _response; }
+const Response& ClientSocket::getResponse() const { return _response; }
 
 
 /* ------------------------------------------------------------- */
@@ -46,9 +46,22 @@ const std::string& ClientSocket::getResponse() const { return _response; }
 
 int ClientSocket::receiveRequest(const char* buffer)
 {
-	_request += buffer;
-	_request.parsingCheck();
-
+	if (!_response.getCode())
+	{
+		try
+		{
+			_request += buffer;
+			_request.parsingCheck();
+		}
+		catch (const StatusLine& staLine)
+		{
+			std::cerr << staLine << "\n";
+			
+			_response.setStatusLine(staLine);
+			_response.setRequest(_request);
+		}
+	}
+	
 	return 0;
 }
 
