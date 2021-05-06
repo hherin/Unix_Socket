@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <exception>
+#include <string>
 
 enum methods { GET, HEAD, PUT, POST, DELETE };
 

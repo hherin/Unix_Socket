@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 11:13:50 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 12:43:47 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 #include "../includes/webserv.hpp"
 #include "msg_format/StatusLine.hpp"
+#include "msg_format/Body.hpp"
 
 class Request
 {
@@ -42,24 +43,12 @@ class Request
 			~requestLine() {}
 		};
 
-		struct msgBody
-		{
-			bool								_recv;
-			size_t								_size;
-			std::string							_buff;
-
-			msgBody() : _recv(), _size(), _buff() {}
-			msgBody(const msgBody& c) :
-					_recv(c._recv), _size(c._size), _buff(c._buff) {}
-			~msgBody() {}
-		};
-
 		std::string	_buffer;
 		size_t		_index;
         
 		struct requestLine					_reqLine;
         std::map<std::string, std::string>	_headers;
-        struct msgBody						_body;
+        Body								_body;
 	
 	
 	public:

@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 11:11:04 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 13:01:15 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ void Request::parsingCheck()
 {
     // Indicates end of request line / header line
 	size_t posCLRF;
-	posCLRF = !_body._recv ? _buffer.find(CLRF, _index) : 0;
+	posCLRF = !_body.isReceiving() ? _buffer.find(CLRF, _index) : 0;
 
-    while (!_body._recv && newLineReceived(posCLRF))
+    while (!_body.isReceiving() && newLineReceived(posCLRF))
     {
         if (_reqLine._path.empty())
             parseRequestLine(posCLRF);    
         
         // Double CRLF indicates end of headers
-        else if (!_body._recv && _index == posCLRF)
+        else if (!_body.isReceiving() && _index == posCLRF)
 		{
 			_index += CLRF_OCTET_SIZE;
 			
@@ -61,18 +61,18 @@ void Request::parsingCheck()
 
 			if (contLen == _headers.end())
 				throw StatusLine(400, REASON_400, "no content lenght header");
-            _body._recv = true;
-			_body._size = atol(contLen->second.c_str());
+            _body.startReceiving();
+			_body.setSize(atol(contLen->second.c_str()));
 		}
             
-        else if (!_body._recv)
+        else if (!_body.isReceiving())
             parseHeaderLine(posCLRF);
             
         _index = posCLRF + CLRF_OCTET_SIZE;
         posCLRF = _buffer.find(CLRF, _index);
     }
 
-	if (_body._recv)
+	if (_body.isReceiving())
 		parseBody();
 }
 
@@ -84,9 +84,7 @@ void Request::clear()
 
 	_headers.clear();
 	
-	_body._recv = false;
-	_body._size = 0;
-	_body._buff.clear();
+	_body.clear();
 }
 
 
@@ -98,17 +96,16 @@ void Request::parseBody()
 	size_t lenToRead = _buffer.size() - _index;
 	
 	// Ignoring end of buffer if we received the amount of octets expected
-	if (lenToRead > _body._size)
-		lenToRead = _body._size;
+	if (lenToRead > _body.getSize())
+		_body.setSize(lenToRead);
 	
 	// Storing the part of body received until content-lenght octects are received
-	_body._buff.append(_buffer, _index, _body._size);
+	_body.recvBuffer(_buffer, _index, lenToRead);
 	_index += lenToRead;
-	_body._size -= lenToRead;
 
-	if (!_body._size)
+	if (!_body.getSize())
 	{
-		std::cerr << "\n" << _body._buff << "\n----------\n";
+		std::cerr << "\n" << _body.getBody() << "\n----------\n";
 		throw StatusLine(200, REASON_200);
 	}
 }
@@ -118,7 +115,7 @@ bool Request::newLineReceived(size_t posCLRF)
     // Protecting against too long fields
     if (_reqLine._path.empty() && _buffer.size() - _index > MAX_URI_LEN)
         throw StatusLine(414, REASON_414);
-    else if (!_body._recv && _buffer.size() - _index > MAX_HEADER_LEN)
+    else if (!_body.isReceiving() && _buffer.size() - _index > MAX_HEADER_LEN)
         throw StatusLine(431, REASON_431);
 
 	else if (posCLRF == std::string::npos)
@@ -254,7 +251,5 @@ void swap(Request& a, Request& b)
 
 	std::swap(a._headers, b._headers);
 
-	std::swap(a._body._recv, b._body._recv);
-	std::swap(a._body._size, b._body._size);
-	std::swap(a._body._buff, b._body._buff);
+	std::swap(a._body, b._body);
 }

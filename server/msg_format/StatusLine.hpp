@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/04 15:40:02 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 12:01:42 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 12:40:37 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class StatusLine
 		StatusLine(const StatusLine& c) :
 				_code(c._code), _reason(c._reason), _addInfos(c._addInfos) {}
 		~StatusLine() {}
+		
 		
 		
 		/* ------------------------------------------------------------- */
