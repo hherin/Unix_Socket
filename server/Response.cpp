@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/03 15:06:30 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:49:56 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
 
-Response::Response() :
-	Request(), _staLine(), _headers(), _body() {}
+Response::Response() {}
+
+Response::Response(const Request& req, const StatusLine& staLine) :
+	_req(req), _staLine(staLine) {}
+
+Response::Response(const Response& c) : 
+	_req(c._req), _staLine(c._staLine), _headers(c._headers), _body(c._body) {}
 
 Response::~Response() {}
-
-Response::Response(const Response& c) : Request(c), 
-	_staLine(c._staLine), _headers(c._headers), _body(c._body) {}
 
 Response& Response::operator=(Response a)
 {
@@ -32,16 +34,66 @@ Response& Response::operator=(Response a)
 
 
 /* ------------------------------------------------------------- */
+/* --------------------------- SETTERS ------------------------- */
+
+void Response::setRequest(const Request& req)
+{
+	_req = req;
+}
+
+void Response::setStatusLine(const StatusLine& staLine)
+{
+	_staLine = staLine;
+}
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- GETTERS ------------------------- */
+
+const StatusLine& Response::getStatusLine() const
+{
+	return _staLine;
+}
+
+int Response::getCode() const
+{
+	return _staLine.getCode();
+}
+
+const std::string& Response::getBuffer() const
+{
+	return _buffer;
+}
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- METHODS ------------------------- */
+
+void Response::clear()
+{
+	_req.clear();
+	_staLine.clear();
+	_headers.clear();
+	_body.clear();
+	_buffer.clear();
+}
+
+void Response::fillBuffer()
+{
+	_buffer = convertNbToString(_staLine.getCode()) + " " + _staLine.getReason();
+	if (!_staLine.getAdditionalInfo().empty())
+		_buffer += " (" + _staLine.getAdditionalInfo() + ")";
+	_buffer += CLRF;
+}
+
+
+/* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(Response& a, Response& b)
 {
-	swap(static_cast<Request&>(a), static_cast<Request&>(b));
-	
-	std::swap(a._staLine._code, b._staLine._code);
-	std::swap(a._staLine._reason, b._staLine._reason);
-
+	swap(a._req, b._req);
+	swap(a._staLine, b._staLine);
 	std::swap(a._headers, b._headers);
-	
 	std::swap(a._body, b._body);
 }

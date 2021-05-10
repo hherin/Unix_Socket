@@ -1,78 +1,90 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Response.hpp                                       :+:      :+:    :+:   */
+/*   Body.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:14:46 by llefranc         ###   ########.fr       */
+/*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
+/*   Updated: 2021/05/10 14:34:57 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RESPONSE_HPP
-#define RESPONSE_HPP
+#ifndef BODY_HPP
+#define BODY_HPP
 
-#include "Request.hpp"
-#include "msg_format/StatusLine.hpp"
-#include "msg_format/Body.hpp"
+#include "../../includes/webserv.hpp"
 
-#include "../parser/FileParser.hpp"
-
-class Response
+class Body
 {
 	private:
-	
+
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
+		
+			bool								_recv;
+			size_t								_size;
+			std::string							_buff;
 
-		// FileParser*							_readFile;
-		Request								_req;	// Request object when the request is fully received
-
-		StatusLine							_staLine;	// Fist line of http response
-		std::map<std::string, std::string>	_headers;	// Headers of http response
-		Body								_body;		// Body (= webpage content for example)
-	
-		std::string							_buffer;
 
 	public:
 
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		Response();
-		Response(const Request& req, const StatusLine& staLine);
-		Response(const Response& c);
-		~Response();
-		Response& operator=(Response a);
-
+		Body() : _recv(false), _size() {}
+		Body(const Body& c) :
+				_recv(c._recv), _size(c._size), _buff(c._buff) {}
+		~Body() {}
+		Body& operator=(Body a)
+		{
+			swap(*this, a);
+			return *this;
+		}
 		
-		/* ------------------------------------------------------------- */
-		/* --------------------------- SETTERS ------------------------- */
-
-		void setRequest(const Request& req);
-		void setStatusLine(const StatusLine& staLine);
-
-
+		
 		/* ------------------------------------------------------------- */
 		/* --------------------------- GETTERS ------------------------- */
+
+		const std::string& getBody() const { return _buff; }
+		size_t getSize() const { return _size; }
+
+
+		/* ------------------------------------------------------------- */
+		/* --------------------------- SETTERS ------------------------- */
 		
-		const StatusLine& getStatusLine() const;
-		int getCode() const;
-		const std::string& getBuffer() const;
-		
+		void setSize(size_t size) { _size = size; }
+		void startReceiving() { _recv = true; }
+
 
 		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
 
-		void clear();
-		void fillBuffer();
-
+		bool isReceiving() const { return _recv; }
+		void clear()
+		{
+			_recv = false;
+			_size = 0;
+			_buff.clear();
+		}
+		
+		void recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
+		{
+			_buff.append(buffer, index, _size);
+			_size -= lenToRead;
+		}
+		
+		
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
+
+		friend void swap(Body& a, Body& b)
+		{
+			std::swap(a._recv, b._recv);
+			std::swap(a._size, b._size);
+			std::swap(a._buff, b._buff);
+		}
 		
-		friend void swap(Response& a, Response& b);
-	
-}; // class Response
+}; // class Body
 
 #endif

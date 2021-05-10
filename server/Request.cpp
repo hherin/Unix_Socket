@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:10:07 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:59:16 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /* ------------------------ COPLIEN FORM ----------------------- */
 
 Request::Request() :
-	_buffer(), _index(), _reqLine(), _headers(), _body() {}
+	_index() {}
 
 Request::~Request() {}
 
@@ -31,7 +31,16 @@ Request& Request::operator=(Request a)
 	return *this;
 }
 	
-	
+
+/* ------------------------------------------------------------- */
+/* --------------------------- GETTERS ------------------------- */	
+
+const std::string& Request::getBuffer() const
+{
+	return _buffer;
+}
+
+
 /* ------------------------------------------------------------- */
 /* --------------------------- METHODS ------------------------- */
 	
@@ -45,48 +54,45 @@ void Request::parsingCheck()
 {
     // Indicates end of request line / header line
 	size_t posCLRF;
-	posCLRF = !_body._recv ? _buffer.find(CLRF, _index) : 0;
+	posCLRF = !_body.isReceiving() ? _buffer.find(CLRF, _index) : 0;
 
-    while (!_body._recv && newLineReceived(posCLRF))
+    while (!_body.isReceiving() && newLineReceived(posCLRF))
     {
-        if (_reqLine._path.empty())
+        if (_reqLine.empty())
             parseRequestLine(posCLRF);    
         
         // Double CRLF indicates end of headers
-        else if (!_body._recv && _index == posCLRF)
+        else if (!_body.isReceiving() && _index == posCLRF)
 		{
 			_index += CLRF_OCTET_SIZE;
 			
 			std::map<std::string, std::string>::iterator contLen = _headers.find("content-lenght");
 
 			if (contLen == _headers.end())
-				throw "Error 400: bad request: no content lenght header\n"; // rajouter trnafer encoding + head etc + get n'a pas de body ?
-            _body._recv = true;
-			_body._size = atol(contLen->second.c_str());
+				throw StatusLine(400, REASON_400, "no content lenght header");
+            _body.startReceiving();
+			_body.setSize(atol(contLen->second.c_str()));
 		}
             
-        else if (!_body._recv)
+        else if (!_body.isReceiving())
             parseHeaderLine(posCLRF);
             
         _index = posCLRF + CLRF_OCTET_SIZE;
         posCLRF = _buffer.find(CLRF, _index);
     }
 
-	if (_body._recv)
+	if (_body.isReceiving())
 		parseBody();
 }
 
 void Request::clear()
 {
-	_reqLine._method = -1;
-	_reqLine._path.clear();
-	_reqLine._query.clear();
-
-	_headers.clear();
+	_index = 0;
+	_buffer.clear();
 	
-	_body._recv = false;
-	_body._size = 0;
-	_body._buff.clear();
+	_reqLine.clear();
+	_headers.clear();
+	_body.clear();
 }
 
 
@@ -98,30 +104,27 @@ void Request::parseBody()
 	size_t lenToRead = _buffer.size() - _index;
 	
 	// Ignoring end of buffer if we received the amount of octets expected
-	if (lenToRead > _body._size)
-		lenToRead = _body._size;
+	if (lenToRead > _body.getSize())
+		_body.setSize(lenToRead);
 	
 	// Storing the part of body received until content-lenght octects are received
-	_body._buff.append(_buffer, _index, _body._size);
+	_body.recvBuffer(_buffer, _index, lenToRead);
 	_index += lenToRead;
-	_body._size -= lenToRead;
 
-	if (!_body._size)
+	if (!_body.getSize())
 	{
-		std::cerr << "\n" << _body._buff << "\n----------\n";
-		exit(EXIT_SUCCESS);
-		
-		// ICI LANCER SUREMENT LA REPONSE. REPRENDRE A CE STADE.
+		std::cerr << "\n" << _body.getBody() << "\n----------\n";
+		throw StatusLine(200, REASON_200);
 	}
 }
 
 bool Request::newLineReceived(size_t posCLRF)
 {
     // Protecting against too long fields
-    if (_reqLine._path.empty() && _buffer.size() - _index > MAX_URI_LEN)
-        throw "Error 414: request URI too long\n";
-    else if (!_body._recv && _buffer.size() - _index > MAX_HEADER_LEN)
-        throw "Error 431: request header fields too large\n";
+    if (_reqLine.getPath().empty() && _buffer.size() - _index > MAX_URI_LEN)
+        throw StatusLine(414, REASON_414);
+    else if (!_body.isReceiving() && _buffer.size() - _index > MAX_HEADER_LEN)
+        throw StatusLine(431, REASON_431);
 
 	else if (posCLRF == std::string::npos)
 		return false;
@@ -135,14 +138,14 @@ void Request::parseHeaderLine(size_t posCLRF)
     
 	size_t pos = headerLine.find(":");
     if (pos == std::string::npos)
-		throw "Error 400: bad request: no semicolon\n";
+		throw StatusLine(400, REASON_400, "no semicolon");
 	
 	// Splitting field name and field value with first semicolon
 	std::pair<std::string, std::string> headerField(headerLine.substr(0, pos), 
 			headerLine.substr(pos + 1, std::string::npos));
 	
 	if (headerField.first.find_first_of("\r\n\t\v\f ") != std::string::npos)
-		throw "Error 400: bad request: no whitespaces before semicolon\n";
+		throw StatusLine(400, REASON_400, "no whitespaces before semicolon");
 	
 	// Header field name is case insensitive, transforming it to lowercase
     std::transform(headerField.first.begin(), headerField.first.end(), 
@@ -153,25 +156,23 @@ void Request::parseHeaderLine(size_t posCLRF)
 	headerField.second.erase(headerField.second.find_last_not_of(" \t") + 1, std::string::npos);
 	
 	if (!_headers.insert(headerField).second)
-		throw "Error 400: bad request: duplicated headers are not allowed\n";
+		throw StatusLine(400, REASON_400, "duplicated headers are not allowed");
     
     std::cerr << headerField.first << ":|" << headerField.second << "|\n"; // TEST
 }
-
-// PARSING REQUEST LINE
 
 void Request::parseRequestLine(size_t posCLRF)
 {
 	// Checking that first line is not empty or contains whitespaces
 	if (posCLRF == _index)
-		throw "Error 400: bad request: first line is empty\n";
+		throw StatusLine(400, REASON_400, "first line is empty");
 
 	std::string requestLine = _buffer.substr(_index, posCLRF - _index);
 	
 	if (requestLine.find_first_of("\r\n\t\v\f") != std::string::npos)
-		throw "Error 400: bad request: whitespaces not allowed\n";
+		throw StatusLine(400, REASON_400, "whitespaces not allowed");
 	else if (std::count(requestLine.begin(), requestLine.end(), ' ') > 2)
-		throw "Error 400: bad request: too many spaces\n";
+		throw StatusLine(400, REASON_400, "too many spaces");
 	
 	
 	// Splitting the request line
@@ -179,13 +180,10 @@ void Request::parseRequestLine(size_t posCLRF)
 	std::istringstream s(requestLine);
 
 	while (std::getline(s, requestLine, ' '))
-	{
 		tokens.push_back(requestLine);
-		if (tokens.size() > 3)
-			throw "Error 400: bad request: too many spaces\n";
-	}
+		
 	if (tokens.size() != 3)
-		throw "Error 400: bad request: a field from request line is missing\n";
+		throw StatusLine(400, REASON_400, "a field from request line is missing");
 
 
 	// Parsing the request line
@@ -193,8 +191,7 @@ void Request::parseRequestLine(size_t posCLRF)
 	parseURI(tokens[1]);
 	parseHTTPVersion(tokens[2]);
 
-    std::cerr << _reqLine._method << " " << _reqLine._path; // TEST
-    _reqLine._query.empty() ? std::cerr << "\n" : std::cerr << "?" << _reqLine._query << "\n"; // TEST
+    std::cerr << _reqLine << "\n";
 }
 
 void Request::parseMethodToken(const std::string& token)
@@ -203,20 +200,22 @@ void Request::parseMethodToken(const std::string& token)
 	
 	for (int i = 0; i < 5; ++i)
 	{
-		if (!token.compare(_index, methods[i].size(), methods[i]))
+		// Token should exactly match one of the five methods
+		if (!token.compare(_index, methods[i].size(), methods[i]) &&
+				token.size() == methods[i].size())
 		{
-			_reqLine._method = i;
+			_reqLine.setMethod(i);
 			return ;
 		}
 	}
 
-	throw "Error 400: bad request: unknown method\n";
+	throw StatusLine(400, REASON_400, "unknown method");
 }
 
 void Request::parseURI(std::string token)
 {
 	if (token[0] != '/')
-		throw "Error 400: bad request: URI must begin with a /\n";
+		throw StatusLine(400, REASON_400, "URI must begin with a /");
 	
     // URI is case insensitive, transforming it to lowercase
     std::transform(token.begin(), token.end(), token.begin(), asciiToLower);
@@ -225,23 +224,23 @@ void Request::parseURI(std::string token)
 	size_t querryChar = token.find("?");
 	if (querryChar != std::string::npos)
 	{
-		_reqLine._path = token.substr(0, querryChar);
-		_reqLine._query = token.substr(querryChar + 1, token.size());
+		_reqLine.setPath(token.substr(0, querryChar));
+		_reqLine.setQuery(token.substr(querryChar + 1, token.size()));
 	}
 
 	// Case there is only path in the URI
 	else
-		_reqLine._path = token;
+		_reqLine.setPath(token);
 }
 
 void Request::parseHTTPVersion(const std::string& token)
 {   
 	if (token.compare(0, 5, "HTTP/") || token.compare(6, 1, ".") ||
 			!isdigit(static_cast<int>(token[5])) || !isdigit(static_cast<int>(token[7])))
-		throw "Error 400: bad request: HTTP version not correct\n";
+		throw StatusLine(400, REASON_400, "HTTP version not correct");
 			
 	else if (token.compare("HTTP/1.1"))
-		throw "Error 505: HTTP Version Not Supported\n";
+		throw StatusLine(505, REASON_505);
 }
 
 
@@ -253,13 +252,7 @@ void swap(Request& a, Request& b)
 	std::swap(a._buffer, b._buffer);
 	std::swap(a._index, b._index);
 	
-	std::swap(a._reqLine._method, b._reqLine._method);
-	std::swap(a._reqLine._path, b._reqLine._path);
-	std::swap(a._reqLine._query, b._reqLine._query);
-
+	swap(a._reqLine, b._reqLine);
 	std::swap(a._headers, b._headers);
-
-	std::swap(a._body._recv, b._body._recv);
-	std::swap(a._body._size, b._body._size);
-	std::swap(a._body._buff, b._body._buff);
+	swap(a._body, b._body);
 }

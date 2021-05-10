@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:06:51 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:42:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
 
-HttpServer::HttpServer() 
-	: _serverSocks(), _clientSocks(), _readFds(), _nbReadyFds() {}
+HttpServer::HttpServer() :
+	_readFds(), _writeFds(), _nbReadyFds() {}
 
 HttpServer::~HttpServer() {}
 
 HttpServer::HttpServer(const HttpServer& c) :
 	_serverSocks(c._serverSocks), _clientSocks(c._clientSocks),
-	_readFds(c._readFds), _nbReadyFds(c._nbReadyFds) {}
+	_readFds(c._readFds), _writeFds(c._writeFds), _nbReadyFds(c._nbReadyFds) {}
 
 HttpServer& HttpServer::operator=(HttpServer a)
 {
@@ -51,31 +51,45 @@ void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSr
 {
 	while (true)
 	{
-		try
-		{
-			// Setting readFd with all passive accept sockets and all clients previously connected
-			FD_ZERO(&_readFds);
-			addSocketsToFdSet<ServerSocket>(_serverSocks);
-			addSocketsToFdSet<ClientSocket>(_clientSocks);
+		// Setting readFd with all passive accept sockets and all clients previously connected
+		FD_ZERO(&_readFds);
+		FD_ZERO(&_writeFds);
+		
+		addSocketsToReadFdSet<ServerSocket>(_serverSocks);
+		addSocketsToReadFdSet<ClientSocket>(_clientSocks);
+		addSocketsToWriteFdSet<ClientSocket>(_clientSocks);
 
-			// Waiting for incoming connections on server sockets / client sockets
-			if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, NULL, NULL, NULL)) < 0)
-				throw "Error on select function\n";
+		// Waiting for incoming connections on server sockets / client sockets
+		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, &_writeFds, NULL, NULL)) < 0)
+			throw std::runtime_error("Fatal error: select function failed\n");
 
-			// If a passive socket was activated, creates a new client connection
-			connectNewClients(mSrv);
-			requestHandler();
-		}
-		catch (const char* error)
-		{
-			std::cerr << error;
-		}
+		// If a passive socket was activated, creates a new client connection
+		sendToClients();
+		connectNewClients(mSrv);
+		requestHandler();
 	}
 }
 
 
 /* ------------------------------------------------------------- */
 /* ------------------ PRIVATE MEMBER FUNCTIONS ----------------- */
+
+void HttpServer::sendToClients()
+{
+	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end(); ++it)
+	{
+		if (FD_ISSET(it->getFd(), &_writeFds))
+		{
+			// Don't handle the case if send can't send everything in one time
+			if (send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()), 
+					it->getResponse()->getBuffer().size(), 0) < 1)
+				throw std::runtime_error("Fatal error: send function failed\n");
+			
+			it->getResponse()->clear();
+			it->getRequest()->clear();
+		}
+	}
+}
 
 void HttpServer::requestHandler()
 {
@@ -88,7 +102,7 @@ void HttpServer::requestHandler()
 			int n = recv(it->getFd(), buffer, BUFFER_SIZE_REQUEST, 0);
 
 			if (n < 0)
-				throw "Error on recv function\n";
+				throw std::runtime_error("Fatal error: recv function failed\n"); // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 				
 			// Closing the connection (in ClientSocket destructor)
 			else if (!n)
@@ -112,10 +126,9 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 {
 	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end(); ++it)
 	{
-		try
+		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			if (FD_ISSET(it->getFd(), &_readFds))
-			{
+			// Not use but need to be set for accept function
 			struct sockaddr_in addrCli;
 			int lenCli = sizeof(addrCli);
 			bzero((char *) &addrCli, sizeof(addrCli));
@@ -123,20 +136,17 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			// Creates a new socket for a client connection
 			int newClient;
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
-				throw "Error while trying to accept a new connection\n";
+				throw std::runtime_error("Fatal error: accept function failed\n");  // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 			
+			// Setting the fd in non-blocking mode, then saving it
+			fcntl(newClient, F_SETFL, O_NONBLOCK);
 			addClientSocket(newClient, it->getPort(), mSrv);
 			std::cout << "client succesfully added on fd " << newClient << "\n";
 
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)
 				break;
-			}	
-		}
-		catch(const char* error)
-		{
-			std::cerr << error;	
-		}
+		}	
 	}
 }
 
@@ -149,5 +159,6 @@ void swap(HttpServer& a, HttpServer& b)
 	std::swap(a._serverSocks, b._serverSocks);
 	std::swap(a._clientSocks, b._clientSocks);
 	std::swap(a._readFds, b._readFds);
+	std::swap(a._writeFds, b._writeFds);
 	std::swap(a._nbReadyFds, b._nbReadyFds);
 }

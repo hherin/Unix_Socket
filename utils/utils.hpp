@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.cpp                                          :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:26:11 by llefranc         ###   ########.fr       */
+/*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
+/*   Updated: 2021/05/10 14:26:20 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.hpp"
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
-char asciiToLower(char in)
-{
-    if (in >= 'A' && in <= 'Z')
-        return in + ('a' - 'A');
-    return in;
-}
+#include <string>
+#include <sstream>
 
-std::string convertNbToString(size_t nb)
-{
-	std::ostringstream oss;
-	
-	oss << nb;
-	return oss.str();
-}
+char asciiToLower(char in);
+std::string convertNbToString(size_t nb);
+
+#endif

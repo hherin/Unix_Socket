@@ -21,8 +21,8 @@ int main(int ac, char **av)
 {
     if (ac != 2)
     {
-        std::cerr << "Wrong output\n";
-        exit(1);
+        std::cerr << "Fatal error: wrong arguments\n";
+        exit(EXIT_FAILURE);
     }
     
     FileParser conf(av[1]);
@@ -45,9 +45,9 @@ int main(int ac, char **av)
 			
 		server.etablishConnection(m_srv);
 	}
-	catch (const char* msg)
+	catch (std::exception& e)
 	{
-		std::cerr << msg;
+		std::cerr << e.what();
 		exit(EXIT_FAILURE);
 	}
 

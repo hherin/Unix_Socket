@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/03 15:07:41 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:53:28 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 #include <map>
 
 #include "../includes/webserv.hpp"
+#include "msg_format/StatusLine.hpp"
+#include "msg_format/RequestLine.hpp"
+#include "msg_format/Body.hpp"
 
 class Request
 {
@@ -29,36 +32,12 @@ class Request
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		struct requestLine
-		{
-			int			_method;
-			std::string _path;
-			std::string _query;
-
-			requestLine() : _method(), _path(), _query() {}
-			requestLine(const requestLine& c) :
-					_method(c._method), _path(c._path), _query(c._query) {}
-			~requestLine() {}
-		};
-
-		struct msgBody
-		{
-			bool								_recv;
-			size_t								_size;
-			std::string							_buff;
-
-			msgBody() : _recv(), _size(), _buff() {}
-			msgBody(const msgBody& c) :
-					_recv(c._recv), _size(c._size), _buff(c._buff) {}
-			~msgBody() {}
-		};
-
 		std::string	_buffer;
 		size_t		_index;
         
-		struct requestLine					_reqLine;
+		RequestLine							_reqLine;
         std::map<std::string, std::string>	_headers;
-        struct msgBody						_body;
+        Body								_body;
 	
 	
 	public:
@@ -73,11 +52,17 @@ class Request
 		
 
 		/* ------------------------------------------------------------- */
+		/* --------------------------- GETTERS ------------------------- */
+		const std::string& getBuffer() const;
+
+
+		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
 
 		Request& operator+=(const char* charBuffer);
 		void parsingCheck();
 		void clear();
+	
 	
 	private:
 
