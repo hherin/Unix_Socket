@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 11:55:56 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 17:05:05 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int Response::getCode() const
 
 void swap(Response& a, Response& b)
 {
+	swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
 	std::swap(a._headers, b._headers);
 	std::swap(a._body, b._body);

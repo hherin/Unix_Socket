@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 16:51:26 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 16:57:43 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 17:14:07 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,26 @@ class RequestLine
 		int getMethod() const { return _method; }
 		const std::string& getPath() const { return _path; }
 		const std::string& getQuery() const { return _query; }
+
+
+		/* ------------------------------------------------------------- */
+		/* --------------------------- SETTERS ------------------------- */
+		
+		void setMethod(int method) { _method = method; }
+		void setPath(const std::string& path) { _path = path; }
+		void setQuery(const std::string& query) { _query = query; }
+		
+
+		/* ------------------------------------------------------------- */
+		/* -------------------------- METHODS -------------------------- */
+
+		void clear()
+		{
+			_method = -1;
+			_path.clear();
+			_query.clear();
+		}
+		bool empty() const { return _path.empty(); }
 
 
 		/* ------------------------------------------------------------- */

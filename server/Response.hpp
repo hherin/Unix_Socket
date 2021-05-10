@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 12:03:44 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 17:57:44 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "Request.hpp"
 #include "msg_format/StatusLine.hpp"
+#include "msg_format/Body.hpp"
 
 #include "../parser/FileParser.hpp"
 
@@ -30,9 +31,10 @@ class Response
 
 		StatusLine							_staLine;	// Fist line of http response
 		std::map<std::string, std::string>	_headers;	// Headers of http response
-		std::string							_body;		// Body (= webpage content for example)
+		Body								_body;		// Body (= webpage content for example)
 	
-	
+		std::string							_buffer;
+
 	public:
 
 		/* ------------------------------------------------------------- */
@@ -57,6 +59,7 @@ class Response
 		
 		const StatusLine& getStatusLine() const;
 		int getCode() const;
+		const std::string& getBuffer() const;
 		
 
 		/* ------------------------------------------------------------- */

@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 12:43:47 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 17:05:38 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 #include "../includes/webserv.hpp"
 #include "msg_format/StatusLine.hpp"
+#include "msg_format/RequestLine.hpp"
 #include "msg_format/Body.hpp"
 
 class Request
@@ -31,22 +32,10 @@ class Request
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		struct requestLine
-		{
-			int			_method;
-			std::string _path;
-			std::string _query;
-
-			requestLine() : _method(), _path(), _query() {}
-			requestLine(const requestLine& c) :
-					_method(c._method), _path(c._path), _query(c._query) {}
-			~requestLine() {}
-		};
-
 		std::string	_buffer;
 		size_t		_index;
         
-		struct requestLine					_reqLine;
+		RequestLine							_reqLine;
         std::map<std::string, std::string>	_headers;
         Body								_body;
 	

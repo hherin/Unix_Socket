@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 13:01:15 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/06 17:14:17 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Request::parsingCheck()
 
     while (!_body.isReceiving() && newLineReceived(posCLRF))
     {
-        if (_reqLine._path.empty())
+        if (_reqLine.empty())
             parseRequestLine(posCLRF);    
         
         // Double CRLF indicates end of headers
@@ -78,12 +78,8 @@ void Request::parsingCheck()
 
 void Request::clear()
 {
-	_reqLine._method = -1;
-	_reqLine._path.clear();
-	_reqLine._query.clear();
-
+	_reqLine.clear();
 	_headers.clear();
-	
 	_body.clear();
 }
 
@@ -113,7 +109,7 @@ void Request::parseBody()
 bool Request::newLineReceived(size_t posCLRF)
 {
     // Protecting against too long fields
-    if (_reqLine._path.empty() && _buffer.size() - _index > MAX_URI_LEN)
+    if (_reqLine.getPath().empty() && _buffer.size() - _index > MAX_URI_LEN)
         throw StatusLine(414, REASON_414);
     else if (!_body.isReceiving() && _buffer.size() - _index > MAX_HEADER_LEN)
         throw StatusLine(431, REASON_431);
@@ -185,8 +181,7 @@ void Request::parseRequestLine(size_t posCLRF)
 	parseURI(tokens[1]);
 	parseHTTPVersion(tokens[2]);
 
-    std::cerr << _reqLine._method << " " << _reqLine._path; // TEST
-    _reqLine._query.empty() ? std::cerr << "\n" : std::cerr << "?" << _reqLine._query << "\n"; // TEST
+    std::cerr << _reqLine << "\n";
 }
 
 void Request::parseMethodToken(const std::string& token)
@@ -197,7 +192,7 @@ void Request::parseMethodToken(const std::string& token)
 	{
 		if (!token.compare(_index, methods[i].size(), methods[i]))
 		{
-			_reqLine._method = i;
+			_reqLine.setMethod(i);
 			return ;
 		}
 	}
@@ -217,13 +212,13 @@ void Request::parseURI(std::string token)
 	size_t querryChar = token.find("?");
 	if (querryChar != std::string::npos)
 	{
-		_reqLine._path = token.substr(0, querryChar);
-		_reqLine._query = token.substr(querryChar + 1, token.size());
+		_reqLine.setPath(token.substr(0, querryChar));
+		_reqLine.setQuery(token.substr(querryChar + 1, token.size()));
 	}
 
 	// Case there is only path in the URI
 	else
-		_reqLine._path = token;
+		_reqLine.setPath(token);
 }
 
 void Request::parseHTTPVersion(const std::string& token)
@@ -245,11 +240,7 @@ void swap(Request& a, Request& b)
 	std::swap(a._buffer, b._buffer);
 	std::swap(a._index, b._index);
 	
-	std::swap(a._reqLine._method, b._reqLine._method);
-	std::swap(a._reqLine._path, b._reqLine._path);
-	std::swap(a._reqLine._query, b._reqLine._query);
-
+	swap(a._reqLine, b._reqLine);
 	std::swap(a._headers, b._headers);
-
-	std::swap(a._body, b._body);
+	swap(a._body, b._body);
 }
