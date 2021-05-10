@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   StatusLine.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/04 15:40:02 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 16:54:59 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:04:33 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class StatusLine
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		StatusLine() : _code(), _reason() {}
+		StatusLine() : _code(-1), _reason() {}
 		StatusLine(int code, const char* reason, const std::string& addInfos = "") :
 			_code(code), _reason(reason), _addInfos(addInfos) {}
 		StatusLine(const StatusLine& c) :
@@ -53,6 +53,17 @@ class StatusLine
 		const std::string& getReason() const { return _reason; }
 		const std::string& getAdditionalInfo() const { return _addInfos; }
 
+
+		/* ------------------------------------------------------------- */
+		/* --------------------------- METHODS ------------------------- */
+
+		void clear()
+		{
+			_code = -1;
+			_reason.clear();
+			_addInfos.clear();
+		}
+		
 
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */

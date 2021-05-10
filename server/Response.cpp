@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 17:05:05 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:49:56 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,32 @@ const StatusLine& Response::getStatusLine() const
 int Response::getCode() const
 {
 	return _staLine.getCode();
+}
+
+const std::string& Response::getBuffer() const
+{
+	return _buffer;
+}
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- METHODS ------------------------- */
+
+void Response::clear()
+{
+	_req.clear();
+	_staLine.clear();
+	_headers.clear();
+	_body.clear();
+	_buffer.clear();
+}
+
+void Response::fillBuffer()
+{
+	_buffer = convertNbToString(_staLine.getCode()) + " " + _staLine.getReason();
+	if (!_staLine.getAdditionalInfo().empty())
+		_buffer += " (" + _staLine.getAdditionalInfo() + ")";
+	_buffer += CLRF;
 }
 
 

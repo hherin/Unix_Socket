@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 12:18:22 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 15:01:38 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ ClientSocket& ClientSocket::operator=(ClientSocket a)
 
 int ClientSocket::getFd() const { return _fd; }
 
-const Request& ClientSocket::getRequest() const { return _request; }
+Request* ClientSocket::getRequest() { return &_request; }
 
-const Response& ClientSocket::getResponse() const { return _response; }
+Response* ClientSocket::getResponse() { return &_response; }
 
 
 /* ------------------------------------------------------------- */
@@ -46,19 +46,24 @@ const Response& ClientSocket::getResponse() const { return _response; }
 
 int ClientSocket::receiveRequest(const char* buffer)
 {
-	if (!_response.getCode())
+	// while response isn't send
+	if (_response.getCode() == -1)
 	{
+		// Parsing information received, sending a StatusLine object when the full request
+		// was received or if an error occured
 		try
 		{
 			_request += buffer;
 			_request.parsingCheck();
 		}
+
+		// Setting the response with the StatusLine previously sent, and with this request
+		// object containing the full request
 		catch (const StatusLine& staLine)
 		{
-			std::cerr << staLine << "\n";
-			
 			_response.setStatusLine(staLine);
 			_response.setRequest(_request);
+			_response.fillBuffer();
 		}
 	}
 	

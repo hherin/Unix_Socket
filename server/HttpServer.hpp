@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/07 13:17:58 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:40:56 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ class HttpServer
 		void addSocketsToWriteFdSet(std::list<T>& sockets)
 		{
 			for (typename std::list<T>::iterator it = sockets.begin(); it != sockets.end(); ++it)
-				if (!(it->getResponse().getBuffer().empty()))
+				if (!(it->getResponse()->getBuffer().empty()))
 					FD_SET(it->getFd(), &_writeFds);
 		}
 

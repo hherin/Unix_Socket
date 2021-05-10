@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 17:57:44 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:14:46 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,12 @@ class Response
 		int getCode() const;
 		const std::string& getBuffer() const;
 		
+
+		/* ------------------------------------------------------------- */
+		/* --------------------------- METHODS ------------------------- */
+
+		void clear();
+		void fillBuffer();
 
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */

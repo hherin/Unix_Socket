@@ -16,6 +16,9 @@
 #include <algorithm>
 #include <exception>
 #include <string>
+#include <sstream>
+
+#include "../utils/utils.hpp"
 
 enum methods { GET, HEAD, PUT, POST, DELETE };
 
@@ -73,7 +76,5 @@ enum methods { GET, HEAD, PUT, POST, DELETE };
 #define REASON_503 "Service Unavailable"
 #define REASON_504 "Gateway Timeout"
 #define REASON_505 "HTTP Version Not Supported"
-
-char asciiToLower(char in);
 
 #endif

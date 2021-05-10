@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 17:14:17 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:59:16 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,16 @@ Request& Request::operator=(Request a)
 	return *this;
 }
 	
-	
+
+/* ------------------------------------------------------------- */
+/* --------------------------- GETTERS ------------------------- */	
+
+const std::string& Request::getBuffer() const
+{
+	return _buffer;
+}
+
+
 /* ------------------------------------------------------------- */
 /* --------------------------- METHODS ------------------------- */
 	
@@ -78,6 +87,9 @@ void Request::parsingCheck()
 
 void Request::clear()
 {
+	_index = 0;
+	_buffer.clear();
+	
 	_reqLine.clear();
 	_headers.clear();
 	_body.clear();
@@ -149,8 +161,6 @@ void Request::parseHeaderLine(size_t posCLRF)
     std::cerr << headerField.first << ":|" << headerField.second << "|\n"; // TEST
 }
 
-// PARSING REQUEST LINE
-
 void Request::parseRequestLine(size_t posCLRF)
 {
 	// Checking that first line is not empty or contains whitespaces
@@ -190,7 +200,9 @@ void Request::parseMethodToken(const std::string& token)
 	
 	for (int i = 0; i < 5; ++i)
 	{
-		if (!token.compare(_index, methods[i].size(), methods[i]))
+		// Token should exactly match one of the five methods
+		if (!token.compare(_index, methods[i].size(), methods[i]) &&
+				token.size() == methods[i].size())
 		{
 			_reqLine.setMethod(i);
 			return ;

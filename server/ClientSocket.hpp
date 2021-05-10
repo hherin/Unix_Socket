@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/06 11:29:04 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:40:12 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ class ClientSocket
 		int getFd() const;
 
 		// Return request
-		const Request& getRequest() const;
+		Request* getRequest();
 
 		// Return response
-		const Response& getResponse() const;
+		Response* getResponse();
 	
 	
 		/* ------------------------------------------------------------- */

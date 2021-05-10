@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/07 13:22:45 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:42:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,13 @@ void HttpServer::sendToClients()
 	{
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
-			send(it->getFd(), static_cast<void*>(it->getResponse().getBuffer().c_str()), 
-					it->getResponse().getBuffer().size(), 0);
+			// Don't handle the case if send can't send everything in one time
+			if (send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()), 
+					it->getResponse()->getBuffer().size(), 0) < 1)
+				throw std::runtime_error("Fatal error: send function failed\n");
+			
+			it->getResponse()->clear();
+			it->getRequest()->clear();
 		}
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Body.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 13:00:43 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 14:34:57 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ class Body
 			_size = 0;
 			_buff.clear();
 		}
+		
 		void recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
 		{
 			_buff.append(buffer, index, _size);
