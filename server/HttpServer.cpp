@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 14:42:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 18:03:19 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void HttpServer::sendToClients()
 
 void HttpServer::requestHandler()
 {
-	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end(); ++it)
+	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end();)
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
@@ -107,18 +107,21 @@ void HttpServer::requestHandler()
 			// Closing the connection (in ClientSocket destructor)
 			else if (!n)
 			{
-				std::list<ClientSocket>::iterator tmp = ++it;
+				// Need to use a tmp iterator because otherwise it is invalidated after erase
+				std::list<ClientSocket>::iterator tmp = it++;
 				_clientSocks.erase(tmp);
+
 				continue ;
 			}
 
 			// Concatenate buffer to actual stored request
 			it->receiveRequest(buffer);
-
+				
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)
-				break;			
+				break;
 		}
+		++it;
 	}
 }
 

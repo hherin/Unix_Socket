@@ -1,0 +1,76 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    telnet.exp                                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/04/28 13:04:49 by heleneherin       #+#    #+#              #
+#    Updated: 2021/05/10 18:01:49 by hherin           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#!/usr/bin/expect -f
+
+set timeout -1											
+
+# ============== client connexion infos 
+# ============== are saved in args
+set args [lrange $argv 0 end]
+
+
+
+# ============== getters path of requests 
+# ============== in req reporitory
+	# open file with all request file path
+set fd [open "ls_files"]
+
+	# save all paths
+set filepath [split [read -nonewline $fd] "\n"]
+close $fd
+
+
+
+# ============== add a log file for expect
+log_file -noappend expLog.log
+
+
+
+# ============== Run telnet
+spawn telnet {*}$args
+
+exec sleep 2
+expect  eof {exit 55}   \
+		".\r"
+
+
+
+# ============== for each request's 
+# ============== path send it to the server
+foreach path $filepath {
+		# open the request file
+	set fdreq [open "$path"]
+		# save input in variable request
+	set request [read $fdreq]
+		# send it to server
+	send -- "$request\r"
+	close $fdreq
+	exec sleep 1
+}
+
+# ============== Tell Telnet to quit.
+exec sleep 1
+send "\x1d"
+expect "\r\ntelnet>"
+send "quit\r"
+
+
+# ============== end of logging
+log_file
+
+
+# ============== exit status 23
+expect eof {exit 23}
+
+
+
