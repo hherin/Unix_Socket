@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RequestLine.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 16:51:26 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/06 17:14:07 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/05/10 16:10:19 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ class RequestLine
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 	
-		int			_method;
-		std::string _path;
-		std::string _query;
+		int			_method;	// Enum methods { GET, HEAD, PUT, POST, DELETE };
+		std::string _path;		// Contains the path where search / put the file
+		std::string _query;		// Contains args coming after first '?' in URI
 
 
 	public:
@@ -63,12 +63,15 @@ class RequestLine
 		/* ------------------------------------------------------------- */
 		/* -------------------------- METHODS -------------------------- */
 
+		// Clear RequestLine object
 		void clear()
 		{
 			_method = -1;
 			_path.clear();
 			_query.clear();
 		}
+
+		// Returns true if no path has been set in RequestLine object, false otherwise
 		bool empty() const { return _path.empty(); }
 
 
@@ -88,6 +91,7 @@ class RequestLine
 /* ------------------------------------------------------------- */
 /* -------------------- OPERATOR OVERLOADS --------------------- */
 
+// Print the RequestLine method, path, and query if there is one
 inline std::ostream& operator<<(std::ostream& stream, const RequestLine& reqLine)
 {
 	stream << "Method = " << reqLine.getMethod() << ", path = |" << reqLine.getPath() << "|";
