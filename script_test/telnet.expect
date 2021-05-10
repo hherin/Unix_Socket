@@ -6,7 +6,7 @@
 #    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/28 13:04:49 by heleneherin       #+#    #+#              #
-#    Updated: 2021/05/03 14:57:49 by heleneherin      ###   ########.fr        #
+#    Updated: 2021/05/04 14:06:35 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,15 +20,19 @@ set fd [open "ls_files"]
 set filepath [split [read -nonewline $fd] "\n"]
 close $fd
 
+log_file expLog.log
 
 foreach path $filepath {
+    spawn ../webserv ../parser/test/conf > webLog.log
     spawn telnet {*}$args
     expect ".\r"
-    puts "$path"
     set fdreq [open "$path"]
     set request [read $fdreq]
-    close $fdreq
     send -- "$request\r"  
+    close $fdreq
     sleep 1
 }
+
+log_file
+
 expect eof
