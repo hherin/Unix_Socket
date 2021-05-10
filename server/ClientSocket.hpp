@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 14:40:12 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:52:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <exception>
+#include <queue>
 
 #include "Request.hpp"
 #include "Response.hpp"
@@ -30,18 +31,17 @@ class ClientSocket
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		int						_fd;
-		std::vector<ServerInfo> _infoVirServs;
+		int						_fd;			// File descriptor receiving / sending with the client
+		std::vector<ServerInfo> _infoVirServs;	// Servers blocks from config file that match a specific port
 		
-		Request					_request;
-		Response				_response;
+		Request					_request;		// Object containing the request
+		std::queue<Response>	_respQueue;		// Queue containing the responses created from request object
 
 	public:
 
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		// Initialize variables
 		ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs);
 		ClientSocket(const ClientSocket& c);
 		~ClientSocket();
@@ -57,8 +57,8 @@ class ClientSocket
 		// Return request
 		Request* getRequest();
 
-		// Return response
-		Response* getResponse();
+		// Return responses queue
+		std::queue<Response>* getResponsesQueued();
 	
 	
 		/* ------------------------------------------------------------- */
@@ -67,7 +67,6 @@ class ClientSocket
 		// Add buffer into request, and request will parse the new line delimited by CRLF
 		int receiveRequest(const char* buffer);
 	
-	private:
 
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */

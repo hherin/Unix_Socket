@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 14:40:56 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:51:33 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ class HttpServer
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		std::list<ServerSocket>	_serverSocks;
-		std::list<ClientSocket>	_clientSocks;
-		fd_set					_readFds;
-		fd_set					_writeFds;
-		int						_nbReadyFds;
+		std::list<ServerSocket>	_serverSocks;	// All passive sockets, each one listening on a specific port
+		std::list<ClientSocket>	_clientSocks;	// All connection established with clients
+		fd_set					_readFds;		// Useful when using select and trying to receive data
+		fd_set					_writeFds;		// Useful when using select and trying to send data
+		int						_nbReadyFds;	// Nb of fds activated (could be from write fd_set or read fd_set)
 
 
 	public:
@@ -77,12 +77,13 @@ class HttpServer
 				FD_SET(it->getFd(), &_readFds);
 		}
 
-		// Set writefd with the content of a socket's list
+		// Set writefd with the content of a socket's list for each client socket containing at least
+		// one response in the queue
 		template <typename T>
 		void addSocketsToWriteFdSet(std::list<T>& sockets)
 		{
 			for (typename std::list<T>::iterator it = sockets.begin(); it != sockets.end(); ++it)
-				if (!(it->getResponse()->getBuffer().empty()))
+				if (it->getResponsesQueued()->size())
 					FD_SET(it->getFd(), &_writeFds);
 		}
 
@@ -92,6 +93,7 @@ class HttpServer
 		// Checks all clients connections, and if one is communicating receive his request
 		void requestHandler();
 
+		// If a response is ready and the client is willing to accept it, send it
 		void sendToClients();
 
 

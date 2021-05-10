@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 14:42:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:52:14 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,11 @@ void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSr
 		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, &_writeFds, NULL, NULL)) < 0)
 			throw std::runtime_error("Fatal error: select function failed\n");
 
-		// If a passive socket was activated, creates a new client connection
+		// Send responses to clients
 		sendToClients();
+		// If a passive socket was activated, creates a new client connection
 		connectNewClients(mSrv);
+		// Receive from client
 		requestHandler();
 	}
 }
@@ -80,13 +82,14 @@ void HttpServer::sendToClients()
 	{
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
-			// Don't handle the case if send can't send everything in one time
-			if (send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()), 
-					it->getResponse()->getBuffer().size(), 0) < 1)
+			// Doesn't handle the case if send can't send everything in one time. Send the first response
+			// of the queue
+			if (send(it->getFd(), static_cast<const void*>(it->getResponsesQueued()->front().getBuffer().c_str()), 
+					it->getResponsesQueued()->front().getBuffer().size(), 0) < 1)
 				throw std::runtime_error("Fatal error: send function failed\n");
 			
-			it->getResponse()->clear();
-			it->getRequest()->clear();
+			// After sending the response, remove it from the queue
+			it->getResponsesQueued()->pop();
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:34:57 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:12:19 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ class Body
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 		
-			bool								_recv;
-			size_t								_size;
-			std::string							_buff;
+			bool								_recv;	// Indicates when request line + headers have been received
+			size_t								_size;	// Content-lenght size
+			std::string							_buff;	// Buffer containing the body
 
 
 	public:
@@ -60,7 +60,10 @@ class Body
 		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
 
+		// Returns true or false depending if request line + all headers have been received
 		bool isReceiving() const { return _recv; }
+		
+		// Reset the Body object
 		void clear()
 		{
 			_recv = false;
@@ -68,13 +71,14 @@ class Body
 			_buff.clear();
 		}
 		
+		// Append buffer received from client until content-lenght octets have been received
 		void recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
 		{
 			_buff.append(buffer, index, _size);
 			_size -= lenToRead;
 		}
 		
-		
+	
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 

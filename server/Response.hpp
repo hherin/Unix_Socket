@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:14:46 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:09:23 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Response
 		std::map<std::string, std::string>	_headers;	// Headers of http response
 		Body								_body;		// Body (= webpage content for example)
 	
-		std::string							_buffer;
+		std::string							_buffer;	// Buffer containing the response that will be send
 
 	public:
 
@@ -65,7 +65,10 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
 
+		// Reset response object
 		void clear();
+
+		// Fill response buffer according to request object and status line previously set
 		void fillBuffer();
 
 		/* ------------------------------------------------------------- */

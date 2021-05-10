@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/04 15:40:02 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:04:33 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:11:37 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ class StatusLine
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 	
-		int			_code;
-		std::string _reason;
-		std::string _addInfos; // Additionnal informations if an error occured for developpment and debug
+		int			_code;		// Code indicating the response category (ex: 200 means ok)
+		std::string _reason;	// Reason explaing the code
+		std::string _addInfos;	// Additionnal informations if an error occured for developpment and debug
 
 
 	public:
@@ -57,6 +57,7 @@ class StatusLine
 		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
 
+		// Clear the StatusLine object
 		void clear()
 		{
 			_code = -1;

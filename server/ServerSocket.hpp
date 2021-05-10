@@ -35,9 +35,9 @@ class ServerSocket
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		int _port;
-		int _maxClient;
-		int	_fd;
+		int _port;			// The port that server socket will listen 
+		int _maxClient;		// Number of max clients that server socket is listening
+		int	_fd;			// Fd representing server socket
 
 
 	public:
@@ -45,7 +45,6 @@ class ServerSocket
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		// Initialize variables
 		ServerSocket(int port, int maxClient);
 		ServerSocket(const ServerSocket& copy);
 		~ServerSocket();
