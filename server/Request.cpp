@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 15:39:00 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:51:33 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void Request::parsingCheck()
 
     while (!_body.isReceiving() && newLineReceived(posCLRF))
     {
+		// (1) First step
         if (_reqLine.empty())
             parseRequestLine(posCLRF);    
         
@@ -86,8 +87,16 @@ void Request::parsingCheck()
 			// Ready to receive x octets of body
             _body.startReceiving();
 			_body.setSize(atol(it->second.c_str()));
+
+			// Case there is no body (content-lenght = 0)
+			if (!_body.getSize())
+			{
+				std::cerr << "\n" << _body.getBody() << "\n----------\n";
+				throw StatusLine(200, REASON_200);
+			}
 		}
             
+		// (2) Second step
         else if (!_body.isReceiving())
             parseHeaderLine(posCLRF);
             
@@ -95,6 +104,7 @@ void Request::parsingCheck()
         posCLRF = _buffer.find(CLRF, _index);
     }
 
+	// (3) Third step
 	if (_body.isReceiving())
 		parseBody();
 }

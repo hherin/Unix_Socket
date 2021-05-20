@@ -17,11 +17,11 @@ As a convention, ABNF rule names prefixed with "obs-" denote
 _______________________________________________________________
 ____________________________ 7230 _____________________________
 
->> 2.6.  Protocol Versioning
+!!!OK 2.6.  Protocol Versioning
 	- PAGE 13 : clarifie comment il doit etre ecrit
 	- PAGE 14 : erreur 505 explique si mauvais Protocol
 
->> 2.7.  Uniform Resource Identifiers (URI)
+!!!OK 2.7.  Uniform Resource Identifiers (URI)
 	- PAGE 16 : bref explication sur comment est un uri
 
 2.7.1.  http URI Scheme
@@ -30,24 +30,24 @@ ____________________________ 7230 _____________________________
 2.7.3.  http and https URI Normalization and Comparison
 	- PAGE 18 : explication sur les URI qui se ressemble (avec hexa par ex)
 
->> 3.  Message Format
+!!!OK 3.  Message Format
 	- PAGE 19 : decrit la structure d'un Message
 
->> 3.1.  Start Line
+!!!OK 3.1.  Start Line
 	- PAGE 20,21 : decrit la structure de la start line (request line / status line)
 
->> 3.2.  Header Fields
+!!!OK 3.2.  Header Fields
 	- PAGE 22-26 : decrit la structure d'un Header
 
->> 3.3.  Message Body
+!!!OK 3.3.  Message Body
 	- PAGE 27 : quelques regles sur le Body
 
->> 3.3.1.  Transfer-Encoding [HEADER]
+3.3.1.  Transfer-Encoding [HEADER]
 	- PAGE 27-28 : requete >> explique les body chunk
 					reponse >> comment le server doit parfois inclure ce header ou non
 	- PAGE 35-36 : plus d'info sur comment sont fait les chunks
 
->> 3.3.2.  Content-Length [HEADER]
+!!!OK 3.3.2.  Content-Length [HEADER]
 	- PAGE 29-30 : requete >> explique quand celui-ci doit etre present ou non, 
 					son role et quand renvoyer une erreur
 					reponse >> indique les cas ou le srveur doit inclure ou non celui-ci
@@ -55,15 +55,15 @@ ____________________________ 7230 _____________________________
 					ce header et la taille du body
 
 >> 3.4.  Handling Incomplete Messages
-	- PAGE 33 : cas des erreurs dans le cas ou la requete est Incomplete
+	- PAGE 33 : cas des erreurs dans le cas ou la requete est Incomplete, integrer le timeout
 
->> 3.5.  Message Parsing Robustness
+!!!OK 3.5.  Message Parsing Robustness
 	- PAGE 34 : serveur doit renvoyer erreur 400 si parsing requete faux
 
 5.3.  Request Target
 	- PAGE 41 : 5.3.1 et 5.3.2 les 2 types de requetes que peut recevoir le server
 
-5.4.  Host
+!!!OK 5.4.  Host
 	- PAGE 43 : requete >> les infos de ce header et les erreurs que le server doit genere. 
 							Permet de choisir entre plusieurs blocs serveurs differents.
 
@@ -71,7 +71,7 @@ ____________________________ 7230 _____________________________
 	- PAGE 44 : explique comment reconstruire l'URI qui va etre utilisé pour la recherche
 				>> URI + config file + header Host
 
->> 7.  ABNF List Extension: #rule
+7.  ABNF List Extension: #rule
 	- PAGE 58-59 : explique le format attendu pour la liste d'elements qui peuvent etre present dans les headers
 
 
@@ -100,7 +100,7 @@ ____________________________ 7231 _____________________________
 3.4.1.  Proactive Negotiation
 	- PAGE 18 : utilisé dans le cas des headers accept languages etc 
 
-4.  Request Methods
+>>> 4.  Request Methods
 	- PAGE 20-21 : décrit les méthodes, + codes d'erreur quand methode pas implémentée
 	- PAGE 23-29 : HEAD GET POST PUT DELETE methodes
 
@@ -120,11 +120,11 @@ ____________________________ 7231 _____________________________
 5.5.3.  User-Agent [HEADER]
 	- PAGE 45 : semble useless aussi.
 
-6.  Response Status Codes
+>>> 6.  Response Status Codes
 	- PAGE 46-63 : tous les status codes. 100 info, 200 ok, 300 redirection, 400 erreur requete, 500 erreur serveur
 			>>>> PENSER A CHECKER LE CODE 304
 
-7.1.1.  Origination Date [HEADER]
+!!!OK 7.1.1.  Origination Date [HEADER]
 	- PAGE 64-66 : explique format date et quand renvoyer ce header.
 
 7.1.2.  Location [HEADER]
@@ -136,7 +136,7 @@ ____________________________ 7231 _____________________________
 7.4.1.  Allow [HEADER]
 	- PAGE 71 : contient les methodes acceptées par le serveur
 
-7.4.2.  Server [HEADER]
+!!!OK 7.4.2.  Server [HEADER]
 	- PAGE 72 : juste le nom du serveur.
 
 
