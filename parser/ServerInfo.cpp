@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerInfo.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/13 20:52:35 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/05/20 15:48:10 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,33 @@ ServerInfo &ServerInfo::operator=(ServerInfo const &copy)
 
 ServerInfo::~ServerInfo() { }
 
-int const &ServerInfo::getMaxClientsBS() { return _max_clients; }
+int const &ServerInfo::getMaxClientsBS() const { return _max_clients; }
 
-bool const &ServerInfo::getAutoIndex() { return _autoindex; }
+bool const &ServerInfo::getAutoIndex() const { return _autoindex; }
 
-std::string const &ServerInfo::getError() { return _error_path; }
+std::string const &ServerInfo::getError() const { return _error_path; }
 
-std::string const &ServerInfo::getRoot() { return _root; }
+std::string const &ServerInfo::getRoot() const { return _root; }
 
-std::string const &ServerInfo::getAuthBasic() { return _auth_basic; }
+std::string const &ServerInfo::getAuthBasic() const { return _auth_basic; }
 
-std::string const &ServerInfo::getAuthBasicFile() { return _auth_b_usr_file; }
+std::string const &ServerInfo::getAuthBasicFile() const { return _auth_b_usr_file; }
 
-std::string const &ServerInfo::getUploadStore() { return _upload_store; }
+std::string const &ServerInfo::getUploadStore() const { return _upload_store; }
 
-std::vector<std::string> const &ServerInfo::getNames() { return _names; }
+std::vector<std::string> const &ServerInfo::getNames() const { return _names; }
 
-std::vector<std::string> const &ServerInfo::getMethods() { return _allow_methd; }
+std::vector<std::string> const &ServerInfo::getMethods() const { return _allow_methd; }
 
-std::vector<std::string> const &ServerInfo::getIndex() { return _index; }
+std::vector<std::string> const &ServerInfo::getIndex() const { return _index; }
 
-int const &ServerInfo::getPort() { return _port; }
+int const &ServerInfo::getPort() const { return _port; }
 
-std::vector<ServerInfo> const &ServerInfo::getLocation() { return _location; }
+std::vector<ServerInfo> const &ServerInfo::getLocation() const { return _location; }
 
-std::string const &ServerInfo::getCgiExe() {return _cgi_exe; }
+std::string const &ServerInfo::getCgiExe() const {return _cgi_exe; }
 
-std::string const &ServerInfo::getCgiPath() {return _cgi_path; }
+std::string const &ServerInfo::getCgiPath() const {return _cgi_path; }
 
 
 

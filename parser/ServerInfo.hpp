@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/20 13:51:13 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/20 15:47:51 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,33 +47,33 @@ class ServerInfo
 		
 		~ServerInfo();
 		
-		int const &getMaxClientsBS();	
+		int const &getMaxClientsBS() const;	
 
-		bool const &getAutoIndex();
+		bool const &getAutoIndex() const;
 
-		std::string const &getError();
+		std::string const &getError() const;
 
-		std::string const &getRoot();
+		std::string const &getRoot() const;
 
-		std::string const &getAuthBasic();
+		std::string const &getAuthBasic() const;
 
-		std::string const &getAuthBasicFile();
+		std::string const &getAuthBasicFile() const;
 
-		std::string const &getUploadStore();
+		std::string const &getUploadStore() const;
 
-		std::string const &getCgiExe();
+		std::string const &getCgiExe() const;
 
-		std::string const &getCgiPath();
+		std::string const &getCgiPath() const;
 		
-		std::vector<std::string> const &getNames();
+		std::vector<std::string> const &getNames() const;
 
-		std::vector<std::string> const &getMethods();
+		std::vector<std::string> const &getMethods() const;
 		
-		std::vector<std::string> const &getIndex();
+		std::vector<std::string> const &getIndex() const;
 		
-		int const &getPort();
+		int const &getPort() const;
 
-		std::vector<ServerInfo> const &getLocation();
+		std::vector<ServerInfo> const &getLocation() const;
 		
 		void setServer(int, int const&, std::string const&);
 
