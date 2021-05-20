@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 13:45:27 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/20 13:46:43 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,11 @@ void Response::fillBuffer()
 	if (!_staLine.getAdditionalInfo().empty())
 		_buffer += " (" + _staLine.getAdditionalInfo() + ")";
 	_buffer += CLRF;
+
+	// if (request.getMethod())
+		// _buffer += execGET();
 }
 
-void Response::execMethod()
-{
-	// int method = _req.getmethod()
-	int method = 0;
-	if (method == GET)
-		execGET();
-}
 
 // HELENE FONCTION qui store la page a renvoyer dans le body de la reponse
 void Response::execGET()
