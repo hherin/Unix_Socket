@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FileParser.cpp                                     :+:      :+:    :+:   */
+/*   fileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/13 20:53:34 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/05/20 13:31:30 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePath(filepath) { _file.open(filepath); }
 
-// FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
+FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
 
 FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
 _m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
@@ -37,17 +37,6 @@ void FileParser::parseRequestFile()
 	if (!_cli_srv){
 		std::cerr << "NOT ALLOWED\n";
 		exit(1);
-	}
-	std::vector<ServerInfo> loc = _cli_srv->getLocation();
-	for (size_t i = 0; i < loc.size(); i++){
-		std::vector<std::string > locName = loc[i].getNames();
-		for (size_t j = 0; j < locName.size(); j++){
-			if (locName[j] == _filePath){
-				// if (locName[j].size() && _cli_srv-> ){
-					
-				// }
-			}
-		}
 	}
 	while (std::getline(_file, _buf))
 		_requestFile.append(_buf + "\n");

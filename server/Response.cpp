@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 13:39:50 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 13:45:27 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void Response::execMethod()
 // HELENE FONCTION qui store la page a renvoyer dans le body de la reponse
 void Response::execGET()
 {
-
+	
 }
 
 /* ------------------------------------------------------------- */
