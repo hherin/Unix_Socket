@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:49:56 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 13:39:50 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 
 Response::Response() {}
 
-Response::Response(const Request& req, const StatusLine& staLine) :
-	_req(req), _staLine(staLine) {}
+Response::Response(const Request& req, const StatusLine& staLine, const std::vector<ServerInfo>& servInfo) :
+	_servInfo(servInfo), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 
-	_req(c._req), _staLine(c._staLine), _headers(c._headers), _body(c._body) {}
+	_servInfo(c._servInfo), _req(c._req), _staLine(c._staLine), _headers(c._headers), _body(c._body) {}
 
 Response::~Response() {}
 
@@ -86,12 +86,26 @@ void Response::fillBuffer()
 	_buffer += CLRF;
 }
 
+void Response::execMethod()
+{
+	// int method = _req.getmethod()
+	int method = 0;
+	if (method == GET)
+		execGET();
+}
+
+// HELENE FONCTION qui store la page a renvoyer dans le body de la reponse
+void Response::execGET()
+{
+
+}
 
 /* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
 void swap(Response& a, Response& b)
 {
+	std::swap(a._servInfo, b._servInfo);
 	swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
 	std::swap(a._headers, b._headers);

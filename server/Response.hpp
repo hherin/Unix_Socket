@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 17:09:23 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 13:40:18 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "msg_format/Body.hpp"
 
 #include "../parser/FileParser.hpp"
+#include "../parser/ServerInfo.hpp"
 
 class Response
 {
@@ -26,8 +27,8 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		// FileParser*							_readFile;
-		Request								_req;	// Request object when the request is fully received
+		std::vector<ServerInfo>				_servInfo;	// Servers blocks from config file that match a specific port
+		Request								_req;		// Request object when the request is fully received
 
 		StatusLine							_staLine;	// Fist line of http response
 		std::map<std::string, std::string>	_headers;	// Headers of http response
@@ -41,7 +42,7 @@ class Response
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(const Request& req, const StatusLine& staLine);
+		Response(const Request& req, const StatusLine& staLine, const std::vector<ServerInfo>& servInfo);
 		Response(const Response& c);
 		~Response();
 		Response& operator=(Response a);
@@ -71,9 +72,22 @@ class Response
 		// Fill response buffer according to request object and status line previously set
 		void fillBuffer();
 
+		// Execute the appropriate method
+		void execMethod();
+
+
+		/* ------------------------------------------------------------- */
+		/* ----------------------- PRIVATE METHODS --------------------- */
+
+	private:
+
+		void execGET();
+
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 		
+	public:
+
 		friend void swap(Response& a, Response& b);
 	
 }; // class Response

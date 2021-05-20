@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 17:47:33 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 13:39:38 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,28 +45,22 @@ std::queue<Response>* ClientSocket::getResponsesQueued() { return &_respQueue; }
 
 int ClientSocket::receiveRequest(const char* buffer)
 {
-	// while response isn't send
-	// if (_respQueue.getCode() == -1)
-	// {
-		// Parsing information received, sending a StatusLine object when the full request
-		// was received or if an error occured
-		try
-		{
-			_request += buffer;
-			_request.parsingCheck();
-		}
+	try
+	{
+		_request += buffer;
+		_request.parsingCheck();
+	}
 
-		// Setting the response with the StatusLine previously sent, and with this request
-		// object containing the full request
-		catch (const StatusLine& staLine)
-		{
-			_respQueue.push(Response(_request, staLine));
-			_respQueue.back().fillBuffer();
-			
-			// Response was created, clearing request object for next incoming request
-			_request.clear();
-		}
-	// }
+	// Setting the response with the StatusLine previously sent, and with this request
+	// object containing the full request
+	catch (const StatusLine& staLine)
+	{
+		_respQueue.push(Response(_request, staLine, _infoVirServs));
+		_respQueue.back().fillBuffer();
+		
+		// Response was created, clearing request object for next incoming request
+		_request.clear();
+	}
 	
 	return 0;
 }

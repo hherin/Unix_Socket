@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 17:02:16 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 12:24:54 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,11 @@ class Request
 
 		/* ------------------------------------------------------------- */
 		/* --------------------------- GETTERS ------------------------- */
-		const std::string& getBuffer() const;
 
+		const std::string& getBuffer() const;
+		const RequestLine& getRequestLine() const;
+		const std::map<std::string, std::string>& getHeaders() const;
+		const Body& getBody() const;
 
 		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
