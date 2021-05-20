@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/20 13:31:30 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/20 16:07:31 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,3 +162,5 @@ void FileParser::addNewServerToMap(ServerInfo &srv)
 }
 
 std::map<int, std::vector<ServerInfo> > const &FileParser::getConfigFile() { parseConfigFile(); return _m_srv; }
+
+void FileParser::setServerInfo(ServerInfo *s) { _cli_srv = s; }

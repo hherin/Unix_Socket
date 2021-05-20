@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 15:14:10 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/20 15:34:38 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,23 +104,23 @@ void Response::setHeaders()
 }
 
 // HELENE FONCTION qui store la page a renvoyer dans le body de la reponse
-void Response::execGET()
-{
-	std::vector<std::string> path = stringDelimSplit(_req.getPath(), "/");							// URI requested is splited 
+// void Response::execGET()
+// {
+// 	// std::vector<std::string> path = stringDelimSplit(_req.getPath(), "/");							// URI requested is splited 
 	
-	for (size_t i = 0; i < _servInfo.size(); i++){													// loop for each 
-		std::vector<ServerInfo> loc = _servInfo[i].getLocation();
-		for (size_t j = 0; j < loc.size(); j++){
-			std::vector<std::string> locName = stringDelimSplit((loc[i].getNames())[0], "/");
-			if (locName[0].compare(0, path[0].size() + 1), path[0]){
+// 	// for (size_t i = 0; i < _servInfo.size(); i++){													// loop for each 
+// 	// 	std::vector<ServerInfo> loc = _servInfo[i].getLocation();
+// 	// 	for (size_t j = 0; j < loc.size(); j++){
+// 	// 		std::vector<std::string> locName = stringDelimSplit((loc[i].getNames())[0], "/");
+// 	// 		if (locName[0].compare(0, path[0].size() + 1), path[0]){
 				
-			}
-		}
-		if (_req.getHeaders().find("host"))
-	}
-	FileParser reqFile();
+// 	// 		}
+// 	// 	}
+// 	// 	if (_req.getHeaders().find("host"))
+// 	// }
+// 	// FileParser reqFile();
 	
-}
+// }
 
 
 /* ------------------------------------------------------------- */

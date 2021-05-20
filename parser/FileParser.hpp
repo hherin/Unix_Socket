@@ -32,6 +32,8 @@ class FileParser
 
         std::map<int, std::vector<ServerInfo> > const &getConfigFile();
 
+        void setServerInfo(ServerInfo *);
+
     private:
         void parseConfigFile();
 
