@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 14:59:16 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 13:53:35 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,19 @@ Request& Request::operator=(Request a)
 /* ------------------------------------------------------------- */
 /* --------------------------- GETTERS ------------------------- */	
 
-const std::string& Request::getBuffer() const
-{
-	return _buffer;
-}
+const RequestLine& Request::getRequestLine() const						{ return _reqLine; }
+
+const std::map<std::string, std::string>& Request::getHeaders() const	{ return _headers; }
+
+const Body& Request::getBody() const									{ return _body; }
+
+const std::string& Request::getBuffer() const							{ return _buffer; }
+
+int Request::getMethod() const											{ return _reqLine.getMethod(); }
+
+const std::string& Request::getPath() const								{ return _reqLine.getPath(); }
+
+const std::string& Request::getQuery() const							{ return _reqLine.getQuery(); }
 
 
 /* ------------------------------------------------------------- */
