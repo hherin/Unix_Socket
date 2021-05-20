@@ -6,12 +6,14 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 13:40:18 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:34:15 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSE_HPP
 #define RESPONSE_HPP
+
+#include <ctime>
 
 #include "Request.hpp"
 #include "msg_format/StatusLine.hpp"
@@ -75,18 +77,31 @@ class Response
 		// Execute the appropriate method
 		void execMethod();
 
+		// Sets all the appropriate headers using request object and status line, both previously set
+		void setHeaders();
+
+
+	private:
 
 		/* ------------------------------------------------------------- */
 		/* ----------------------- PRIVATE METHODS --------------------- */
 
-	private:
-
 		void execGET();
 
+		// Sets Content-lenght header with body size (0 if body is empty)
+		void setHeaderContentLenght();
+
+		// Sets Server header with server name (webserv)
+		void setHeaderServer();
+
+		// Sets Date header with the actual date
+		void setHeaderDate();
+
+
+	public:
+	
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
-		
-	public:
 
 		friend void swap(Response& a, Response& b);
 	

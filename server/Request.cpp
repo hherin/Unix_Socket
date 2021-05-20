@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 13:53:35 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:46:37 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,11 +185,7 @@ void Request::parseRequestLine(size_t posCLRF)
 	
 	
 	// Splitting the request line
-	std::vector<std::string> tokens;
-	std::istringstream s(requestLine);
-
-	while (std::getline(s, requestLine, ' '))
-		tokens.push_back(requestLine);
+	std::vector<std::string> tokens = splitWithSep(requestLine, ' ');
 		
 	if (tokens.size() != 3)
 		throw StatusLine(400, REASON_400, "a field from request line is missing");
