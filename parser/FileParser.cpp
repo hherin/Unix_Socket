@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/03 14:45:24 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/05/13 20:53:34 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,27 +89,31 @@ void FileParser::newLocation(ServerInfo &srv)
 		bracketRegulator(brack, _buf);
 		
 		if (!_buf.compare(0, 6, "listen"))
-			n_loc.setServer(0, 6, _buf);
+			n_loc.setServer(LIS, 6, _buf);
 		else if (!_buf.compare(0, 5, "error"))
-			n_loc.setServer(1, 5, _buf);
+			n_loc.setServer(ERR, 5, _buf);
 		else if (!_buf.compare(0, 11, "server_name"))
-			n_loc.setServer(2, 11, _buf);
+			n_loc.setServer(SRV_N, 11, _buf);
 		else if (!_buf.compare(0, 12, "allow_method"))
-			n_loc.setServer(3, 12, _buf);
+			n_loc.setServer(METHO, 12, _buf);
 		else if (!_buf.compare(0, 5, "index"))
-			n_loc.setServer(4, 5, _buf);
+			n_loc.setServer(IDX, 5, _buf);
 		else if (!_buf.compare(0, 10, "auth_basic"))
-			n_loc.setServer(5, 10, _buf);
+			n_loc.setServer(AUTHB, 10, _buf);
 		else if (!_buf.compare(0, 15, "auth_b_usr_file"))
-			n_loc.setServer(6, 15, _buf);
+			n_loc.setServer(AUTHB_FILE, 15, _buf);
 		else if (!_buf.compare(0, 20, "client_max_body_size"))
-			n_loc.setServer(7, 20, _buf);
+			n_loc.setServer(BODY, 20, _buf);
 		else if (!_buf.compare(0, 9, "autoindex"))
-			n_loc.setServer(8, 9, _buf);
+			n_loc.setServer(AUTOIDX, 9, _buf);
 		else if (!_buf.compare(0, 12, "upload_store"))
-			n_loc.setServer(9, 12, _buf);
+			n_loc.setServer(STORE, 12, _buf);
 		else if (!_buf.compare(0, 4, "root"))
-			n_loc.setServer(10, 4, _buf);
+			n_loc.setServer(ROOT, 4, _buf);
+		else if (!_buf.compare(0, 3, "cgi"))
+			n_loc.setServer(CGI_EXE, 3, _buf);
+		else if (!_buf.compare(0, 8, "cgi_path"))
+			n_loc.setServer(CGI_PATH, 8, _buf);
 		else continue;
 	}
 	_bracket--;
@@ -128,27 +132,27 @@ void FileParser::newServer(void)
 		if (!_buf.compare(0, 8, "location"))	
 			newLocation(n_srv);
 		else if (!_buf.compare(0, 6, "listen"))
-			n_srv.setServer(0, 6, _buf);
+			n_srv.setServer(LIS, 6, _buf);
 		else if (!_buf.compare(0, 5, "error"))
-			n_srv.setServer(1, 5, _buf);
+			n_srv.setServer(ERR, 5, _buf);
 		else if (!_buf.compare(0, 11, "server_name"))
-			n_srv.setServer(2, 11, _buf);
+			n_srv.setServer(SRV_N, 11, _buf);
 		else if (!_buf.compare(0, 12, "allow_method"))
-			n_srv.setServer(3, 12, _buf);
+			n_srv.setServer(METHO, 12, _buf);
 		else if (!_buf.compare(0, 5, "index"))
-			n_srv.setServer(4, 5, _buf);
+			n_srv.setServer(IDX, 5, _buf);
 		else if (!_buf.compare(0, 10, "auth_basic"))
-			n_srv.setServer(5, 10, _buf);
+			n_srv.setServer(AUTHB, 10, _buf);
 		else if (!_buf.compare(0, 15, "auth_b_usr_file"))
-			n_srv.setServer(6, 15, _buf);
+			n_srv.setServer(AUTHB_FILE, 15, _buf);
 		else if (!_buf.compare(0, 20, "client_max_body_size"))
-			n_srv.setServer(7, 20, _buf);
+			n_srv.setServer(BODY, 20, _buf);
 		else if (!_buf.compare(0, 9, "autoindex"))
-			n_srv.setServer(8, 9, _buf);
+			n_srv.setServer(AUTOIDX, 9, _buf);
 		else if (!_buf.compare(0, 12, "upload_store"))
-			n_srv.setServer(9, 12, _buf);
+			n_srv.setServer(STORE, 12, _buf);
 		else if (!_buf.compare(0, 4, "root"))
-			n_srv.setServer(10, 4, _buf);
+			n_srv.setServer(ROOT, 4, _buf);
 		else continue;		// BIG ERROR TO DO
 	}
 	addNewServerToMap(n_srv);

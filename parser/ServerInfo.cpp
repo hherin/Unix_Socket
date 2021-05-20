@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/28 14:29:45 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/05/13 20:52:35 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ int const &ServerInfo::getPort() { return _port; }
 
 std::vector<ServerInfo> const &ServerInfo::getLocation() { return _location; }
 
+std::string const &ServerInfo::getCgiExe() {return _cgi_exe; }
+
+std::string const &ServerInfo::getCgiPath() {return _cgi_path; }
+
+
+
 /**
 ** set variable inside server object
 ** param nb is which method of the object is choosen
@@ -63,7 +69,7 @@ void	ServerInfo::setServer(int nb, int const &pos, std::string const &buf)
 	typedef void (ServerInfo::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &ServerInfo::setPort, &ServerInfo::setError, &ServerInfo::setNames, &ServerInfo::setMethods, &ServerInfo::setIndex,
                         &ServerInfo::setAuthBasic, &ServerInfo::setAuthBasicFile, &ServerInfo::setMaxClientsBS, &ServerInfo::setAutoIndex,
-                        &ServerInfo::setUploadStore, &ServerInfo::setRoot };
+                        &ServerInfo::setUploadStore, &ServerInfo::setRoot, &ServerInfo::setCgiExe, &ServerInfo::setCgiPath };
                         
     const char *tmp = buf.c_str() + pos;
 	int i = 0;
@@ -98,6 +104,10 @@ void ServerInfo::setMethods(char const *n) { setStringArray(n, _allow_methd); }
 void ServerInfo::setIndex(char const *n) { setStringArray(n, _index); }
 
 void ServerInfo::setPort(char const *p) { _port = atoi(p); }
+
+void ServerInfo::setCgiExe(char const *c) { _cgi_exe = c; }
+
+void ServerInfo::setCgiPath(char const *c) { _cgi_path = c; }
 
 void ServerInfo::setStringArray(char const *n, std::vector<std::string> &v) 
 {

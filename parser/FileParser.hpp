@@ -3,6 +3,8 @@
 
 # include "parser.hpp"
 
+enum s_info { LIS, ERR, SRV_N, METHO, IDX, AUTHB, AUTHB_FILE, BODY, AUTOIDX, STORE, ROOT, CGI_EXE, CGI_PATH};
+
 class FileParser 
 {
     private:

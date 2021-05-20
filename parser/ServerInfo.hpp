@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/04/28 14:28:28 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/05/13 20:49:34 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ class ServerInfo
 		std::string _auth_basic;				//
 		std::string _auth_b_usr_file;			//
 		std::string _upload_store;				//
+		std::string	_cgi_exe;
+		std::string	_cgi_path;
 		std::vector<std::string> _names;		//
 		std::vector<std::string> _allow_methd;	//
 		std::vector<std::string> _index;		//
@@ -58,6 +60,10 @@ class ServerInfo
 
 		std::string const &getUploadStore();
 
+		std::string const &getCgiExe();
+
+		std::string const &getCgiPath();
+		
 		std::vector<std::string> const &getNames();
 
 		std::vector<std::string> const &getMethods();
@@ -94,6 +100,10 @@ class ServerInfo
 		void setIndex(char const*);
 		
 		void setPort(char const*);
+
+		void setCgiExe(char const *);
+
+		void setCgiPath(char const *);
 		
 		void setStringArray(char const *n, std::vector<std::string> &v);		
 };
