@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 14:46:37 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:39:00 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,17 @@ void Request::parsingCheck()
 		{
 			_index += CLRF_OCTET_SIZE;
 			
-			std::map<std::string, std::string>::iterator contLen = _headers.find("content-lenght");
+			std::map<std::string, std::string>::iterator it = _headers.find("host");
+			if (it == _headers.end() || it->second.empty())
+				throw StatusLine(400, REASON_400, "host field missing or empty");
 
-			if (contLen == _headers.end())
+			it = _headers.find("content-lenght");
+			if (it == _headers.end())
 				throw StatusLine(400, REASON_400, "no content lenght header");
+
+			// Ready to receive x octets of body
             _body.startReceiving();
-			_body.setSize(atol(contLen->second.c_str()));
+			_body.setSize(atol(it->second.c_str()));
 		}
             
         else if (!_body.isReceiving())

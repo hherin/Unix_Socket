@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 13:39:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:36:23 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,12 @@ ClientSocket& ClientSocket::operator=(ClientSocket a)
 /* ------------------------------------------------------------- */
 /* -------------------------- GETTERS -------------------------- */
 
-int ClientSocket::getFd() const { return _fd; }
+int ClientSocket::getFd() const								{ return _fd; }
 
-Request* ClientSocket::getRequest() { return &_request; }
+Request* ClientSocket::getRequest()							{ return &_request; }
 
-std::queue<Response>* ClientSocket::getResponsesQueued() { return &_respQueue; }
+std::queue<Response>* ClientSocket::getResponsesQueued()	{ return &_respQueue; }
+
 
 /* ------------------------------------------------------------- */
 /* --------------------------- METHODS ------------------------- */
