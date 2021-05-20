@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 14:44:26 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/20 15:13:46 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,14 @@ std::vector<std::string> stringDelimSplit(std::string const &str, const char *de
         }
     }
     return strArray;
+}
+std::vector<std::string> splitWithSep(std::string line, char sep)
+{
+	std::vector<std::string> res;
+	std::istringstream s(line);
+
+	while (std::getline(s, line, sep))
+		res.push_back(line);
+	
+	return res;
 }
