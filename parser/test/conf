@@ -92,7 +92,7 @@ server {
 	listen 	8080
     error	./www/tester/paco
 	server_name	sbfg
-	host	localhostl
+	host	localhost
 
 }
 

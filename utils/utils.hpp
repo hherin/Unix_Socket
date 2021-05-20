@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/10 14:26:20 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:29:52 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 #include <string>
 #include <sstream>
-
+#include <vector>
+#include <iostream>
 char asciiToLower(char in);
 std::string convertNbToString(size_t nb);
+std::vector<std::string> stringDelimSplit(std::string const &str, const char *delim);
 
 #endif

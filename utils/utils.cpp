@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 14:26:11 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:44:26 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,25 @@ std::string convertNbToString(size_t nb)
 	
 	oss << nb;
 	return oss.str();
+}
+
+std::vector<std::string> stringDelimSplit(std::string const &str, const char *delim)
+{
+    static std::vector<std::string> strArray;       // use static to return the vector
+    size_t posinit = 0, posfind = 0;
+    
+    strArray.clear();
+    while (posfind < str.size()){
+        posfind = str.find(delim, posinit + 1);
+        
+        if (posfind != std::string::npos){
+            strArray.push_back(str.substr(posinit, posfind - posinit));
+            posinit = posfind;
+        }
+        else{
+            strArray.push_back(str.substr(posinit, str.size() - posinit));
+            posfind = str.size();
+        }
+    }
+    return strArray;
 }
