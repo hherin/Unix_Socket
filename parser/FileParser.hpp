@@ -3,7 +3,10 @@
 
 # include "parser.hpp"
 
-enum s_info { LIS, ERR, SRV_N, METHO, IDX, AUTHB, AUTHB_FILE, BODY, AUTOIDX, STORE, ROOT, CGI_EXE, CGI_PATH};
+enum e_srv { LIS, ERR, SRV_N, BODY, HOST};
+
+enum e_loc { METHO, IDX, AUTHB, AUTHB_FILE, AUTOIDX, STORE, ROOT, CGI_EXE, CGI_PATH};
+
 
 class FileParser 
 {
@@ -44,6 +47,8 @@ class FileParser
         void newLocation(ServerInfo &);
         
         void addNewServerToMap(ServerInfo &);
+
+        void addNewLocationToMap(ServerInfo&, Location*, std::string const&);
 };
 
 #endif

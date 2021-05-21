@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Body.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 16:12:19 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/21 13:45:07 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Body
 		/* --------------------------- SETTERS ------------------------- */
 		
 		void setSize(size_t size) { _size = size; }
+		void setBuff(std::string const &buf) { _buff = buf; }
 		void startReceiving() { _recv = true; }
 
 

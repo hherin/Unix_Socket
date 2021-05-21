@@ -6,31 +6,29 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 15:33:37 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/20 16:27:43 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/21 14:33:03 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Response.hpp"
 
-void lookUpForRootInLocation(ServerInfo const &srv, std::vector<std::string> const &reqPath)
+std::string const lookUpForRootInLocation(ServerInfo const &srv, std::vector<std::string> const &reqPath)
 {
-	std::string pathtofile;
 	int defLoc = 0;
 	std::vector<ServerInfo> loc = srv.getLocation();
 	
 	for (size_t i = 0; i < loc.size(); i++){
 		if (!loc[i].getNames()[0].compare(0, reqPath[0].size(), reqPath[0]))
-			pathtofile = loc[i].getRoot();
+			return loc[i].getRoot();
 		(!loc[i].getNames()[0].compare(0, 2, "/")) ? defLoc = i : 0;
-		if (i == loc.size() - 1 && !pathtofile.size()){
+		if (i == loc.size() - 1)
 			if (defLoc)
-				pathtofile = loc[i].getRoot();
-		}
+				return loc[i].getRoot();
 	}
-	
+	return srv.getRoot();
 }
 
-
+// Location const &locationSearcher(std::vector<ServerInfo> const &srv, std::string const &name)
 ServerInfo const &serverSearcher(std::vector<ServerInfo> const &srv, std::string const &name)
 {
 	for (size_t i = 0; i < srv.size(); i++){													// loop for each 
@@ -46,13 +44,15 @@ ServerInfo const &serverSearcher(std::vector<ServerInfo> const &srv, std::string
 void Response::execGET()
 {
 	std::vector<std::string> path = stringDelimSplit(_req.getPath(), "/");							// URI requested is splited 
+	std::string root;
 	
 	std::map<std::string, std::string>::const_iterator mit = _req.getHeaders().find("host");
 	if (mit != _req.getHeaders().end()){
-		
+		root = lookUpForRootInLocation(serverSearcher(_servInfo, mit->second), path);
+		std::cout << root << "\n";
 	}
 		// Look for good server and Do the thing whith good server
 	else
+	;
 		// Do the thing with default
-
 }

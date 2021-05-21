@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 15:13:46 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/21 15:25:34 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,16 @@ std::vector<std::string> splitWithSep(std::string line, char sep)
 		res.push_back(line);
 	
 	return res;
+}
+
+void setStringArray(char const *n, std::vector<std::string> &v) 
+{
+    char *tmp = strdup(n);
+    char *token = strtok(tmp, "\t\v\f\r ");
+
+    while (token){
+        v.push_back(token);
+        token = strtok(NULL, "\t\v\f\r ");
+    }
+    delete tmp;
 }
