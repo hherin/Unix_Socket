@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/21 13:43:28 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 14:40:54 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void Response::clear()
 
 void Response::fillBuffer()
 {
-	if (_req.getMethod() ==  GET)
+	if (_req->getMethod() ==  GET)
 		execGET();
 
 	setHeaders();

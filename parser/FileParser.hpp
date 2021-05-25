@@ -10,46 +10,46 @@ enum e_loc { METHO, IDX, AUTHB, AUTHB_FILE, AUTOIDX, STORE, ROOT, CGI_EXE, CGI_P
 
 class FileParser 
 {
-    private:
-        std::ifstream _file;
-        std::string _buf;
-        int _bracket;
-        std::map<int, std::vector<ServerInfo> > _m_srv;
-        std::map<std::string, Location> _m_loc;
-        std::string _requestFile;
-        ServerInfo *_cli_srv;
-        std::string _filePath;
+	private:
+		std::ifstream _file;
+		std::string _buf;
+		int _bracket;
+		std::map<int, std::vector<ServerInfo> > _m_srv;
+		std::map<std::string, Location> _m_loc;
+		std::string _requestFile;
+		ServerInfo *_cli_srv;
+		std::string _filePath;
 
-    public:
+	public:
 
-        FileParser(const char*);
+		FileParser(const char*);
 
-        FileParser(const char*, ServerInfo *);
+		FileParser(const char*, ServerInfo *);
 
-        FileParser(FileParser const&);
+		FileParser(FileParser const&);
 
-        FileParser &operator=(FileParser const&);
+		FileParser &operator=(FileParser const&);
 
-        ~FileParser();
-        
-        std::string const& getRequestFile();
+		~FileParser();
+		
+		std::string const& getRequestFile();
 
-        std::map<int, std::vector<ServerInfo> > const &getConfigFile();
+		std::map<int, std::vector<ServerInfo> > const &getConfigFile();
 
-        void setServerInfo(ServerInfo *);
+		void setServerInfo(ServerInfo *);
 
-    private:
-        void parseConfigFile();
+	private:
+		void parseConfigFile();
 
-        void parseRequestFile();
-        
-        void newServer(void);
-        
-        void newLocation(ServerInfo &);
-        
-        void addNewServerToMap(ServerInfo &);
+		void parseRequestFile();
+		
+		void newServer(void);
+		
+		void newLocation(ServerInfo &);
+		
+		void addNewServerToMap(ServerInfo &);
 
-        void addNewLocationToMap(Location*, std::string const&);
+		void addNewLocationToMap(Location*, std::string const&);
 };
 
 #endif

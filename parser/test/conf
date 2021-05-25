@@ -76,7 +76,7 @@ server {
 		root 		./www/tester
 		auth 		user:pass
 	}
-    location /  {
+    location /maxbody  {
 		allow_method 	    PUT
 		root 		./www/tester
 		index		index.html

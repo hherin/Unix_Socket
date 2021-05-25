@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 14:29:28 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 15:46:05 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,9 @@ void FileParser::newLocation(ServerInfo &srv)
 	bracketRegulator(brack, _buf);
 	if (!_buf.compare(0, 8, "location")){
 		(!_buf.compare(_buf.size() - 1, 1, "{")) ? _buf.erase(_buf.size() - 1, 1) : 0;
-		uri = _buf;
-		uri.replace(0, 9, "");
+		uri = *wsTrim(_buf);
+		uri.replace(0, 8, "");
+		std::cout << "uri ." << uri << ".\n";
 	}
 	while (brack > 0)
 	{
@@ -132,7 +133,7 @@ void FileParser::newServer(void)
 void FileParser::addNewServerToMap(ServerInfo &srv)
 {
 	int s_port = srv.getPort();
-	srv.getLocation().insert(_m_loc.begin(), _m_loc.end());
+	srv.getLocation()->insert(_m_loc.begin(), _m_loc.end());
 	std::map<int, std::vector<ServerInfo> >::iterator it = _m_srv.find(s_port);
 		
 	if (it == _m_srv.end()){
