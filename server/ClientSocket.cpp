@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 13:39:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/21 15:46:57 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
 
-ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs) :
+ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>* infoVirServs) :
 		_fd(fd), _infoVirServs(infoVirServs) {}
 
 ClientSocket::~ClientSocket() {}
@@ -34,11 +34,12 @@ ClientSocket& ClientSocket::operator=(ClientSocket a)
 /* ------------------------------------------------------------- */
 /* -------------------------- GETTERS -------------------------- */
 
-int ClientSocket::getFd() const { return _fd; }
+int ClientSocket::getFd() const								{ return _fd; }
 
-Request* ClientSocket::getRequest() { return &_request; }
+Request* ClientSocket::getRequest()							{ return &_request; }
 
-std::queue<Response>* ClientSocket::getResponsesQueued() { return &_respQueue; }
+std::queue<Response>* ClientSocket::getResponsesQueued()	{ return &_respQueue; }
+
 
 /* ------------------------------------------------------------- */
 /* --------------------------- METHODS ------------------------- */
@@ -55,7 +56,7 @@ int ClientSocket::receiveRequest(const char* buffer)
 	// object containing the full request
 	catch (const StatusLine& staLine)
 	{
-		_respQueue.push(Response(_request, staLine, _infoVirServs));
+		_respQueue.push(Response(&_request, staLine, _infoVirServs));
 		_respQueue.back().fillBuffer();
 		
 		// Response was created, clearing request object for next incoming request

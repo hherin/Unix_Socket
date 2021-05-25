@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 13:38:11 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/21 15:45:47 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,18 @@ class ClientSocket
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		int						_fd;			// File descriptor receiving / sending with the client
-		std::vector<ServerInfo> _infoVirServs;	// Servers blocks from config file that match a specific port
+		int								_fd;			// File descriptor receiving / sending with the client
+		const std::vector<ServerInfo>*	_infoVirServs;	// Servers blocks from config file that match a specific port
 		
-		Request					_request;		// Object containing the request
-		std::queue<Response>	_respQueue;		// Queue containing the responses created from request object
+		Request							_request;		// Object containing the request
+		std::queue<Response>			_respQueue;		// Queue containing the responses created from request object
 
 	public:
 
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		ClientSocket(int fd, const std::vector<ServerInfo>& infoVirServs);
+		ClientSocket(int fd, const std::vector<ServerInfo>* infoVirServs);
 		ClientSocket(const ClientSocket& c);
 		~ClientSocket();
 		ClientSocket& operator=(ClientSocket a);

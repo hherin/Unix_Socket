@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/20 14:34:15 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/21 15:48:10 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		std::vector<ServerInfo>				_servInfo;	// Servers blocks from config file that match a specific port
-		Request								_req;		// Request object when the request is fully received
+		const std::vector<ServerInfo>*		_servInfo;	// Servers blocks from config file that match a specific port
+		Request*							_req;		// Request object when the request is fully received, used to create response
 
 		StatusLine							_staLine;	// Fist line of http response
 		std::map<std::string, std::string>	_headers;	// Headers of http response
@@ -44,7 +44,7 @@ class Response
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(const Request& req, const StatusLine& staLine, const std::vector<ServerInfo>& servInfo);
+		Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo);
 		Response(const Response& c);
 		~Response();
 		Response& operator=(Response a);
@@ -53,7 +53,7 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* --------------------------- SETTERS ------------------------- */
 
-		void setRequest(const Request& req);
+		void setRequest(Request* req);
 		void setStatusLine(const StatusLine& staLine);
 
 

@@ -18,7 +18,7 @@
 
 Response::Response() {}
 
-Response::Response(const Request& req, const StatusLine& staLine, const std::vector<ServerInfo>& servInfo) :
+Response::Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo) :
 	_servInfo(servInfo), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 
@@ -36,7 +36,7 @@ Response& Response::operator=(Response a)
 /* ------------------------------------------------------------- */
 /* --------------------------- SETTERS ------------------------- */
 
-void Response::setRequest(const Request& req)
+void Response::setRequest(Request* req)
 {
 	_req = req;
 }
@@ -71,7 +71,6 @@ const std::string& Response::getBuffer() const
 
 void Response::clear()
 {
-	_req.clear();
 	_staLine.clear();
 	_headers.clear();
 	_body.clear();
@@ -160,7 +159,7 @@ void Response::setHeaderDate()
 void swap(Response& a, Response& b)
 {
 	std::swap(a._servInfo, b._servInfo);
-	swap(a._req, b._req);
+	std::swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
 	std::swap(a._headers, b._headers);
 	std::swap(a._body, b._body);
