@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/21 16:48:35 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 14:29:28 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,19 +64,21 @@ void FileParser::parseConfigFile()
 void FileParser::newLocation(ServerInfo &srv)
 {
 	Location n_loc(&srv);
+	std::string uri;
 	int brack = 0;
 	
 	bracketRegulator(brack, _buf);
 	if (!_buf.compare(0, 8, "location")){
 		(!_buf.compare(_buf.size() - 1, 1, "{")) ? _buf.erase(_buf.size() - 1, 1) : 0;
-		n_loc.setLocation(2, 8, _buf);
+		uri = _buf;
+		uri.replace(0, 9, "");
 	}
 	while (brack > 0)
 	{
 		std::getline(_file, _buf);
 		cleanLineFromSpaces(_buf);
 		bracketRegulator(brack, _buf);
-		
+
 		if (!_buf.compare(0, 12, "allow_method"))
 			n_loc.setLocation(METHO, 12, _buf);
 		else if (!_buf.compare(0, 5, "index"))
@@ -98,7 +100,7 @@ void FileParser::newLocation(ServerInfo &srv)
 		else continue;
 	}
 	_bracket--;
-	// srv.setLocation(n_loc);
+	addNewLocationToMap(&n_loc, uri);
 }
 
 void FileParser::newServer(void)
@@ -130,7 +132,7 @@ void FileParser::newServer(void)
 void FileParser::addNewServerToMap(ServerInfo &srv)
 {
 	int s_port = srv.getPort();
-
+	srv.getLocation().insert(_m_loc.begin(), _m_loc.end());
 	std::map<int, std::vector<ServerInfo> >::iterator it = _m_srv.find(s_port);
 		
 	if (it == _m_srv.end()){
@@ -139,15 +141,15 @@ void FileParser::addNewServerToMap(ServerInfo &srv)
 	}
 	else
 		it->second.push_back(srv);
+	_m_loc.clear();
 }
 
-void FileParser::addNewLocationToMap(ServerInfo &srv, Location *loc, std::string const &name)
+void FileParser::addNewLocationToMap(Location *loc, std::string const &name)
 {
-	std::map<std::string, Location> m_loc = srv.getLocation();
-	std::map<std::string, Location>::iterator it = m_loc.find(name);
-		
-	if (it == m_loc.end())
-		m_loc.insert(std::pair<std::string, Location>(name, *loc));
+	std::map<std::string, Location>::iterator it = _m_loc.find(name);
+	
+	if (it == _m_loc.end())
+		_m_loc.insert(std::pair<std::string, Location>(name, *loc));
 	else
 		throw "Error location already exist\n";
 }

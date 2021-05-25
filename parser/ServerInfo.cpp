@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/21 16:46:34 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 14:07:39 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ std::vector<std::string> const &ServerInfo::getNames() const { return _names; }
 
 int const &ServerInfo::getPort() const { return _port; }
 
-std::map<std::string, Location> const &ServerInfo::getLocation() const { return _location; }
+std::map<std::string, Location> &ServerInfo::getLocation() { return _location; }
 
 std::string const &ServerInfo::getHost() const { return _host; }
 

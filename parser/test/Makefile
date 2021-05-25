@@ -6,7 +6,7 @@
 #    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/27 16:19:33 by hherin           ###   ########.fr        #
+#    Updated: 2021/05/25 13:35:44 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAMEconfig		=	parserConfig
 
 NAMEfile		=	parserFile
 
-SRCS			=	../ServerInfo.cpp ../FileParser.cpp ../parserUtils.cpp
+SRCS			=	../ServerInfo.cpp ../FileParser.cpp ../parserUtils.cpp ../LocationObj.cpp ../../utils/utils.cpp
 
 SRCSCONF		=	mainConfig.cpp
 

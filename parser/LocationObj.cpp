@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/21 16:46:15 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 13:45:12 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void	Location::setLocation(int nb, int const &pos, std::string const &buf)
 	typedef void (Location::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &Location::setMethods, &Location::setIndex, &Location::setAuthBasic, 
                         &Location::setAuthBasicFile, &Location::setAutoIndex, 
-                        &Location::setUploadStore, &Location::setRoot };
+                        &Location::setUploadStore, &Location::setRoot, &Location::setCgiExe,
+                        &Location::setCgiPath };
 
     const char *tmp = buf.c_str() + pos;
 	int i = 0;

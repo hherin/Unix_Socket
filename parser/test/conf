@@ -76,7 +76,7 @@ server {
 		root 		./www/tester
 		auth 		user:pass
 	}
-    location /maxbody  {
+    location /  {
 		allow_method 	    PUT
 		root 		./www/tester
 		index		index.html
@@ -90,6 +90,14 @@ server {
 	server_name	sbfg
 	root	
 	host	localhost
+
+	location /	{
+    	root    	./www/methods/post
+		index		index.html
+		allow_method	    POST GET TRACE CONNECT
+		cgi_path 	./www/CGI/ubuntu_cgi_tester
+		cgi			.cgi
+    }
 
 }
 

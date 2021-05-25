@@ -15,6 +15,7 @@ class FileParser
         std::string _buf;
         int _bracket;
         std::map<int, std::vector<ServerInfo> > _m_srv;
+        std::map<std::string, Location> _m_loc;
         std::string _requestFile;
         ServerInfo *_cli_srv;
         std::string _filePath;
@@ -48,7 +49,7 @@ class FileParser
         
         void addNewServerToMap(ServerInfo &);
 
-        void addNewLocationToMap(ServerInfo&, Location*, std::string const&);
+        void addNewLocationToMap(Location*, std::string const&);
 };
 
 #endif
