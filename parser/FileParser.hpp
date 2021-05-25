@@ -38,6 +38,8 @@ class FileParser
 
         void setServerInfo(ServerInfo *);
 
+		size_t getRequestFileSize() const;
+
     private:
         void parseConfigFile();
 

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/21 15:48:10 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:00:35 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ class Response
 		Request*							_req;		// Request object when the request is fully received, used to create response
 
 		StatusLine							_staLine;	// Fist line of http response
-		std::map<std::string, std::string>	_headers;	// Headers of http response
 		Body								_body;		// Body (= webpage content for example)
 	
-		std::string							_buffer;	// Buffer containing the response that will be send
+		std::string							_buffer;	// Buffer containing the response that will be send. Directly writing
+														// headers into it.
 
 	public:
 
@@ -88,14 +88,14 @@ class Response
 
 		void execGET();
 
-		// Sets Content-lenght header with body size (0 if body is empty)
-		void setHeaderContentLenght();
+		// Fills buffer with Content-lenght header
+		void fillContentLenghtHeader(const std::string& size);
 
-		// Sets Server header with server name (webserv)
-		void setHeaderServer();
+		// Fills buffer with server header with server name (webserv)
+		void fillServerHeader();
 
-		// Sets Date header with the actual date
-		void setHeaderDate();
+		// Fills buffer with Date header with the actual date
+		void fillDateHeader();
 
 
 	public:

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fileParser.cpp                                     :+:      :+:    :+:   */
+/*   FileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 14:29:28 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 15:37:13 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void FileParser::parseConfigFile()
 		else continue; // ERREUR 
 	}
 }
+
+size_t FileParser::getRequestFileSize() const { return _requestFile.size(); }
 
 // check bracket la ou il faut pas
 void FileParser::newLocation(ServerInfo &srv)
