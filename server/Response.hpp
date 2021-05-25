@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/25 16:00:35 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 17:13:49 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		const std::vector<ServerInfo>*		_servInfo;	// Servers blocks from config file that match a specific port
+		std::vector<ServerInfo>*			_servInfo;	// Servers blocks from config file that match a specific port
 		Request*							_req;		// Request object when the request is fully received, used to create response
 
 		StatusLine							_staLine;	// Fist line of http response
@@ -44,7 +44,7 @@ class Response
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo);
+		Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* servInfo);
 		Response(const Response& c);
 		~Response();
 		Response& operator=(Response a);
@@ -77,14 +77,13 @@ class Response
 		// Execute the appropriate method
 		void execMethod();
 
-		// Sets all the appropriate headers using request object and status line, both previously set
-		void setHeaders();
-
 
 	private:
 
 		/* ------------------------------------------------------------- */
 		/* ----------------------- PRIVATE METHODS --------------------- */
+
+		void setHeader(std::string e);
 
 		void execGET();
 
@@ -97,6 +96,7 @@ class Response
 		// Fills buffer with Date header with the actual date
 		void fillDateHeader();
 
+		const std::string& reconstructFullURI(const Location* loc);
 
 	public:
 	

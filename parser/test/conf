@@ -7,7 +7,7 @@ server {
 
     location /  {
 		allow_method	    GET
-        root	    ./www/tester
+        root	    /htmlFiles
 		index	    getindex.html
 		cgi			.bla
 		cgi_path 	./www/CGI/ubuntu_cgi_tester

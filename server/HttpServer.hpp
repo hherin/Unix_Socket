@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/21 15:34:09 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:32:44 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ class HttpServer
 		void addServerSocket(ServerSocket sock);
 		
 		// Store the client fd when a connection is etablished
-		void addClientSocket(int fdNewClient, int port, const std::map<int, std::vector<ServerInfo> >& mSrv);
+		void addClientSocket(int fdNewClient, int port, std::map<int, std::vector<ServerInfo> >& mSrv);
 		
 		// Infinite loop, sets fd_set with all fds for passive accept sockets + connected clients
-		void etablishConnection(const std::map<int, std::vector<ServerInfo> >& mSrv);
+		void etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv);
 
 
 	private:
@@ -88,7 +88,7 @@ class HttpServer
 		}
 
 		// Check all passive accept socket and if one is ready, create a new client connection
-		void connectNewClients(const std::map<int, std::vector<ServerInfo> >& mSrv);
+		void connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv);
 
 		// Checks all clients connections, and if one is communicating receive his request
 		void requestHandler();

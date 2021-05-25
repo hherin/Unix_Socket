@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/25 16:02:59 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 17:29:24 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 Response::Response() {}
 
-Response::Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo) :
+Response::Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* servInfo) :
 	_servInfo(servInfo), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 
@@ -86,16 +86,21 @@ void Response::fillBuffer()
 
 	// Storing headers in buffer
 	fillServerHeader();
-	fillDateHeader();
+	// fillDateHeader(); >>>> GROS FDP QUI BUG
 	
 	if (_req->getMethod() == GET)
 	{
-		FileParser body("URI_A_REMPLIR"); // CAHNGER
+		const Location* loc = locationSearcher(_servInfo,
+				std::pair<std::string, std::string>(_req->getHeaders().find("host")->second, _req->getPath()));
+		
+		FileParser body(reconstructFullURI(loc).c_str(), true); // CAHNGER
 
 		fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+
+		std::cerr << "FILEPARSER = |" << body.getRequestFile() << "|\n";
 		_buffer += CLRF;
 
-		
+		_buffer += body.getRequestFile();
 	}
 	else
 	{
@@ -103,41 +108,43 @@ void Response::fillBuffer()
 		_buffer += CLRF;
 	}
 
-	// !!previous way to add headers
-	// for (std::map<std::string, std::string>::iterator it = _headers.begin(); it != _headers.end(); ++it)
-	// 		_buffer += it->first + ": " + it->second + CLRF;
-	// _buffer += CLRF;
+	// http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html
+// --------------------------------------- TEST -------------------------------------------
+	// setHeader("HTTP/1.1 200 OK");
 
 	
+	// setHeader("Server: nginx/1.19.9");
+	// fillServerHeader();
+	
+	
+	// setHeader("Date: Tue, 25 May 2021 14:57:59 GMT");
+	// fillDateHeader();
+	
+	
+	
+// 	setHeader("Content-Type: text/html");
+	// setHeader("Content-Length: 189");
+
+// setHeader("Last-Modified: Wed, 14 Apr 2021 12:21:13 GMT");
+// setHeader("Connection: keep-alive");
+// setHeader("ETag: \"6076de39-bd\"");
+// setHeader("Accept-Ranges: bytes");
+// _buffer += CLRF;
+// const Location* loc = locationSearcher(_servInfo,
+// 				std::pair<std::string, std::string>(_req->getHeaders().find("host")->second, _req->getPath()));
+		
+// 		FileParser body(reconstructFullURI(loc).c_str(), true); // CAHNGER
+// _buffer += body.getRequestFile();
 }
-
-void Response::setHeaders()
-{
-
-}
-
-// HELENE FONCTION qui store la page a renvoyer dans le body de la reponse
-// void Response::execGET()
-// {
-// 	// std::vector<std::string> path = stringDelimSplit(_req.getPath(), "/");							// URI requested is splited 
-	
-// 	// for (size_t i = 0; i < _servInfo.size(); i++){													// loop for each 
-// 	// 	std::vector<ServerInfo> loc = _servInfo[i].getLocation();
-// 	// 	for (size_t j = 0; j < loc.size(); j++){
-// 	// 		std::vector<std::string> locName = stringDelimSplit((loc[i].getNames())[0], "/");
-// 	// 		if (locName[0].compare(0, path[0].size() + 1), path[0]){
-				
-// 	// 		}
-// 	// 	}
-// 	// 	if (_req.getHeaders().find("host"))
-// 	// }
-// 	// FileParser reqFile();
-	
-// }
 
 
 /* ------------------------------------------------------------- */
 /* ----------------------- PRIVATE METHODS --------------------- */
+
+void Response::setHeader(std::string e)
+{
+	_buffer += e + CLRF;
+}
 
 void Response::fillContentLenghtHeader(const std::string& size) 
 {
@@ -166,6 +173,15 @@ void Response::fillDateHeader()
 	// Formating header date.
 	// ctime format = Thu May 20 14:33:40 2021 >> to header date format : Thu, 20 May 2021 12:16:42 GMT
 	_buffer+= "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT\r\n";
+}
+
+const std::string& Response::reconstructFullURI(const Location* loc)
+{
+	if (!loc)
+		_req->getPath();
+
+		
+	return _req->getPath(); // A SUPPRIMER
 }
 
 

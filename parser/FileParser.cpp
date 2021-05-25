@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 16:02:04 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:52:43 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePath(filepath) { _file.open(filepath); }
 
-FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
+FileParser::FileParser(const char *filepath, bool s) : _bracket(0), _cli_srv(0), _filePath(filepath)
+{ std::cerr << "filepath dans cons = |" <<filepath << "\n" ; _file.open(filepath); parseRequestFile(); (void)s; }
+
+// FileParser::FileParser(const char *filepath, ServerInfo *cli_srv) : _bracket(0), _cli_srv(cli_srv), _filePath(filepath) { _file.open(filepath); }
 
 FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
 _m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
@@ -34,15 +37,11 @@ FileParser::~FileParser() { _file.close(); }
 
 void FileParser::parseRequestFile()
 {
-	if (!_cli_srv){
-		std::cerr << "NOT ALLOWED\n";
-		exit(1);
-	}
 	while (std::getline(_file, _buf))
 		_requestFile.append(_buf + "\n");
 }
 
-std::string const& FileParser::getRequestFile() { parseRequestFile(); return _requestFile; }
+std::string const& FileParser::getRequestFile() { return _requestFile; }
 
 void FileParser::parseConfigFile()
 {
@@ -74,7 +73,6 @@ void FileParser::newLocation(ServerInfo &srv)
 		(!_buf.compare(_buf.size() - 1, 1, "{")) ? _buf.erase(_buf.size() - 1, 1) : 0;
 		uri = *wsTrim(_buf);
 		uri.replace(0, 8, "");
-		std::cout << "uri ." << uri << ".\n";
 	}
 	while (brack > 0)
 	{

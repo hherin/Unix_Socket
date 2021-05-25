@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/21 15:37:22 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:32:35 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ void HttpServer::addServerSocket(ServerSocket sock)
 	_serverSocks.push_back(sock);
 }
 
-void HttpServer::addClientSocket(int fdNewClient, int port, const std::map<int, std::vector<ServerInfo> >& mSrv)
+void HttpServer::addClientSocket(int fdNewClient, int port, std::map<int, std::vector<ServerInfo> >& mSrv)
 {
 	_clientSocks.push_back(ClientSocket(fdNewClient, &(mSrv.find(port)->second)));
 }
 
-void HttpServer::etablishConnection(const std::map<int, std::vector<ServerInfo> >& mSrv)
+void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv)
 {
 	while (true)
 	{
@@ -128,7 +128,7 @@ void HttpServer::requestHandler()
 	}
 }
 
-void HttpServer::connectNewClients(const std::map<int, std::vector<ServerInfo> >& mSrv)
+void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv)
 {
 	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end(); ++it)
 	{

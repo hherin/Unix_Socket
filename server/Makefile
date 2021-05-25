@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
+#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/05/20 15:36:48 by hherin           ###   ########.fr        #
+#    Updated: 2021/05/25 16:28:13 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,6 @@ SRCS		=	HttpServer.cpp \
 				ClientSocket.cpp \
 				Request.cpp \
 				Response.cpp \
-				methods/execGET.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 

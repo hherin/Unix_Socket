@@ -6,13 +6,13 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/05/10 14:24:42 by llefranc         ###   ########.fr        #
+#    Updated: 2021/05/25 16:05:12 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	lutils.a
 
-SRCS		=	utils.cpp \
+SRCS		=	utils.cpp 
 
 OBJS		=	${SRCS:.cpp=.o}
 

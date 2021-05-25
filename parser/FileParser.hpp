@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 16:02:25 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/25 16:02:28 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:50:11 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ class FileParser
 
 		FileParser(const char*);
 
-		FileParser(const char*, ServerInfo *);
+		FileParser(const char *filepath, bool s);
+		// FileParser(const char*, ServerInfo *);
 
 		FileParser(FileParser const&);
 
