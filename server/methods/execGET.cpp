@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 15:33:37 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/21 14:33:03 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 14:34:41 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,6 @@ std::string const lookUpForRootInLocation(ServerInfo const &srv, std::vector<std
 				return loc[i].getRoot();
 	}
 	return srv.getRoot();
-}
-
-// Location const &locationSearcher(std::vector<ServerInfo> const &srv, std::string const &name)
-ServerInfo const &serverSearcher(std::vector<ServerInfo> const &srv, std::string const &name)
-{
-	for (size_t i = 0; i < srv.size(); i++){													// loop for each 
-		std::vector<std::string> sinfoNames = srv[i].getNames();
-		for (size_t j = 0; j < sinfoNames.size(); j++)
-			if (!sinfoNames[i].compare(0, name.size() + 1, name))
-				return srv[i];
-	}
-	return srv[0];
 }
 
 // HELENE FONCTION qui store la page a renvoyer dans le body de la reponse

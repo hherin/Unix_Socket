@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 14:07:16 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 14:51:02 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ class ServerInfo
 		std::string const &getHost() const;
 		std::vector<std::string> const &getNames() const;
 		int const &getPort() const;
-		std::map<std::string, Location> &getLocation();
+		std::map<std::string, Location> *getLocation();
 		
 		/*	===========================================
 			================= SETTERS =================

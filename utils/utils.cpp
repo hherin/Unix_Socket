@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/21 15:25:34 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 15:47:17 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,33 @@ void setStringArray(char const *n, std::vector<std::string> &v)
         token = strtok(NULL, "\t\v\f\r ");
     }
     delete tmp;
+}
+
+Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
+{
+	for (size_t i = 0; i < srv->size(); i++){													// loop for each virtual server
+		std::vector<std::string> sinfoNames = (*srv)[i].getNames();
+		std::cout << "i " << i << "\n";
+        for (size_t j = 0; j < sinfoNames.size(); j++) {                                         // loop for each names in server
+			std::cout << "j " << j << "\n";
+            if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first)){
+                std::cout << "virtual server is found\n";
+                std::map<std::string, Location> *loc = (*srv)[i].getLocation();
+                if (loc->find(names.second) != loc->end()){
+                    std::cout << "location found\n";
+                    return (&(loc->find(names.second)->second));}
+			}
+        }
+	}
+	return NULL;
+}
+
+std::string *wsTrim(std::string &buf)
+{
+    if (buf.empty())
+        return &buf;
+    for (std::string::iterator it = buf.end(); it != buf.begin(); --it)
+        if (isspace(*it))
+            buf.erase(it);            
+    return &buf;
 }
