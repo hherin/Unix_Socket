@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/26 18:37:58 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 18:47:53 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,14 @@ void Response::fillBuffer()
 	
 	if (_req->getMethod() == GET)
 	{
+		// Keeping only host name and removing port
+		std::string hostName(_req->getHeaders().find("host")->second);
+		hostName = hostName.substr(0, hostName.find(':'));
+		
 		// Looking for the location block matching the URI. If returns NULL, then no appropriate block was found
 		// and no additionnal configuration (index, root...) will change the URI
 		const Location* loc = locationSearcher(_servInfo,
-				std::pair<std::string, std::string>(_req->getHeaders().find("host")->second, _req->getPath()));
+				std::pair<std::string, std::string>(hostName, _req->getPath()));
 		
 		FileParser body(reconstructFullURI(loc).c_str(), true); // CAHNGER
 
@@ -113,8 +117,6 @@ void Response::fillBuffer()
 		fillContentLenghtHeader(convertNbToString(0));
 		_buffer += CLRF;
 	}
-
-	std::cerr << "size to send: " << _buffer.size() << "\n";
 
 	// http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html
 }

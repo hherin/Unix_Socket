@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/26 18:05:32 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 19:06:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,34 @@ Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, 
 	for (size_t i = 0; i < srv->size(); i++){													// loop for each virtual server
 	
 		std::vector<std::string> sinfoNames = (*srv)[i].getNames();
+
 		
         for (size_t j = 0; j < sinfoNames.size(); j++) {                                         // loop for each names in server
-		
+
+			std::cerr << "server name = " << sinfoNames[j] << "\n";
+
 			// virtual server is found
             if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first)){
                 std::cout << "virtual server is found\n";
 
                 std::map<std::string, Location> *loc = (*srv)[i].getLocation();
-                // Location* bestMatch = 0;
 
-				if (loc->find(names.second) != loc->end()){
-                    std::cout << "location found\n";
-                    return (&(loc->find(names.second)->second));}
+				// Setting the size_t to zero so the size comparise will always be true for the first match
+                std::pair<size_t, std::map<std::string, Location>::iterator> 
+						bestMatch(0, loc->begin());
+
+FIX ICI LA RECHERCHE DE NOM
+
+				// Checking each location name, and saving the most long match
+				for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
+					if (it->first.compare(0, std::string::npos, names.second, 0, it->first.size()) &&
+							it->first.size() > bestMatch.first)
+					{
+						bestMatch.first = it->first.size();
+						bestMatch.second = it;
+					}
+
+				return &bestMatch.second->second;
 			}
         }
 	}
