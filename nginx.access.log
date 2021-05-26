@@ -1,2 +1,0 @@
-127.0.0.1 - - [25/May/2021:17:07:21 +0200] "GET /Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html HTTP/1.1" 200 189 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
-127.0.0.1 - - [25/May/2021:17:07:21 +0200] "GET /favicon.ico HTTP/1.1" 404 555 "http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"

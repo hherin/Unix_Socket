@@ -6,12 +6,14 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/25 17:29:24 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 14:45:59 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
+
+// apres avoir fait une requete, est ce que l'on close ?
 
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
@@ -86,7 +88,7 @@ void Response::fillBuffer()
 
 	// Storing headers in buffer
 	fillServerHeader();
-	// fillDateHeader(); >>>> GROS FDP QUI BUG
+	fillDateHeader();
 	
 	if (_req->getMethod() == GET)
 	{
@@ -95,11 +97,11 @@ void Response::fillBuffer()
 		
 		FileParser body(reconstructFullURI(loc).c_str(), true); // CAHNGER
 
+		// Setting size after storing the body in FileParser object
 		fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
-
-		std::cerr << "FILEPARSER = |" << body.getRequestFile() << "|\n";
 		_buffer += CLRF;
 
+		// Writing the body previously stored to the buffer
 		_buffer += body.getRequestFile();
 	}
 	else
@@ -109,32 +111,6 @@ void Response::fillBuffer()
 	}
 
 	// http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html
-// --------------------------------------- TEST -------------------------------------------
-	// setHeader("HTTP/1.1 200 OK");
-
-	
-	// setHeader("Server: nginx/1.19.9");
-	// fillServerHeader();
-	
-	
-	// setHeader("Date: Tue, 25 May 2021 14:57:59 GMT");
-	// fillDateHeader();
-	
-	
-	
-// 	setHeader("Content-Type: text/html");
-	// setHeader("Content-Length: 189");
-
-// setHeader("Last-Modified: Wed, 14 Apr 2021 12:21:13 GMT");
-// setHeader("Connection: keep-alive");
-// setHeader("ETag: \"6076de39-bd\"");
-// setHeader("Accept-Ranges: bytes");
-// _buffer += CLRF;
-// const Location* loc = locationSearcher(_servInfo,
-// 				std::pair<std::string, std::string>(_req->getHeaders().find("host")->second, _req->getPath()));
-		
-// 		FileParser body(reconstructFullURI(loc).c_str(), true); // CAHNGER
-// _buffer += body.getRequestFile();
 }
 
 
@@ -149,13 +125,11 @@ void Response::setHeader(std::string e)
 void Response::fillContentLenghtHeader(const std::string& size) 
 {
 	_buffer += "Content-lenght: " + size + CLRF;
-	// _headers["Content-lenght"] = convertNbToString(_body.getSize());
 }
 
 void Response::fillServerHeader() 
 {
 	_buffer += "Server: webserv\r\n";
-	// _headers["Server"] = "webserv";
 }
 
 void Response::fillDateHeader() 
@@ -167,12 +141,16 @@ void Response::fillDateHeader()
 	char* date_time = ctime(&now);
 
 	// Splitting date line and removing '\n'
+	std::cerr << "date befire = |" << date_time << "|\n";
+
 	std::vector<std::string> date = splitWithSep(date_time, ' ');
-	date.back().back() = '\0';
+	
+	std::cerr << "date back befire = |" << date.back() << "|\n";
+	date.back().resize(4);
 
 	// Formating header date.
 	// ctime format = Thu May 20 14:33:40 2021 >> to header date format : Thu, 20 May 2021 12:16:42 GMT
-	_buffer+= "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT\r\n";
+	_buffer += "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT" + CLRF;
 }
 
 const std::string& Response::reconstructFullURI(const Location* loc)
