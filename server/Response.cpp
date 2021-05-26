@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/26 14:45:59 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 18:37:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void Response::fillBuffer()
 	
 	if (_req->getMethod() == GET)
 	{
+		// Looking for the location block matching the URI. If returns NULL, then no appropriate block was found
+		// and no additionnal configuration (index, root...) will change the URI
 		const Location* loc = locationSearcher(_servInfo,
 				std::pair<std::string, std::string>(_req->getHeaders().find("host")->second, _req->getPath()));
 		
@@ -103,6 +105,8 @@ void Response::fillBuffer()
 
 		// Writing the body previously stored to the buffer
 		_buffer += body.getRequestFile();
+
+		
 	}
 	else
 	{
@@ -110,9 +114,10 @@ void Response::fillBuffer()
 		_buffer += CLRF;
 	}
 
+	std::cerr << "size to send: " << _buffer.size() << "\n";
+
 	// http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html
 }
-
 
 /* ------------------------------------------------------------- */
 /* ----------------------- PRIVATE METHODS --------------------- */
@@ -124,7 +129,7 @@ void Response::setHeader(std::string e)
 
 void Response::fillContentLenghtHeader(const std::string& size) 
 {
-	_buffer += "Content-lenght: " + size + CLRF;
+	_buffer += "Content-Length: " + size + CLRF;
 }
 
 void Response::fillServerHeader() 
@@ -141,11 +146,7 @@ void Response::fillDateHeader()
 	char* date_time = ctime(&now);
 
 	// Splitting date line and removing '\n'
-	std::cerr << "date befire = |" << date_time << "|\n";
-
 	std::vector<std::string> date = splitWithSep(date_time, ' ');
-	
-	std::cerr << "date back befire = |" << date.back() << "|\n";
 	date.back().resize(4);
 
 	// Formating header date.
@@ -153,12 +154,31 @@ void Response::fillDateHeader()
 	_buffer += "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT" + CLRF;
 }
 
+void printLoc(const Location* loc)
+{
+	std::cout << "root: " << loc->getRoot() << "\n";
+	for (std::vector<std::string>::const_iterator it = loc->getMethods().begin(); it != loc->getMethods().end(); it++)
+		std::cout << "methods: " << *it << "\n";
+		
+	for (std::vector<std::string>::const_iterator it = loc->getIndex().begin(); it != loc->getIndex().end(); it++)
+		std::cout << "index: " << *it << "\n";
+
+	std::cout << "autoindex: " << loc->getAutoIndex() << "\n";
+}
+
 const std::string& Response::reconstructFullURI(const Location* loc)
 {
+	std::cerr << "loc is null : " << loc << "\n";
+	
+	// zero location block match the URI so the URI isn't modified
 	if (!loc)
-		_req->getPath();
+		return _req->getPath();
 
-		
+	printLoc(loc);
+
+
+	exit(1);
+
 	return _req->getPath(); // A SUPPRIMER
 }
 

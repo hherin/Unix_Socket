@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/25 16:28:55 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 18:05:32 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,23 @@ void setStringArray(char const *n, std::vector<std::string> &v)
     delete tmp;
 }
 
+// srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
 Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
 {
 	for (size_t i = 0; i < srv->size(); i++){													// loop for each virtual server
+	
 		std::vector<std::string> sinfoNames = (*srv)[i].getNames();
-		std::cout << "i " << i << "\n";
+		
         for (size_t j = 0; j < sinfoNames.size(); j++) {                                         // loop for each names in server
-			std::cout << "j " << j << "\n";
+		
+			// virtual server is found
             if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first)){
                 std::cout << "virtual server is found\n";
+
                 std::map<std::string, Location> *loc = (*srv)[i].getLocation();
-                if (loc->find(names.second) != loc->end()){
+                // Location* bestMatch = 0;
+
+				if (loc->find(names.second) != loc->end()){
                     std::cout << "location found\n";
                     return (&(loc->find(names.second)->second));}
 			}

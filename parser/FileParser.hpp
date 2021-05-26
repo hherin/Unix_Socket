@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 16:02:25 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/25 16:50:11 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 18:03:32 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FILEPARSER_HPP
 
 # include "parser.hpp"
+#include <unistd.h>
 
 enum e_srv { LIS, ERR, SRV_N, BODY, HOST};
 

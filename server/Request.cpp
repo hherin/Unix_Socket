@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/25 14:28:26 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/26 15:02:45 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void Request::parsingCheck()
         if (_reqLine.empty())
             parseRequestLine(posCLRF);    
         
-        // Double CRLF indicates end of headers
+        // (3) Third step, double CRLF indicates end of headers
         else if (!_body.isReceiving() && _index == posCLRF)
 		{
 			_index += CLRF_OCTET_SIZE;
@@ -80,20 +80,16 @@ void Request::parsingCheck()
 			if (it == _headers.end() || it->second.empty())
 				throw StatusLine(400, REASON_400, "host field missing or empty");
 
-			it = _headers.find("content-lenght");
-			if (it == _headers.end())
-				throw StatusLine(400, REASON_400, "no content lenght header");
-
-			// Ready to receive x octets of body
-            _body.startReceiving();
-			_body.setSize(atol(it->second.c_str()));
-
-			// Case there is no body (content-lenght = 0)
-			if (!_body.getSize())
+			// Body will receive content-lenght octets
+			if ((it = _headers.find("content-lenght")) != _headers.end())
 			{
-				std::cerr << "\n" << _body.getBody() << "\n----------\n";
-				throw StatusLine(200, REASON_200);
+				_body.startReceiving();
+				_body.setSize(atol(it->second.c_str()));
 			}
+			
+			// Case no content-lenght header, so no body
+			else
+				throw StatusLine(200, REASON_200);
 		}
             
 		// (2) Second step
@@ -104,7 +100,7 @@ void Request::parsingCheck()
         posCLRF = _buffer.find(CLRF, _index);
     }
 
-	// (3) Third step
+	// (4) Fourth step
 	if (_body.isReceiving())
 		parseBody();
 }
