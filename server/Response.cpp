@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 18:03:21 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 18:53:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,17 +100,18 @@ void Response::fillBuffer()
 				std::pair<std::string, std::string>(hostName, _req->getPath()));
 			
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath()); 
-			
+		
+
 		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
 			FileParser body(realUri.c_str(), true); // CAHNGER
 
-			// Setting size after storing the body in FileParser object
+			// Setting size after storing the body in FileParser object, then setting Last-Modified header
 			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+			fillLastModifiedHeader(realUri.c_str());
 			_buffer += CLRF;
 
 			// For GET, writing the body previously stored to the buffer
-			// _req->getMethod() == GET ? _buffer += body.getRequestFile() : 0;
 			if (_req->getMethod() == GET)
 				_buffer += body.getRequestFile();
 		}
@@ -165,6 +166,23 @@ void Response::fillDateHeader()
 	// Formating header date.
 	// ctime format = Thu May 20 14:33:40 2021 >> to header date format : Thu, 20 May 2021 12:16:42 GMT
 	_buffer += "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT" + CLRF;
+}
+
+void Response::fillLastModifiedHeader(const char* uri)
+{
+	struct stat infFile;
+
+	if (stat(uri, &infFile) == -1)
+		throw StatusLine(404, REASON_404);
+
+	struct tm* lm = localtime(&infFile.st_mtimespec.tv_sec);
+
+	const std::string day[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+	const std::string mon[12] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+	_buffer += "Last-Modified: " + day[lm->tm_wday - 1] + ", " + convertNbToString(lm->tm_mday) + " " + mon[lm->tm_mon] + " " 
+			+ convertNbToString(lm->tm_year + 1900) + " " + convertNbToString(lm->tm_hour) + ":" + 
+			convertNbToString(lm->tm_min) + ":" + convertNbToString(lm->tm_sec) + " GMT" + CLRF;
 }
 
 void Response::fillStatusLine(const StatusLine& staLine)
@@ -264,7 +282,7 @@ std::string Response::reconstructFullURI(int method,
 		addRoot(&uri, loc.second->getRoot(), loc.first);
 
 	if (stat(uri.c_str(), &infFile) == -1)
-		throw StatusLine(404, REASON_404, "stat retruned -1 in reconstruct");
+		throw StatusLine(404, REASON_404);
 	if (S_ISDIR(infFile.st_mode))
 		uri = addIndex(uri, loc.second->getIndex());
 	

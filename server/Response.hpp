@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 17:42:40 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 18:11:30 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ class Response
 
 		// Fills buffer with Date header with the actual date
 		void fillDateHeader();
+
+		void fillLastModifiedHeader(const char* uri);
 
 		// Fills buffer with status line
 		void fillStatusLine(const StatusLine& staLine);
