@@ -81,6 +81,26 @@ server {
 		index		index.html
 		max_body	100
 	}
+	location /authe  {
+		allow_method 	    PUT
+		root 		./www/tester/13
+		auth 		user:pass
+	}
+	location /authen  {
+		allow_method 	    PUT
+		root 		./www/tester/14
+		auth 		user:pass
+	}
+	location /aut  {
+		allow_method 	    PUT
+		root 		./www/tester/15
+		auth 		user:pass
+	}
+	location /autx  {
+		allow_method 	    PUT
+		root 		./www/tester/16
+		auth 		user:pass
+	}
 }
 
 server {

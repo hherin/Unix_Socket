@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/26 19:06:58 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 11:50:41 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,44 +70,47 @@ void setStringArray(char const *n, std::vector<std::string> &v)
     delete tmp;
 }
 
+Location* matchLocation(std::map<std::string, Location> *loc, const std::string& locName)
+{
+	std::pair<bool, std::map<std::string, Location>::iterator> 
+						bestMatch(0, loc->begin());
+
+	// Checking each location name, and saving the most long match. As we stored location names in a map,
+	// they're already sorted form smaller to longest same words, no need to check size: the last match will 
+	// be the longest possible match (ex: if searching for "bla", "bl" location will be stored after "b" location)
+	for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
+		if (!it->first.compare(0, std::string::npos, locName, 0, it->first.size()))
+		{
+			bestMatch.first = true;
+			bestMatch.second = it;
+		}
+	
+	// Case there was no match
+	if (!bestMatch.first)
+		return 0;
+
+	return &bestMatch.second->second;
+}
+
 // srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
 Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
 {
-	for (size_t i = 0; i < srv->size(); i++){													// loop for each virtual server
+	// loop for each virtual server for a specific port
+	for (size_t i = 0; i < srv->size(); i++){
 	
 		std::vector<std::string> sinfoNames = (*srv)[i].getNames();
 
-		
-        for (size_t j = 0; j < sinfoNames.size(); j++) {                                         // loop for each names in server
-
-			std::cerr << "server name = " << sinfoNames[j] << "\n";
-
+		// loop for each names in each server block
+        for (size_t j = 0; j < sinfoNames.size(); j++)
+		{
 			// virtual server is found
-            if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first)){
-                std::cout << "virtual server is found\n";
-
-                std::map<std::string, Location> *loc = (*srv)[i].getLocation();
-
-				// Setting the size_t to zero so the size comparise will always be true for the first match
-                std::pair<size_t, std::map<std::string, Location>::iterator> 
-						bestMatch(0, loc->begin());
-
-FIX ICI LA RECHERCHE DE NOM
-
-				// Checking each location name, and saving the most long match
-				for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
-					if (it->first.compare(0, std::string::npos, names.second, 0, it->first.size()) &&
-							it->first.size() > bestMatch.first)
-					{
-						bestMatch.first = it->first.size();
-						bestMatch.second = it;
-					}
-
-				return &bestMatch.second->second;
-			}
+            if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first))
+                return matchLocation((*srv)[i].getLocation(), names.second);
         }
 	}
-	return NULL;
+	
+	// Case no server_names match, using default server block (the first one)
+	return matchLocation((*srv)[0].getLocation(), names.second);
 }
 
 std::string *wsTrim(std::string &buf)
@@ -118,4 +121,4 @@ std::string *wsTrim(std::string &buf)
         if (isspace(*it))
             buf.erase(it);            
     return &buf;
-}
+} 
