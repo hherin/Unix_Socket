@@ -35,7 +35,6 @@ ANS ◦ WWW-Authenticate
 
 
 A FAIRE AJD :
-	- ajouter le allow method header
 	- ajouter le header date derniere Modified
 	- faire la methode head
 	- ajouter le max body size

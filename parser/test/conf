@@ -76,7 +76,7 @@ server {
 		max_body	100
 	}
 	location /authe  {
-		allow_method 	    PUT
+		allow_method 	    HEAD PUT GET
 		root 		./www/tester
 		index		index.html
 		auth 		user:pass

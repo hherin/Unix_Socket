@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 17:44:42 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 18:03:21 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void Response::fillBuffer()
 			
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath()); 
 			
-		if (_req->getMethod() == GET)
+		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
 			FileParser body(realUri.c_str(), true); // CAHNGER
 
@@ -109,8 +109,10 @@ void Response::fillBuffer()
 			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
 			_buffer += CLRF;
 
-			// Writing the body previously stored to the buffer
-			_buffer += body.getRequestFile();
+			// For GET, writing the body previously stored to the buffer
+			// _req->getMethod() == GET ? _buffer += body.getRequestFile() : 0;
+			if (_req->getMethod() == GET)
+				_buffer += body.getRequestFile();
 		}
 
 		else
