@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 11:50:41 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 12:55:38 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void setStringArray(char const *n, std::vector<std::string> &v)
     delete tmp;
 }
 
-Location* matchLocation(std::map<std::string, Location> *loc, const std::string& locName)
+std::pair<const std::string, const Location*> 
+		matchLocation(std::map<std::string, Location> *loc, const std::string& locName)
 {
 	std::pair<bool, std::map<std::string, Location>::iterator> 
 						bestMatch(0, loc->begin());
@@ -87,13 +88,14 @@ Location* matchLocation(std::map<std::string, Location> *loc, const std::string&
 	
 	// Case there was no match
 	if (!bestMatch.first)
-		return 0;
+		return std::pair<const std::string, const Location*>("", 0);
 
-	return &bestMatch.second->second;
+	return std::pair<const std::string, const Location*>(bestMatch.second->first, &bestMatch.second->second);
 }
 
 // srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
-Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
+std::pair<const std::string, const Location*> 
+		locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
 {
 	// loop for each virtual server for a specific port
 	for (size_t i = 0; i < srv->size(); i++){

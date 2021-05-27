@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/25 17:13:49 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 17:42:40 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define RESPONSE_HPP
 
 #include <ctime>
+#include <sys/stat.h>
 
 #include "Request.hpp"
 #include "msg_format/StatusLine.hpp"
@@ -96,7 +97,19 @@ class Response
 		// Fills buffer with Date header with the actual date
 		void fillDateHeader();
 
-		const std::string& reconstructFullURI(const Location* loc);
+		// Fills buffer with status line
+		void fillStatusLine(const StatusLine& staLine);
+
+		// Transforms URI using index and root settings
+		std::string reconstructFullURI(int method,
+				const std::pair<const std::string, const Location*>& loc, std::string uri);
+
+		// Replaces the location name that matched with root directive
+		void addRoot(std::string* uri, const std::string& root, const std::string& locName);
+
+		std::string addIndex(const std::string& uri, const std::vector<std::string>& indexs);
+		
+		void checkMethods(int method, const std::vector<std::string>& methodsAllowed) const;
 
 	public:
 	

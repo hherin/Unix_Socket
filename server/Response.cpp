@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/26 18:47:53 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 17:44:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Response::Response(Request* req, const StatusLine& staLine, std::vector<ServerIn
 	_servInfo(servInfo), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 
-	_servInfo(c._servInfo), _req(c._req), _staLine(c._staLine), _body(c._body) {}
+	_servInfo(c._servInfo), _req(c._req), _staLine(c._staLine), _body(c._body), _buffer(c._buffer) {}
 
 Response::~Response() {}
 
@@ -80,17 +80,15 @@ void Response::clear()
 
 void Response::fillBuffer()
 {
-	// Storing status line in buffer
-	_buffer = "HTTP/1.1 " + convertNbToString(_staLine.getCode()) + " " + _staLine.getReason();
-	if (!_staLine.getAdditionalInfo().empty())
-		_buffer += " (" + _staLine.getAdditionalInfo() + ")";
-	_buffer += CLRF;
-
-	// Storing headers in buffer
+	// Storing status line and some headers in buffer
+	fillStatusLine(_staLine);
 	fillServerHeader();
 	fillDateHeader();
 	
-	if (_req->getMethod() == GET)
+	if (_staLine.getCode() >= 300)
+		return ;
+
+	try
 	{
 		// Keeping only host name and removing port
 		std::string hostName(_req->getHeaders().find("host")->second);
@@ -98,24 +96,35 @@ void Response::fillBuffer()
 		
 		// Looking for the location block matching the URI. If returns NULL, then no appropriate block was found
 		// and no additionnal configuration (index, root...) will change the URI
-		const Location* loc = locationSearcher(_servInfo,
+		std::pair<const std::string, const Location*> loc = locationSearcher(_servInfo,
 				std::pair<std::string, std::string>(hostName, _req->getPath()));
-		
-		FileParser body(reconstructFullURI(loc).c_str(), true); // CAHNGER
+			
+		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath()); 
+			
+		if (_req->getMethod() == GET)
+		{
+			FileParser body(realUri.c_str(), true); // CAHNGER
 
-		// Setting size after storing the body in FileParser object
-		fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
-		_buffer += CLRF;
+			// Setting size after storing the body in FileParser object
+			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+			_buffer += CLRF;
 
-		// Writing the body previously stored to the buffer
-		_buffer += body.getRequestFile();
+			// Writing the body previously stored to the buffer
+			_buffer += body.getRequestFile();
+		}
 
-		
+		else
+		{
+			fillContentLenghtHeader(convertNbToString(0));
+			_buffer += CLRF;
+		}
 	}
-	else
+
+	catch (const StatusLine& errorStaLine)
 	{
-		fillContentLenghtHeader(convertNbToString(0));
-		_buffer += CLRF;
+		fillStatusLine(errorStaLine);
+		fillServerHeader();
+		fillDateHeader();
 	}
 
 	// http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html
@@ -156,6 +165,14 @@ void Response::fillDateHeader()
 	_buffer += "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT" + CLRF;
 }
 
+void Response::fillStatusLine(const StatusLine& staLine)
+{
+	_buffer = "HTTP/1.1 " + convertNbToString(staLine.getCode()) + " " + staLine.getReason();
+	if (!staLine.getAdditionalInfo().empty())
+		_buffer += " (" + staLine.getAdditionalInfo() + ")";
+	_buffer += CLRF;
+}
+
 void printLoc(const Location* loc)
 {
 	std::cout << "root: " << loc->getRoot() << "\n";
@@ -168,20 +185,102 @@ void printLoc(const Location* loc)
 	std::cout << "autoindex: " << loc->getAutoIndex() << "\n";
 }
 
-const std::string& Response::reconstructFullURI(const Location* loc)
+void Response::addRoot(std::string* uri, const std::string& root, const std::string& locName)
 {
-	std::cerr << "loc is null : " << loc << "\n";
+	// Creating an iterator pointing just after the part that matched the location
+	std::string::iterator it = uri->begin() + locName.size();
+
+	// Going to the next '/' (for example, case "/authentificate/ok" matched location "/auth" with a root of "/test"
+	//						  >> we need to replace "/authentificate" with "/test" in order to get "/test/ok")
+	if (*it != '/')
+		while (*it && *it != '/')
+			++it;
 	
+	// Replacing beginning of the URI with the root path
+	uri->erase(uri->begin(), it);
+	
+	// To correctly append indexs if last '/' is missing
+	if (root.back() != '/')
+		uri->insert(uri->begin(), '/');
+		
+	uri->insert(0, root);
+}
+
+std::string Response::addIndex(const std::string& uri, const std::vector<std::string>& indexs)
+{
+	struct stat infFile;
+	
+	for (std::vector<std::string>::const_iterator it = indexs.begin(); it != indexs.end(); ++it)
+	{
+		std::string uriWithIndex(uri + *it);
+
+		std::cerr << "TRYING URI + INDEX: |" << uriWithIndex << "\n";
+
+		if (!stat(uriWithIndex.c_str(), &infFile))
+			return uriWithIndex;
+	}
+	
+	throw StatusLine(301, REASON_301, "trying to access a directory");
+}
+
+void Response::checkMethods(int method, const std::vector<std::string>& methodsAllowed) const
+{
+	std::string tab[5] = { "GET", "HEAD", "PUT", "POST", "DELETE" };
+
+	std::cout << "le numero de method = " << method << "\n";
+
+	for (std::vector<std::string>::const_iterator it = methodsAllowed.begin();
+			it != methodsAllowed.end(); ++it)
+	{
+		std::cerr << "mthod = |" << tab[method] << "| && la mehode comparee = |" << *it << "|\n";
+		if (!it->compare(tab[method]))
+			return ;
+	}
+
+	throw StatusLine(405, REASON_405);
+}
+
+std::string Response::reconstructFullURI(int method,
+		const std::pair<const std::string, const Location*>& loc, std::string uri)
+{
+	struct stat infFile;
+
 	// zero location block match the URI so the URI isn't modified
-	if (!loc)
-		return _req->getPath();
+	if (!loc.second)
+	{
+		// Checking if the file exist or if it's  directory
+		if (stat(uri.c_str(), &infFile) == -1)
+			throw StatusLine(404, REASON_404);
+		if (S_ISDIR(infFile.st_mode))
+			throw StatusLine(301, REASON_301, "trying to access a directory");
 
-	printLoc(loc);
+		return uri;
+	}
 
+	// Replacing the part of the URI that matched with the root path if there is one existing
+	if (!loc.second->getRoot().empty())
+		addRoot(&uri, loc.second->getRoot(), loc.first);
 
-	exit(1);
+	if (stat(uri.c_str(), &infFile) == -1)
+		throw StatusLine(404, REASON_404, "stat retruned -1 in reconstruct");
+	if (S_ISDIR(infFile.st_mode))
+		uri = addIndex(uri, loc.second->getIndex());
+	
+	printLoc(loc.second);
+	
+	checkMethods(method, loc.second->getMethods());
+	/*
+	dans l'ordre:
+	- on ajoute le root
+	- on check ensuite si c'est un directory ou pas
+	- si c'est un directory, on essaye d'append chaque index et de voir si un fichier existe
+	- si un fichier avec ce chemin existe, on relance une recherche du bon bloc location avec cette uri
+	*/
 
-	return _req->getPath(); // A SUPPRIMER
+	// printLoc(loc.second);
+	// exit(1);
+
+	return uri;
 }
 
 
@@ -194,5 +293,5 @@ void swap(Response& a, Response& b)
 	std::swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
 	std::swap(a._body, b._body);
+	std::swap(a._buffer, b._buffer);
 }
-

@@ -2,16 +2,9 @@ server {
 	listen 	8080
     error	./www/tester/error
 	server_name	server1
-	host	localhost
 	max_body	100
 
-    location /  {
-		allow_method	    GET
-        root	    /htmlFiles/1
-		index	    getindex.html
-		cgi			.bla
-		cgi_path 	./www/CGI/ubuntu_cgi_tester
-    }
+   
     location /put_test  {
 		allow_method 	    PUT
 		root 		./www/tester/2
@@ -72,28 +65,31 @@ server {
 	}
     location /auth  {
 		allow_method 	    PUT
-		root 		./www/tester/11
+		root 		./www/tester
+		index		index.htm index.html
 		auth 		user:pass
 	}
     location /maxbody  {
 		allow_method 	    PUT
-		root 		./www/tester/12
-		index		index.html
+		root 		./www/tester
+		index		index.htm
 		max_body	100
 	}
 	location /authe  {
 		allow_method 	    PUT
-		root 		./www/tester/13
+		root 		./www/tester
+		index		index.html
 		auth 		user:pass
 	}
 	location /authen  {
 		allow_method 	    PUT
-		root 		./www/tester/14
+		root 		./www/perso/
 		auth 		user:pass
 	}
 	location /aut  {
 		allow_method 	    PUT
-		root 		./www/tester/15
+		root 		./www/perso/
+		index		index_test.html
 		auth 		user:pass
 	}
 	location /autx  {

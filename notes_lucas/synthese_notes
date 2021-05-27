@@ -35,10 +35,7 @@ ANS ◦ WWW-Authenticate
 
 
 A FAIRE AJD :
-	- bien refaire la location search
-	- tester get avec la new location search
-	- ajouter root
-	- ajouter index
 	- ajouter le allow method header
 	- ajouter le header date derniere Modified
 	- faire la methode head
+	- ajouter le max body size
