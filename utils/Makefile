@@ -6,7 +6,7 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 15:03:03 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/02 15:05:31 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 all			:	${NAME}
 
 %.o			:	%.cpp
-				${CC} -DDEBUG=${debug} ${FLAGS} -o $@ -c $<
+				@${CC} -DDEBUG=${debug} ${FLAGS} -o $@ -c $<
 
 ${NAME}		:	${OBJS} 
 				@ar rcs ${NAME} ${OBJS}

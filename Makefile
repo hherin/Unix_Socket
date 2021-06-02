@@ -6,7 +6,7 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 15:02:56 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/02 15:05:57 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,8 +41,8 @@ debug		:	fclean ${NAME}
 				@${CC} ${FLAGS} -o $@ -c $<
 				
 ${NAME}		:	${LIBS} ${OBJS}
-				${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
-ifeq (SETDEBUG, 0)
+				@${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
+ifeq ($(SETDEBUG), 0)
 				@echo "webserv is ready";
 endif
 
