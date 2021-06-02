@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/21 16:44:57 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/02 14:32:53 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,13 @@ class Location
 		*/
 		void	setLocation(int nb, int const &pos, std::string const &buf);
 	
+		/*	===========================================
+			================= METHODS =================
+		*/
+
+		void	printLocation(const std::string& locName) const;
+
+
 	private:	
 		void setRoot(char const*);
 		void setAuthBasic(char const*);

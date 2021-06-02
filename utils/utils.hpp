@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/27 15:06:43 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 12:25:59 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,8 @@ std::pair<const std::string, const Location*>
 
 // Remove whitespaces of given buffer and return its pointer
 std::string *wsTrim(std::string &buf);
+
+// Prints the time of the day and the msg on std::cout
+void printLog(const std::string &msg, const std::string& addInfo = "");
 
 #endif

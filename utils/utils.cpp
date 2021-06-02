@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 12:55:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:14:47 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,12 @@ std::pair<const std::string, const Location*>
 		{
 			// virtual server is found
             if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first))
+			{
+				#if DEBUG
+					
+				#endif
                 return matchLocation((*srv)[i].getLocation(), names.second);
+			}
         }
 	}
 	
@@ -123,4 +128,23 @@ std::string *wsTrim(std::string &buf)
         if (isspace(*it))
             buf.erase(it);            
     return &buf;
-} 
+}
+
+void printLog(const std::string &msg, const std::string& addInfo)
+{
+	// current date and time on the current system
+	time_t now = time(0);
+
+	// convert now to string form and removing '\n'
+	std::string date(ctime(&now));
+	date.resize(date.length() - 1);
+
+	std::cout << "[" << date << "] " << msg;
+
+	#if defined DEBUG
+		if (!addInfo.empty())
+			std::cout << "-------------------------\n" << addInfo << "-------------------------\n\n";
+	#else
+		(void)addInfo;
+	#endif
+}

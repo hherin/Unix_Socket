@@ -65,7 +65,7 @@ void ServerSocket::createSocket()
 		throw std::runtime_error("Fatal error: bind function failed\n");  // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 
 	listen(_fd, _maxClient);
-	std::cout << "http-socket() succesfully created on port " << _port << "\n";
+	printLog(" >> PORT " + convertNbToString(_port) + ": HTTP socket created\n");
 }
 
 

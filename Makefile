@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
+#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/04/27 17:18:32 by hherin           ###   ########.fr        #
+#    Updated: 2021/06/02 12:44:38 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,10 @@ LIBS		=	parser/lparser.a \
 				utils/lutils.a
 
 all			:	${NAME}
+
+debug		:	${LIBS} ${OBJS}
+				@${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
+				@echo "debug webserv is ready";
 
 %.a			:	sub_makefile
 				@make -C ${@D}

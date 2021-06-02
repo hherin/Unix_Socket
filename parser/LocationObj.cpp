@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 13:45:12 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/02 14:35:48 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,31 @@ void Location::setCgiExe(char const *c) { _cgi_exe = c; }
 void Location::setCgiPath(char const *c) { _cgi_path = c; }
 
 void Location::setAutoIndex(char const *i) { _autoindex = (!strncmp("on", i, 3)) ? 1 : 0; }
+
+
+// ============================================================================
+// =============================== METHODS ====================================
+
+void Location::printLocation(const std::string& locName) const
+{
+	std::cout << "\nLOCATION\n-------------------------\n"
+			<< "root = |" << locName << "|\n"
+			<< "root = |" << _root << "|\n"
+			<< "auth_basic = |" << _auth_basic << "|\n"
+			<< "auth_b_usr_file = |" << _auth_b_usr_file << "|\n"
+			<< "upload_store = |" << _upload_store << "|\n"
+			<< "cgi_exe = |" << _cgi_exe << "|\n"
+			<< "cgi_path = |" << _cgi_path << "|\n"
+			<< "autoindex = |" << _root << "|\n";
+	
+	for (std::vector<std::string>::const_iterator it = _allow_methd.begin(); it != _allow_methd.end(); ++it)
+		std::cout << "method = |" << *it << "|\n";
+
+	for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); ++it)
+		std::cout << "index = |" << *it << "|\n";
+	
+	std::cout << "-------------------------\n\n";
+}
 
 
 // ============================================================================

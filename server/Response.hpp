@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 18:11:30 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 11:16:55 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ class Response
 		// Fills buffer with Date header with the actual date
 		void fillDateHeader();
 
+		// Fills buffer with Last-Modified header (last modification of a file)
 		void fillLastModifiedHeader(const char* uri);
 
 		// Fills buffer with status line
@@ -109,8 +110,12 @@ class Response
 		// Replaces the location name that matched with root directive
 		void addRoot(std::string* uri, const std::string& root, const std::string& locName);
 
+		// Try to add all the indexs until one path is correct. If none are correct, throws a StatusLine
+		// object with a 301 error code
 		std::string addIndex(const std::string& uri, const std::vector<std::string>& indexs);
 		
+		// Compares the methods allowed from a location block with the requested method. If not allowed,
+		// throws a StatusLine object with a 405 error code
 		void checkMethods(int method, const std::vector<std::string>& methodsAllowed) const;
 
 	public:
@@ -118,6 +123,7 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
 
+		// Swap two Response object
 		friend void swap(Response& a, Response& b);
 	
 }; // class Response

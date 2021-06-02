@@ -6,14 +6,12 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/27 18:53:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:38:19 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
-
-// apres avoir fait une requete, est ce que l'on close ?
 
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
@@ -83,10 +81,12 @@ void Response::fillBuffer()
 	// Storing status line and some headers in buffer
 	fillStatusLine(_staLine);
 	fillServerHeader();
-	fillDateHeader();
+	// fillDateHeader();
 	
 	if (_staLine.getCode() >= 300)
 		return ;
+
+	_staLine.print();
 
 	try
 	{
@@ -98,17 +98,23 @@ void Response::fillBuffer()
 		// and no additionnal configuration (index, root...) will change the URI
 		std::pair<const std::string, const Location*> loc = locationSearcher(_servInfo,
 				std::pair<std::string, std::string>(hostName, _req->getPath()));
-			
+		
+		#if DEBUG
+			if (loc.second)
+				loc.second->printLocation(loc.first);
+			else
+				std::cout << "LOCATION: no match\n";
+		#endif
+
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath()); 
 		
-
 		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
 			FileParser body(realUri.c_str(), true); // CAHNGER
 
 			// Setting size after storing the body in FileParser object, then setting Last-Modified header
 			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
-			fillLastModifiedHeader(realUri.c_str());
+			// fillLastModifiedHeader(realUri.c_str());
 			_buffer += CLRF;
 
 			// For GET, writing the body previously stored to the buffer
@@ -123,14 +129,13 @@ void Response::fillBuffer()
 		}
 	}
 
+	// If an error occured, filling the buffer with the error response
 	catch (const StatusLine& errorStaLine)
 	{
 		fillStatusLine(errorStaLine);
 		fillServerHeader();
-		fillDateHeader();
+		// fillDateHeader();
 	}
-
-	// http://localhost:8080/Users/llefranc/Rendu/42cursus/Unix_Socket/htmlFiles/index.html
 }
 
 /* ------------------------------------------------------------- */
@@ -173,7 +178,7 @@ void Response::fillLastModifiedHeader(const char* uri)
 	struct stat infFile;
 
 	if (stat(uri, &infFile) == -1)
-		throw StatusLine(404, REASON_404);
+		throw StatusLine(404, REASON_404, "fillLastModifiedHeader method");
 
 	struct tm* lm = localtime(&infFile.st_mtimespec.tv_sec);
 
@@ -252,12 +257,12 @@ void Response::checkMethods(int method, const std::vector<std::string>& methodsA
 	for (std::vector<std::string>::const_iterator it = methodsAllowed.begin();
 			it != methodsAllowed.end(); ++it)
 	{
-		std::cerr << "mthod = |" << tab[method] << "| && la mehode comparee = |" << *it << "|\n";
+		std::cerr << "method = |" << tab[method] << "| && la mehode comparee = |" << *it << "|\n";
 		if (!it->compare(tab[method]))
 			return ;
 	}
 
-	throw StatusLine(405, REASON_405);
+	throw StatusLine(405, REASON_405, "checkMethods method");
 }
 
 std::string Response::reconstructFullURI(int method,
@@ -270,7 +275,7 @@ std::string Response::reconstructFullURI(int method,
 	{
 		// Checking if the file exist or if it's  directory
 		if (stat(uri.c_str(), &infFile) == -1)
-			throw StatusLine(404, REASON_404);
+			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
 		if (S_ISDIR(infFile.st_mode))
 			throw StatusLine(301, REASON_301, "trying to access a directory");
 
@@ -282,23 +287,13 @@ std::string Response::reconstructFullURI(int method,
 		addRoot(&uri, loc.second->getRoot(), loc.first);
 
 	if (stat(uri.c_str(), &infFile) == -1)
-		throw StatusLine(404, REASON_404);
+		throw StatusLine(404, REASON_404, "reconstructFullURI method: " + uri);
 	if (S_ISDIR(infFile.st_mode))
 		uri = addIndex(uri, loc.second->getIndex());
 	
 	printLoc(loc.second);
-	
-	checkMethods(method, loc.second->getMethods());
-	/*
-	dans l'ordre:
-	- on ajoute le root
-	- on check ensuite si c'est un directory ou pas
-	- si c'est un directory, on essaye d'append chaque index et de voir si un fichier existe
-	- si un fichier avec ce chemin existe, on relance une recherche du bon bloc location avec cette uri
-	*/
 
-	// printLoc(loc.second);
-	// exit(1);
+	checkMethods(method, loc.second->getMethods());
 
 	return uri;
 }

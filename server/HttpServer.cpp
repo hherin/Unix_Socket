@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/26 18:24:16 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 12:12:31 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,15 @@ void HttpServer::sendToClients()
 		{
 			int n = 0;
 			
-			std::cerr << "we're gonna send\n";
-
 			// Doesn't handle the case if send can't send everything in one time. Send the first response
 			// of the queue
 			if ((n = send(it->getFd(), static_cast<const void*>(it->getResponsesQueued()->front().getBuffer().c_str()), 
 					it->getResponsesQueued()->front().getBuffer().size(), 0)) < 1)
 				throw std::runtime_error("Fatal error: send function failed\n");
 			
-			std::cerr << "octet envoyés : " << n << "\n";
-
+			printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent\n", 
+					it->getResponsesQueued()->front().getBuffer());
+			
 			// After sending the response, remove it from the queue
 			it->getResponsesQueued()->pop();
 		}
@@ -116,6 +115,8 @@ void HttpServer::requestHandler()
 			// Closing the connection (in ClientSocket destructor)
 			else if (!n)
 			{
+				printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
+
 				// Need to use a tmp iterator because otherwise it is invalidated after erase
 				std::list<ClientSocket>::iterator tmp = it++;
 				_clientSocks.erase(tmp);
@@ -153,7 +154,7 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			// Setting the fd in non-blocking mode, then saving it
 			fcntl(newClient, F_SETFL, O_NONBLOCK);
 			addClientSocket(newClient, it->getPort(), mSrv);
-			std::cout << "client succesfully added on fd " << newClient << "\n";
+			printLog(" >> FD " + convertNbToString(newClient) + ": Client socket created\n");
 
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)

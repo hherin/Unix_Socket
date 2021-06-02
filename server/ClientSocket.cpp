@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/25 16:30:50 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 12:46:02 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ int ClientSocket::receiveRequest(const char* buffer)
 	// object containing the full request
 	catch (const StatusLine& staLine)
 	{
+		printLog(" >> FD " + convertNbToString(getFd()) + ": Request received\n",
+				_request.getBuffer());
+
 		_respQueue.push(Response(&_request, staLine, _infoVirServs));
 		_respQueue.back().fillBuffer();
 		
