@@ -77,4 +77,6 @@ enum methods { GET, HEAD, PUT, POST, DELETE };
 #define REASON_504 "Gateway Timeout"
 #define REASON_505 "HTTP Version Not Supported"
 
+#define DEFAULT_PATH_ERROR_PAGES "./http_error_pages/"
+
 #endif

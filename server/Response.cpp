@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 15:32:51 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 18:01:10 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,14 @@ void Response::clear()
 
 void Response::fillBuffer()
 {
+	// If an error occured during request parsing
+	if (_staLine.getCode() >= 300)
+		return fillError(_staLine);
+	
 	// Storing status line and some headers in buffer
 	fillStatusLine(_staLine);
 	fillServerHeader();
 	fillDateHeader();
-	
-	if (_staLine.getCode() >= 300)
-		return ;
 
 	try
 	{
@@ -127,12 +128,10 @@ void Response::fillBuffer()
 		}
 	}
 
-	// If an error occured, filling the buffer with the error response
+	// If an error occured during URI reconstruction and file searching
 	catch (const StatusLine& errorStaLine)
 	{
-		fillStatusLine(errorStaLine);
-		fillServerHeader();
-		fillDateHeader();
+		fillError(errorStaLine);
 	}
 }
 
@@ -202,18 +201,6 @@ void Response::fillStatusLine(const StatusLine& staLine)
 	if (!staLine.getAdditionalInfo().empty())
 		_buffer += " (" + staLine.getAdditionalInfo() + ")";
 	_buffer += CLRF;
-}
-
-void printLoc(const Location* loc)
-{
-	std::cout << "root: " << loc->getRoot() << "\n";
-	for (std::vector<std::string>::const_iterator it = loc->getMethods().begin(); it != loc->getMethods().end(); it++)
-		std::cout << "methods: " << *it << "\n";
-		
-	for (std::vector<std::string>::const_iterator it = loc->getIndex().begin(); it != loc->getIndex().end(); it++)
-		std::cout << "index: " << *it << "\n";
-
-	std::cout << "autoindex: " << loc->getAutoIndex() << "\n";
 }
 
 void Response::addRoot(std::string* uri, const std::string& root, const std::string& locName)
@@ -297,11 +284,65 @@ std::string Response::reconstructFullURI(int method,
 	if (S_ISDIR(infFile.st_mode))
 		uri = addIndex(uri, loc.second->getIndex());
 	
-	printLoc(loc.second);
-
 	checkMethods(method, loc.second->getMethods());
 
 	return uri;
+}
+
+void Response::fillError(const StatusLine& sta)
+{
+	// Filling buffer with error code + some basic headers
+	fillStatusLine(sta);
+	fillServerHeader();
+	fillDateHeader();
+
+	// Value of host header field in request
+	const std::string* hostField = &_req->getHeaders().find("host")->second;
+	const std::string hostValue(hostField->substr(0, hostField->find(':')));
+	const ServerInfo* servMatch = 0;
+
+	std::cerr << "HOST HEADER FIELD VALUE IS: |" << hostValue << "|\n";
+
+	// Looking in each virtual server names if one match host header field value
+	for (std::vector<ServerInfo>::const_iterator virtServ = _servInfo->begin(); virtServ != _servInfo->end(); ++virtServ)
+	{
+		for (std::vector<std::string>::const_iterator servNames = virtServ->getNames().begin();
+				servNames != virtServ->getNames().end(); ++servNames)
+		{
+			// If we match one server name, saving this virtual server
+			if (*servNames == hostValue)
+				servMatch = &(*virtServ);
+		}
+	}
+
+	std::string pathError;
+	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
+
+	if (servMatch && !servMatch->getError().empty())
+	{
+		std::cerr << "ERROR IN SERVMATCH IS: " << servMatch->getError() << "\n";
+
+		pathError = servMatch->getError() + errorCodeHTML;
+
+		std::cerr << "ERROR WITH LOCATION IS: " << pathError << "\n";
+		
+
+		struct stat infFile;
+		if (stat(pathError.c_str(), &infFile) == -1)
+			pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
+	}
+	else
+		pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
+
+	FileParser body(pathError.c_str(), true);
+
+	fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+	_buffer += CLRF + body.getRequestFile();
+
+	std::cout << "ERROR_PATH is: |" << pathError << "|\n";
+	#if DEBUG
+		std::cout << "ERROR_PATH is: |" << pathError << "|\n";
+	#endif
 }
 
 
