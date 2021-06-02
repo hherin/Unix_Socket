@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/21 15:48:10 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/27 18:11:30 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define RESPONSE_HPP
 
 #include <ctime>
+#include <sys/stat.h>
 
 #include "Request.hpp"
 #include "msg_format/StatusLine.hpp"
@@ -29,14 +30,14 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		const std::vector<ServerInfo>*		_servInfo;	// Servers blocks from config file that match a specific port
+		std::vector<ServerInfo>*			_servInfo;	// Servers blocks from config file that match a specific port
 		Request*							_req;		// Request object when the request is fully received, used to create response
 
 		StatusLine							_staLine;	// Fist line of http response
-		std::map<std::string, std::string>	_headers;	// Headers of http response
 		Body								_body;		// Body (= webpage content for example)
 	
-		std::string							_buffer;	// Buffer containing the response that will be send
+		std::string							_buffer;	// Buffer containing the response that will be send. Directly writing
+														// headers into it.
 
 	public:
 
@@ -44,7 +45,7 @@ class Response
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo);
+		Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* servInfo);
 		Response(const Response& c);
 		~Response();
 		Response& operator=(Response a);
@@ -77,26 +78,40 @@ class Response
 		// Execute the appropriate method
 		void execMethod();
 
-		// Sets all the appropriate headers using request object and status line, both previously set
-		void setHeaders();
-
 
 	private:
 
 		/* ------------------------------------------------------------- */
 		/* ----------------------- PRIVATE METHODS --------------------- */
 
+		void setHeader(std::string e);
+
 		void execGET();
 
-		// Sets Content-lenght header with body size (0 if body is empty)
-		void setHeaderContentLenght();
+		// Fills buffer with Content-lenght header
+		void fillContentLenghtHeader(const std::string& size);
 
-		// Sets Server header with server name (webserv)
-		void setHeaderServer();
+		// Fills buffer with server header with server name (webserv)
+		void fillServerHeader();
 
-		// Sets Date header with the actual date
-		void setHeaderDate();
+		// Fills buffer with Date header with the actual date
+		void fillDateHeader();
 
+		void fillLastModifiedHeader(const char* uri);
+
+		// Fills buffer with status line
+		void fillStatusLine(const StatusLine& staLine);
+
+		// Transforms URI using index and root settings
+		std::string reconstructFullURI(int method,
+				const std::pair<const std::string, const Location*>& loc, std::string uri);
+
+		// Replaces the location name that matched with root directive
+		void addRoot(std::string* uri, const std::string& root, const std::string& locName);
+
+		std::string addIndex(const std::string& uri, const std::vector<std::string>& indexs);
+		
+		void checkMethods(int method, const std::vector<std::string>& methodsAllowed) const;
 
 	public:
 	

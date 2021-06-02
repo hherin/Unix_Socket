@@ -1,7 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   FileParser.hpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/25 16:02:25 by llefranc          #+#    #+#             */
+/*   Updated: 2021/05/26 18:03:32 by llefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FILEPARSER_HPP
 # define FILEPARSER_HPP
 
 # include "parser.hpp"
+#include <unistd.h>
 
 enum e_srv { LIS, ERR, SRV_N, BODY, HOST};
 
@@ -24,7 +37,8 @@ class FileParser
 
 		FileParser(const char*);
 
-		FileParser(const char*, ServerInfo *);
+		FileParser(const char *filepath, bool s);
+		// FileParser(const char*, ServerInfo *);
 
 		FileParser(FileParser const&);
 
@@ -38,8 +52,10 @@ class FileParser
 
 		void setServerInfo(ServerInfo *);
 
-	private:
-		void parseConfigFile();
+		size_t getRequestFileSize() const;
+
+    private:
+        void parseConfigFile();
 
 		void parseRequestFile();
 		

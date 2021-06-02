@@ -2,30 +2,23 @@ server {
 	listen 	8080
     error	./www/tester/error
 	server_name	server1
-	host	localhost
 	max_body	100
 
-    location /  {
-		allow_method	    GET
-        root	    ./www/tester
-		index	    getindex.html
-		cgi			.bla
-		cgi_path 	./www/CGI/ubuntu_cgi_tester
-    }
+   
     location /put_test  {
 		allow_method 	    PUT
-		root 		./www/tester
+		root 		./www/tester/2
 	}
     location /post_body {
 		allow_method 	    POST
-		root 		./www/tester
+		root 		./www/tester/3
 		index 		index.html
 		cgi			.bla
 	}
     location /directory {
 		cgi			.bla
 		allow_method 	    GET POST
-		root 		./www/tester/YoupiBanane
+		root 		./www/tester/YoupiBanane/4
 		index 		youpi.bad_extension
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
 	}
@@ -33,54 +26,76 @@ server {
 
 
 server {
-    listen 	8081
+    listen 	8080
     error	./www/perso/error
-	server_name	server2
-	host	localhost
+	server_name	server2 localhost
 	
     location / 		{
-        root	./www/perso
+        root	./www/perso/5
 		index	index.html
 		allow_method	GET POST HEAD OPTIONS PUT
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
     }
     location /test	{
-        root    ./www/perso/test
+        root    ./www/perso/test/6
 		index	index.html
 		auto_index	0
 		allow_method	GET POST HEAD OPTIONS PUT
     }
     location /auto_index	{
-        root    ./www/perso/vide
+        root    ./www/perso/vide/7
 		index	videvidevide
 		auto_index	1
 		allow_method	GET POST OPTIONS
     }
     location /no_auto_index	{
-        root    ./www/perso/vide
+        root    ./www/perso/vide/8
 		index	videvidevide
 		auto_index	0
 		allow_method	GET POST HEAD OPTIONS PUT
     }
     location /delete {
-        root    	./www/perso/delete
+        root    	./www/perso/delete/9
 		index		to_delete
 		allow_method		OPTIONS DELETE
 	}
     location /put_test  {
 		allow_method 	    PUT
-		root 		./www/tester
+		root 		./www/tester/10
 	}
     location /auth  {
 		allow_method 	    PUT
 		root 		./www/tester
+		index		index.htm index.html
 		auth 		user:pass
 	}
     location /maxbody  {
 		allow_method 	    PUT
 		root 		./www/tester
-		index		index.html
+		index		index.htm
 		max_body	100
+	}
+	location /authe  {
+		allow_method 	    HEAD PUT GET
+		root 		./www/tester
+		index		index.html
+		auth 		user:pass
+	}
+	location /authen  {
+		allow_method 	    PUT
+		root 		./www/perso/
+		auth 		user:pass
+	}
+	location /aut  {
+		allow_method 	    PUT
+		root 		./www/perso/
+		index		index_test.html
+		auth 		user:pass
+	}
+	location /autx  {
+		allow_method 	    PUT
+		root 		./www/tester/16
+		auth 		user:pass
 	}
 }
 
@@ -89,10 +104,9 @@ server {
     error	./www/tester/paco
 	server_name	sbfg
 	root	
-	host	localhost
 
 	location /	{
-    	root    	./www/methods/post
+    	root    	./www/methods/post/13
 		index		index.html
 		allow_method	    POST GET TRACE CONNECT
 		cgi_path 	./www/CGI/ubuntu_cgi_tester
@@ -101,16 +115,13 @@ server {
 
 }
 
-GET /yoyo/bibi HTTP/1.1 
-
 server {
-    listen 	8082
+    listen 	8080
     error	./www/perso/error
 	server_name	post_server
-	host	localhost
 	
     location /	{
-    	root    	./www/methods/post
+    	root    	./www/methods/post/14
 		index		index.html
 		allow_method	    POST GET TRACE CONNECT
 		cgi_path 	./www/CGI/ubuntu_cgi_tester

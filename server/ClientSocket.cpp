@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/21 15:46:57 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:30:50 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* ------------------------------------------------------------- */
 /* ------------------------ COPLIEN FORM ----------------------- */
 
-ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>* infoVirServs) :
+ClientSocket::ClientSocket(int fd, std::vector<ServerInfo>* infoVirServs) :
 		_fd(fd), _infoVirServs(infoVirServs) {}
 
 ClientSocket::~ClientSocket() {}

@@ -32,3 +32,8 @@ ANS ◦ Server
 REQ ◦ Transfer-Encoding
 REQ ◦ User-Agent
 ANS ◦ WWW-Authenticate
+
+
+A FAIRE AJD :
+	- ajouter le header date derniere Modified
+	- ajouter le max body size

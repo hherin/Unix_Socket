@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/25 15:43:00 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/27 15:06:43 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,15 @@ std::vector<std::string> splitWithSep(std::string line, char sep);
 // Push each word of n in the vector v
 void setStringArray(char const *n, std::vector<std::string> &v);
 
+// Search inside a map of location names /location block the best possible match with locName. Return NULL
+// if no match
+std::pair<const std::string, const Location*> 
+		matchLocation(std::map<std::string, Location> *loc, const std::string& locName);
+
 // srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
-Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names);
+// Return the best possible location block for a specific host+URI. Return NULL if no match
+std::pair<const std::string, const Location*>
+		locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names);
 
 // Remove whitespaces of given buffer and return its pointer
 std::string *wsTrim(std::string &buf);

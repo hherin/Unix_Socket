@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/25 15:47:17 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/31 16:21:03 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ std::string convertNbToString(size_t nb)
 	oss << nb;
 	return oss.str();
 }
+
 
 std::vector<std::string> stringDelimSplit(std::string const &str, const char *delim)
 {
@@ -47,6 +48,7 @@ std::vector<std::string> stringDelimSplit(std::string const &str, const char *de
     }
     return strArray;
 }
+
 std::vector<std::string> splitWithSep(std::string line, char sep)
 {
 	std::vector<std::string> res;
@@ -58,6 +60,7 @@ std::vector<std::string> splitWithSep(std::string line, char sep)
 	return res;
 }
 
+// Split a char array into a vector of word
 void setStringArray(char const *n, std::vector<std::string> &v) 
 {
     char *tmp = strdup(n);
@@ -70,25 +73,52 @@ void setStringArray(char const *n, std::vector<std::string> &v)
     delete tmp;
 }
 
-Location *locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
+std::pair<const std::string, const Location*> 
+		matchLocation(std::map<std::string, Location> *loc, const std::string& locName)
 {
-	for (size_t i = 0; i < srv->size(); i++){													// loop for each virtual server
-		std::vector<std::string> sinfoNames = (*srv)[i].getNames();
-		std::cout << "i " << i << "\n";
-        for (size_t j = 0; j < sinfoNames.size(); j++) {                                         // loop for each names in server
-			std::cout << "j " << j << "\n";
-            if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first)){
-                std::cout << "virtual server is found\n";
-                std::map<std::string, Location> *loc = (*srv)[i].getLocation();
-                if (loc->find(names.second) != loc->end()){
-                    std::cout << "location found\n";
-                    return (&(loc->find(names.second)->second));}
-			}
-        }
-	}
-	return NULL;
+	std::pair<bool, std::map<std::string, Location>::iterator> 
+						bestMatch(0, loc->begin());
+
+	// Checking each location name, and saving the most long match. As we stored location names in a map,
+	// they're already sorted form smaller to longest same words, no need to check size: the last match will 
+	// be the longest possible match (ex: if searching for "bla", "bl" location will be stored after "b" location)
+	for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
+		if (!it->first.compare(0, std::string::npos, locName, 0, it->first.size()))
+		{
+			bestMatch.first = true;
+			bestMatch.second = it;
+		}
+	
+	// Case there was no match
+	if (!bestMatch.first)
+		return std::pair<const std::string, const Location*>("", 0);
+
+	return std::pair<const std::string, const Location*>(bestMatch.second->first, &bestMatch.second->second);
 }
 
+// srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
+std::pair<const std::string, const Location*> 
+		locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
+{
+	// loop for each virtual server for a specific port
+	for (size_t i = 0; i < srv->size(); i++){
+	
+		std::vector<std::string> sinfoNames = (*srv)[i].getNames();
+
+		// loop for each names in each server block
+        for (size_t j = 0; j < sinfoNames.size(); j++)
+		{
+			// virtual server is found
+            if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first))
+                return matchLocation((*srv)[i].getLocation(), names.second);
+        }
+	}
+	
+	// Case no server_names match, using default server block (the first one)
+	return matchLocation((*srv)[0].getLocation(), names.second);
+}
+
+// erase all whitespaces in buf
 std::string *wsTrim(std::string &buf)
 {
     if (buf.empty())
@@ -97,4 +127,4 @@ std::string *wsTrim(std::string &buf)
         if (isspace(*it))
             buf.erase(it);            
     return &buf;
-}
+} 
