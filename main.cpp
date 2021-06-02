@@ -24,7 +24,7 @@ int main(int ac, char **av)
         std::cerr << "Fatal error: wrong arguments\n";
         exit(EXIT_FAILURE);
     }
-    
+
     FileParser conf(av[1]);
     
     std::map<int, std::vector<ServerInfo> > m_srv = conf.getConfigFile();

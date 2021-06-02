@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 14:46:18 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 15:32:51 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void Response::fillBuffer()
 	// Storing status line and some headers in buffer
 	fillStatusLine(_staLine);
 	fillServerHeader();
-	// fillDateHeader();
+	fillDateHeader();
 	
 	if (_staLine.getCode() >= 300)
 		return ;
@@ -112,7 +112,7 @@ void Response::fillBuffer()
 
 			// Setting size after storing the body in FileParser object, then setting Last-Modified header
 			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
-			// fillLastModifiedHeader(realUri.c_str());
+			fillLastModifiedHeader(realUri.c_str());
 			_buffer += CLRF;
 
 			// For GET, writing the body previously stored to the buffer
@@ -132,7 +132,7 @@ void Response::fillBuffer()
 	{
 		fillStatusLine(errorStaLine);
 		fillServerHeader();
-		// fillDateHeader();
+		fillDateHeader();
 	}
 }
 
@@ -165,6 +165,14 @@ void Response::fillDateHeader()
 	// Splitting date line and removing '\n'
 	std::vector<std::string> date = splitWithSep(date_time, ' ');
 	date.back().resize(4);
+
+	std::cout << "VALUE "<< static_cast<int>(date[2][0]) << "\n";
+
+	std::cout << "\n\n\n---------DATE------\n";
+	for (std::pair<int, std::vector<std::string>::iterator> i(0, date.begin()); i.second != date.end();++i.first, ++i.second)
+		std::cout << "date " << i.first << ":" << *i.second << "\n";
+	
+	std::cout << "\n";
 
 	// Formating header date.
 	// ctime format = Thu May 20 14:33:40 2021 >> to header date format : Thu, 20 May 2021 12:16:42 GMT

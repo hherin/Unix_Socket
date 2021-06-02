@@ -6,7 +6,7 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 15:05:57 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/02 15:10:31 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SETDEBUG	=	0
 all			:	${NAME}
 
 debug		:	SETDEBUG=1	
-debug		:	fclean ${NAME}
+debug		:	fclean ${NAME} 
 				@echo "debug webserv is ready";
 
 %.a			:	sub_makefile
