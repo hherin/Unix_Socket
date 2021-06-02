@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 15:46:05 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 16:44:35 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,6 @@ FileParser::~FileParser() { _file.close(); }
 
 void FileParser::parseRequestFile()
 {
-	if (!_cli_srv){
-		std::cerr << "NOT ALLOWED\n";
-		exit(1);
-	}
 	while (std::getline(_file, _buf))
 		_requestFile.append(_buf + "\n");
 }
