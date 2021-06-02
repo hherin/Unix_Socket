@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/26 18:39:13 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 15:01:30 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePa
 
 FileParser::FileParser(const char *filepath, bool s) : _bracket(0), _cli_srv(0), _filePath(filepath)
 {
-	std::cerr << "filepath dans cons = |" <<filepath << "\n";
+	#if DEBUG
+		std::cout << "FileParser object trying to read file at path :|" << filepath << "|\n";
+	#endif
+	
 	_file.open(filepath);
 	parseRequestFile();
 	(void)s;

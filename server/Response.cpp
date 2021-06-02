@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 14:38:19 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:46:18 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ void Response::fillBuffer()
 	
 	if (_staLine.getCode() >= 300)
 		return ;
-
-	_staLine.print();
 
 	try
 	{
