@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 14:14:47 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 15:03:19 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ std::string convertNbToString(size_t nb)
 	oss << nb;
 	return oss.str();
 }
+
 
 std::vector<std::string> stringDelimSplit(std::string const &str, const char *delim)
 {
@@ -47,6 +48,7 @@ std::vector<std::string> stringDelimSplit(std::string const &str, const char *de
     }
     return strArray;
 }
+
 std::vector<std::string> splitWithSep(std::string line, char sep)
 {
 	std::vector<std::string> res;
@@ -58,6 +60,7 @@ std::vector<std::string> splitWithSep(std::string line, char sep)
 	return res;
 }
 
+// Split a char array into a vector of word
 void setStringArray(char const *n, std::vector<std::string> &v) 
 {
     char *tmp = strdup(n);
@@ -120,6 +123,7 @@ std::pair<const std::string, const Location*>
 	return matchLocation((*srv)[0].getLocation(), names.second);
 }
 
+// erase all whitespaces in buf
 std::string *wsTrim(std::string &buf)
 {
     if (buf.empty())

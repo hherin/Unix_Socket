@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 14:30:40 by hherin           ###   ########.fr       */
+/*   Updated: 2021/05/25 16:43:07 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int main(int ac, char **av)
 				std::cout << "port : " << it->second[j].getPort() << "\n";
 				
 				std::cout << "\n------- LOCATION ---------\n";
-				std::map<std::string, Location> loc = it->second[j].getLocation();
+				std::map<std::string, Location> loc = *(it->second[j].getLocation());
 				for (std::map<std::string, Location>::iterator it2 = loc.begin(); it2 != loc.end(); it2++){
 					
 					std::cout << "LOC " << it2->first << ": \n";
