@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 15:05:57 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/02 16:40:13 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,21 +30,26 @@ SETDEBUG	=	0
 
 all			:	${NAME}
 
-debug		:	SETDEBUG=1	
+debug		:	SETDEBUG=1
 debug		:	fclean ${NAME}
-				@echo "debug webserv is ready";
+				@make clean
+
 
 %.a			:	sub_makefile
 					@make debug=${SETDEBUG} -C ${@D}
 
 %.o			:	%.cpp
-				@${CC} ${FLAGS} -o $@ -c $<
+				@${CC} -DDEBUG=${SETDEBUG} ${FLAGS} -o $@ -c $<
 				
-${NAME}		:	${LIBS} ${OBJS}
+${NAME}		:	${LIBS} ${OBJS}	
 				@${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
-ifeq ($(SETDEBUG), 0)
 				@echo "webserv is ready";
-endif
+# ifeq ($(SETDEBUG), 0)
+# 					@echo ${CACA}
+# 					@echo "webserv is ready";
+# else
+# 					@echo "debug webserv is ready";
+# endif
 
 ${OBJS}		:	${HDRS}
 
