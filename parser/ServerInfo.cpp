@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 14:51:38 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/03 17:46:56 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,44 @@ void	ServerInfo::setServer(int nb, int const &pos, std::string const &buf)
 	(this->*F[nb])(tmp + i);
 }
 
-void ServerInfo::setMaxClientsBS(char const *m) { _max_cli_body = atoi(m); }
+void ServerInfo::setMaxClientsBS(char const *m)
+{
+    std::string cString = m;
+    if (numberOfWords(m) != 1)
+        throw std::runtime_error("Error : " + cString + " - put only one input for body size\n");
+    
+    cString = *wsTrim(cString);
+    for (size_t i = 0; i < cString.size(); i++) 
+		if (cString[i] < 48 || cString[i]  > 57)
+			throw std::runtime_error("Error : " + cString + " - use only digit for listen\n");
 
-void ServerInfo::setError(char const *e) { _error_path = e; }
+    _max_cli_body = atoi(m);
+}
+
+void ServerInfo::setError(char const *e) 
+{
+    if (numberOfWords(e) != 1)
+        throw std::runtime_error("Error : " + std::string(e) + " - put only one error path\n");
+    _error_path = e;
+}
 
 void ServerInfo::setHost(char const *h) { _host = h; }
 
 void ServerInfo::setNames(char const *n) { setStringArray(n, _names); }
 
-void ServerInfo::setPort(char const *p) { _port = atoi(p); }
+void ServerInfo::setPort(char const *p) 
+{
+    std::string cString = p;
+    if (numberOfWords(p) != 1)
+        throw std::runtime_error("Error : " + cString + " - put only one port to listen\n");
+    
+    cString = *wsTrim(cString);
+    for (size_t i = 0; i < cString.size(); i++) 
+		if (cString[i] < 48 || cString[i]  > 57)
+			throw std::runtime_error("Error : " + cString + " - use only digit for listen\n");
+    
+    _port = atoi(p);
+}
 
 
 // ============================================================================

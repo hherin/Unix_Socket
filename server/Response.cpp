@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 14:46:18 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:12:46 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,8 +204,6 @@ void printLoc(const Location* loc)
 		
 	for (std::vector<std::string>::const_iterator it = loc->getIndex().begin(); it != loc->getIndex().end(); it++)
 		std::cout << "index: " << *it << "\n";
-
-	std::cout << "autoindex: " << loc->getAutoIndex() << "\n";
 }
 
 void Response::addRoot(std::string* uri, const std::string& root, const std::string& locName)

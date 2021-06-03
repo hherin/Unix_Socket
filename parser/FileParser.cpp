@@ -1,16 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FileParser.cpp                                     :+:      :+:    :+:   */
+/*   fileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/02 15:02:40 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 18:04:31 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FileParser.hpp"
+
+// ============================================================================
+// =========================== COPLIEN FORM ===================================
 
 FileParser::FileParser(const char *filepath) : _bracket(0), _cli_srv(0), _filePath(filepath) { _file.open(filepath); }
 
@@ -27,9 +30,7 @@ FileParser::FileParser(const char *filepath, bool s) : _bracket(0), _cli_srv(0),
 
 FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
 _m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
-{
-	_file.open(_filePath);
-}
+{ _file.open(_filePath); }
 
 FileParser &FileParser::operator=(FileParser const&copy)
 {
@@ -41,31 +42,45 @@ FileParser &FileParser::operator=(FileParser const&copy)
 
 FileParser::~FileParser() { _file.close(); }
 
+
+// ============================================================================
+// ============================ PUBLIC METHODS ================================
+
+std::string const& FileParser::getRequestFile() { return _requestFile; }
+
+std::map<int, std::vector<ServerInfo> > const &FileParser::getConfigFile() { parseConfigFile(); return _m_srv; }
+
+void FileParser::setServerInfo(ServerInfo *s) { _cli_srv = s; }
+
+size_t FileParser::getRequestFileSize() const { return _requestFile.size(); }
+
+
+// ============================================================================
+// =========================== PRIVATE METHODS ================================
+
+// Parse all the file whithout any process
 void FileParser::parseRequestFile()
 {
 	while (std::getline(_file, _buf))
 		_requestFile.append(_buf + "\n");
 }
 
-std::string const& FileParser::getRequestFile() { return _requestFile; }
-
+// Parsing of the configuration file
 void FileParser::parseConfigFile()
 {
-	if (_cli_srv){
-		std::cerr << "NOT ALLOWED\n";
-		exit(1);
-	}
+	// loop for each block server if there is something else, throw an error
 	while (std::getline(_file, _buf)){
-		if (_buf.find_first_of("server") != std::string::npos){
+		
+		if (!_buf.compare(0, 9, "server {")){
 			_bracket = 0;
 			bracketRegulator(_bracket, _buf);
 			newServer();
 		}
-		else continue; // ERREUR 
+		else if (!_buf.compare(0, 1, "}") || !_buf.compare(0, 2, ""))
+			continue;
+		else throw std::runtime_error(errParseMessage("error line : ", _buf.c_str(), " not a good name for server block\n")); // ERREUR 
 	}
 }
-
-size_t FileParser::getRequestFileSize() const { return _requestFile.size(); }
 
 // check bracket la ou il faut pas
 void FileParser::newLocation(ServerInfo &srv)
@@ -75,36 +90,41 @@ void FileParser::newLocation(ServerInfo &srv)
 	int brack = 0;
 	
 	bracketRegulator(brack, _buf);
-	if (!_buf.compare(0, 8, "location")){
+
+	// Processing of the first line of location
+	if (!_buf.compare(0, 9, "location ")){
+		
+		// **check validity of the line**	
+		if (numberOfWords(_buf.c_str()) != 3)
+			throw std::runtime_error(errParseMessage("error line : ", _buf.c_str(), "\n"));
+		
+		// **get the locaton name without whitespaces**
 		(!_buf.compare(_buf.size() - 1, 1, "{")) ? _buf.erase(_buf.size() - 1, 1) : 0;
 		uri = *wsTrim(_buf);
 		uri.replace(0, 8, "");
 	}
+	
+	// Processing of the location block
 	while (brack > 0)
 	{
 		std::getline(_file, _buf);
 		cleanLineFromSpaces(_buf);
 		bracketRegulator(brack, _buf);
 
-		if (!_buf.compare(0, 12, "allow_method"))
-			n_loc.setLocation(METHO, 12, _buf);
-		else if (!_buf.compare(0, 5, "index"))
-			n_loc.setLocation(IDX, 5, _buf);
-		else if (!_buf.compare(0, 10, "auth_basic"))
-			n_loc.setLocation(AUTHB, 10, _buf);
-		else if (!_buf.compare(0, 15, "auth_b_usr_file"))
-			n_loc.setLocation(AUTHB_FILE, 15, _buf);
-		else if (!_buf.compare(0, 9, "autoindex"))
-			n_loc.setLocation(AUTOIDX, 9, _buf);
-		else if (!_buf.compare(0, 12, "upload_store"))
-			n_loc.setLocation(STORE, 12, _buf);
-		else if (!_buf.compare(0, 4, "root"))
-			n_loc.setLocation(ROOT, 4, _buf);
-		else if (!_buf.compare(0, 3, "cgi"))
-			n_loc.setLocation(CGI_EXE, 3, _buf);
-		else if (!_buf.compare(0, 8, "cgi_path"))
-			n_loc.setLocation(CGI_PATH, 8, _buf);
-		else continue;
+		if (!_buf.compare(0, 13, "allow_method\t"))
+			n_loc.setLocation(METHO, 13, _buf);
+		else if (!_buf.compare(0, 6, "index\t"))
+			n_loc.setLocation(IDX, 6, _buf);
+		else if (!_buf.compare(0, 13, "upload_store\t"))
+			n_loc.setLocation(STORE, 13, _buf);
+		else if (!_buf.compare(0, 5, "root\t"))
+			n_loc.setLocation(ROOT, 5, _buf);
+		else if (!_buf.compare(0, 9, "cgi_path\t"))
+			n_loc.setLocation(CGI_PATH, 9, _buf);
+		else if (!_buf.compare(0, 4, "cgi\t"))
+			n_loc.setLocation(CGI_EXE, 4, _buf);
+		else if (!_buf.compare(0, 1, "}")) continue;
+		else throw std::runtime_error(errParseMessage("error line : ", _buf.c_str(), ". Wrong input in block location\n"));
 	}
 	_bracket--;
 	addNewLocationToMap(&n_loc, uri);
@@ -119,19 +139,20 @@ void FileParser::newServer(void)
 		cleanLineFromSpaces(_buf);
 		bracketRegulator(_bracket, _buf);
 
-		if (!_buf.compare(0, 8, "location"))	
+		if (!_buf.compare(0, 9, "location "))	
 			newLocation(n_srv);
-		else if (!_buf.compare(0, 6, "listen"))
-			n_srv.setServer(LIS, 6, _buf);
-		else if (!_buf.compare(0, 5, "error"))
-			n_srv.setServer(ERR, 5, _buf);
-		else if (!_buf.compare(0, 11, "server_name"))
-			n_srv.setServer(SRV_N, 11, _buf);
-		else if (!_buf.compare(0, 20, "client_max_body_size"))
-			n_srv.setServer(BODY, 20, _buf);
-		else if (!_buf.compare(0, 4, "host"))
-			n_srv.setServer(HOST, 4, _buf);
-		else continue;		// BIG ERROR TO DO
+		else if (!_buf.compare(0, 7, "listen\t"))
+			n_srv.setServer(LIS, 7, _buf);
+		else if (!_buf.compare(0, 6, "error\t"))
+			n_srv.setServer(ERR, 6, _buf);
+		else if (!_buf.compare(0, 12, "server_name\t"))
+			n_srv.setServer(SRV_N, 12, _buf);
+		else if (!_buf.compare(0, 9, "max_body\t"))
+			n_srv.setServer(BODY, 9, _buf);
+		else if (!_buf.compare(0, 5, "host\t"))
+			n_srv.setServer(HOST, 5, _buf);
+		else if (!_buf.compare(0, 1, "}")) continue;
+		else std::runtime_error(errParseMessage("error line : ", _buf.c_str(), ". Not accepting this input\n"));
 	}
 	addNewServerToMap(n_srv);
 }
@@ -158,9 +179,5 @@ void FileParser::addNewLocationToMap(Location *loc, std::string const &name)
 	if (it == _m_loc.end())
 		_m_loc.insert(std::pair<std::string, Location>(name, *loc));
 	else
-		throw "Error location already exist\n";
+		throw std::runtime_error(errParseMessage("Error : location ", name.c_str(), " already exist\n"));
 }
-
-std::map<int, std::vector<ServerInfo> > const &FileParser::getConfigFile() { parseConfigFile(); return _m_srv; }
-
-void FileParser::setServerInfo(ServerInfo *s) { _cli_srv = s; }

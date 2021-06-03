@@ -19,21 +19,29 @@
 
 int main(int ac, char **av)
 {
-    if (ac != 2)
-    {
-        std::cerr << "Fatal error: wrong arguments\n";
-        exit(EXIT_FAILURE);
-    }
-    
-    FileParser conf(av[1]);
-    
-    std::map<int, std::vector<ServerInfo> > m_srv = conf.getConfigFile();
-	// PARTIE PARSEUR
+	if (ac != 2)
+	{
+		std::cerr << "Fatal error: wrong arguments\n";
+		exit(EXIT_FAILURE);
+	}
+	
+	// ** CONFIRURATION FILE PARSER PART **
+	FileParser conf(av[1]);
+	std::map<int, std::vector<ServerInfo> > m_srv;
 
+	try{
+		m_srv = conf.getConfigFile();
+	}
+	catch (std::exception &errmsg){
+		std::cout << errmsg.what();
+		exit(EXIT_FAILURE);
+	}
+
+	// ** SERVER PART **
 	// boucle pour add tous les sockets >> ou les mettre dans la boucle en dessous ?
-    std::vector<int> sockArray;
-    for (std::map<int, std::vector<ServerInfo> >::iterator it = m_srv.begin(); it != m_srv.end(); it++)
-        sockArray.push_back(it->first);
+	std::vector<int> sockArray;
+	for (std::map<int, std::vector<ServerInfo> >::iterator it = m_srv.begin(); it != m_srv.end(); it++)
+		sockArray.push_back(it->first);
 
 	HttpServer server;
 
@@ -51,5 +59,5 @@ int main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 
-    return 0;
+	return 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   FileParser.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 16:02:25 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/26 18:03:32 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:39:47 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 # define FILEPARSER_HPP
 
 # include "parser.hpp"
-#include <unistd.h>
+# include <unistd.h>
+# include <fstream>
+# include <map>
 
 enum e_srv { LIS, ERR, SRV_N, BODY, HOST};
 
-enum e_loc { METHO, IDX, AUTHB, AUTHB_FILE, AUTOIDX, STORE, ROOT, CGI_EXE, CGI_PATH};
+enum e_loc { METHO, IDX, STORE, ROOT, CGI_EXE, CGI_PATH};
 
 
 class FileParser 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 15:03:19 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 16:57:08 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,6 @@ std::vector<std::string> splitWithSep(std::string line, char sep)
 	return res;
 }
 
-// Split a char array into a vector of word
-void setStringArray(char const *n, std::vector<std::string> &v) 
-{
-    char *tmp = strdup(n);
-    char *token = strtok(tmp, "\t\v\f\r ");
-
-    while (token){
-        v.push_back(token);
-        token = strtok(NULL, "\t\v\f\r ");
-    }
-    delete tmp;
-}
-
 std::pair<const std::string, const Location*> 
 		matchLocation(std::map<std::string, Location> *loc, const std::string& locName)
 {
@@ -121,17 +108,6 @@ std::pair<const std::string, const Location*>
 	
 	// Case no server_names match, using default server block (the first one)
 	return matchLocation((*srv)[0].getLocation(), names.second);
-}
-
-// erase all whitespaces in buf
-std::string *wsTrim(std::string &buf)
-{
-    if (buf.empty())
-        return &buf;
-    for (std::string::iterator it = buf.end(); it != buf.begin(); --it)
-        if (isspace(*it))
-            buf.erase(it);            
-    return &buf;
 }
 
 void printLog(const std::string &msg, const std::string& addInfo)
