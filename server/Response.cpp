@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 18:01:10 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 11:58:23 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,14 +165,6 @@ void Response::fillDateHeader()
 	std::vector<std::string> date = splitWithSep(date_time, ' ');
 	date.back().resize(4);
 
-	std::cout << "VALUE "<< static_cast<int>(date[2][0]) << "\n";
-
-	std::cout << "\n\n\n---------DATE------\n";
-	for (std::pair<int, std::vector<std::string>::iterator> i(0, date.begin()); i.second != date.end();++i.first, ++i.second)
-		std::cout << "date " << i.first << ":" << *i.second << "\n";
-	
-	std::cout << "\n";
-
 	// Formating header date.
 	// ctime format = Thu May 20 14:33:40 2021 >> to header date format : Thu, 20 May 2021 12:16:42 GMT
 	_buffer += "Date: " + date[0] + ", " + date[2] + " " + date[1] + " " + date[4] + " " + date[3] + " GMT" + CLRF;
@@ -230,10 +222,10 @@ std::string Response::addIndex(const std::string& uri, const std::vector<std::st
 	
 	for (std::vector<std::string>::const_iterator it = indexs.begin(); it != indexs.end(); ++it)
 	{
+		// Add each index to the uri
 		std::string uriWithIndex(uri + *it);
 
-		std::cerr << "TRYING URI + INDEX: |" << uriWithIndex << "\n";
-
+		// And then try to access the URI resulting from this concatenation
 		if (!stat(uriWithIndex.c_str(), &infFile))
 			return uriWithIndex;
 	}
@@ -245,15 +237,10 @@ void Response::checkMethods(int method, const std::vector<std::string>& methodsA
 {
 	std::string tab[5] = { "GET", "HEAD", "PUT", "POST", "DELETE" };
 
-	std::cout << "le numero de method = " << method << "\n";
-
 	for (std::vector<std::string>::const_iterator it = methodsAllowed.begin();
 			it != methodsAllowed.end(); ++it)
-	{
-		std::cerr << "method = |" << tab[method] << "| && la mehode comparee = |" << *it << "|\n";
 		if (!it->compare(tab[method]))
 			return ;
-	}
 
 	throw StatusLine(405, REASON_405, "checkMethods method");
 }
@@ -266,7 +253,7 @@ std::string Response::reconstructFullURI(int method,
 	// zero location block match the URI so the URI isn't modified
 	if (!loc.second)
 	{
-		// Checking if the file exist or if it's  directory
+		// Checking if the file exist or if it's a directory
 		if (stat(uri.c_str(), &infFile) == -1)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
 		if (S_ISDIR(infFile.st_mode))
@@ -279,6 +266,8 @@ std::string Response::reconstructFullURI(int method,
 	if (!loc.second->getRoot().empty())
 		addRoot(&uri, loc.second->getRoot(), loc.first);
 
+	// Checking if the path after root substitution is correct, and if it's a directory trying
+	// to add indexs
 	if (stat(uri.c_str(), &infFile) == -1)
 		throw StatusLine(404, REASON_404, "reconstructFullURI method: " + uri);
 	if (S_ISDIR(infFile.st_mode))
@@ -301,8 +290,6 @@ void Response::fillError(const StatusLine& sta)
 	const std::string hostValue(hostField->substr(0, hostField->find(':')));
 	const ServerInfo* servMatch = 0;
 
-	std::cerr << "HOST HEADER FIELD VALUE IS: |" << hostValue << "|\n";
-
 	// Looking in each virtual server names if one match host header field value
 	for (std::vector<ServerInfo>::const_iterator virtServ = _servInfo->begin(); virtServ != _servInfo->end(); ++virtServ)
 	{
@@ -320,13 +307,7 @@ void Response::fillError(const StatusLine& sta)
 
 	if (servMatch && !servMatch->getError().empty())
 	{
-		std::cerr << "ERROR IN SERVMATCH IS: " << servMatch->getError() << "\n";
-
 		pathError = servMatch->getError() + errorCodeHTML;
-
-		std::cerr << "ERROR WITH LOCATION IS: " << pathError << "\n";
-		
-
 		struct stat infFile;
 		if (stat(pathError.c_str(), &infFile) == -1)
 			pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
@@ -338,11 +319,6 @@ void Response::fillError(const StatusLine& sta)
 
 	fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
 	_buffer += CLRF + body.getRequestFile();
-
-	std::cout << "ERROR_PATH is: |" << pathError << "|\n";
-	#if DEBUG
-		std::cout << "ERROR_PATH is: |" << pathError << "|\n";
-	#endif
 }
 
 

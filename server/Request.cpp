@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/26 15:02:45 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 12:11:11 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,18 @@ void Request::clear()
 	_body.clear();
 }
 
+void Request::print() const
+{
+	_reqLine.print();
+
+	std::cout << "-------- HEADERS ---------\n";
+	for (std::map<std::string, std::string>::const_iterator it = _headers.begin();
+			it != _headers.end(); ++it)
+		std::cout << it->first << ":" << it->second << "\n";
+	
+	std::cout << "---------- BODY ----------\n" << _body.getBody();
+}
+
 
 /* ------------------------------------------------------------- */
 /* ------------------ PRIVATE MEMBER FUNCTIONS ----------------- */
@@ -132,10 +144,7 @@ void Request::parseBody()
 	_index += lenToRead;
 
 	if (!_body.getSize())
-	{
-		std::cerr << "\n" << _body.getBody() << "\n----------\n";
 		throw StatusLine(200, REASON_200);
-	}
 }
 
 bool Request::newLineReceived(size_t posCLRF)
@@ -177,8 +186,6 @@ void Request::parseHeaderLine(size_t posCLRF)
 	
 	if (!_headers.insert(headerField).second)
 		throw StatusLine(400, REASON_400, "duplicated headers are not allowed");
-    
-    std::cerr << headerField.first << ":|" << headerField.second << "|\n"; // TEST
 }
 
 void Request::parseRequestLine(size_t posCLRF)
@@ -206,8 +213,6 @@ void Request::parseRequestLine(size_t posCLRF)
 	parseMethodToken(tokens[0]);
 	parseURI(tokens[1]);
 	parseHTTPVersion(tokens[2]);
-
-    std::cerr << _reqLine << "\n";
 }
 
 void Request::parseMethodToken(const std::string& token)

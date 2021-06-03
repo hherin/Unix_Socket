@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/20 13:50:22 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 12:08:24 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ class Request
 
 		// Reset the request object
 		void clear();
+
+		// Print the Request object on stdout
+		void print() const;
 	
 	
 	private:

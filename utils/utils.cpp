@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 15:34:33 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 11:54:02 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,8 @@ void printLog(const std::string &msg, const std::string& addInfo)
 	std::string date(ctime(&now));
 	date.resize(date.length() - 1);
 
-	std::cout << "[" << date << "] " << msg;
+	if (!msg.empty())
+		std::cout << "[" << date << "] " << msg;
 
 	#if defined DEBUG
 		if (!addInfo.empty())

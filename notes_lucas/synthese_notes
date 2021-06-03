@@ -36,7 +36,6 @@ ANS ◦ WWW-Authenticate
 
 A FAIRE AJD :
 	- ajouter le max body size
-	- gerer les signaux
 	- faire delete
 	- faire put
-	- ajouter des logs
+	- faire fonction pour match la cgi d'helene

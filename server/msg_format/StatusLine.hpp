@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/04 15:40:02 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 14:21:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 12:07:41 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,10 @@ class StatusLine
 		}
 		
 		// Print the StatusLine object
-		void print()
+		void print() const
 		{
-			std::cout << "Status line: " << _code << " " << _reason << "(" << _addInfos << ")\n";
+			std::cout << "------ REQUEST LINE ------\ncode: " << _code << ", reason: |" << _reason
+				<< "|, add info: |" << _addInfos << "|\n";
 		}
 
 
