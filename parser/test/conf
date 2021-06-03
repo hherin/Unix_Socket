@@ -27,8 +27,8 @@ server {
 
 
 server {
-	listen	8080
-	error	./www/perso/error
+    listen 	8080
+    error	./http_error_pages/test_changing_path/
 	server_name	server2 localhost
 	
 	location / 		{
@@ -72,13 +72,16 @@ server {
 		index	index.htm
 	}
 	location /authe  {
-		allow_method		HEAD PUT GET
-		root		./www/tester
-		index		index.html
+		allow_method 	    HEAD PUT GET
+		root 		./www/tester
+		index		index.htm index.html index_test.html
+		auth 		user:pass
 	}
 	location /authen  {
-		allow_method		PUT
-		root		./www/perso/
+		allow_method 	    PUT
+		root 		./www/perso/
+		index		index.htm index.html index_test.html
+		auth 		user:pass
 	}
 	location /aut  {
 		allow_method		PUT

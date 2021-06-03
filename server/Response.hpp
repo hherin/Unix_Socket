@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 11:16:55 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/02 16:23:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ class Response
 		// Compares the methods allowed from a location block with the requested method. If not allowed,
 		// throws a StatusLine object with a 405 error code
 		void checkMethods(int method, const std::vector<std::string>& methodsAllowed) const;
+
+		void fillError(const StatusLine& sta);
 
 	public:
 	

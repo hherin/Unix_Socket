@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 17:12:46 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/03 18:17:17 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,14 @@ void Response::clear()
 
 void Response::fillBuffer()
 {
+	// If an error occured during request parsing
+	if (_staLine.getCode() >= 300)
+		return fillError(_staLine);
+	
 	// Storing status line and some headers in buffer
 	fillStatusLine(_staLine);
 	fillServerHeader();
-	// fillDateHeader();
-	
-	if (_staLine.getCode() >= 300)
-		return ;
+	fillDateHeader();
 
 	try
 	{
@@ -112,7 +113,7 @@ void Response::fillBuffer()
 
 			// Setting size after storing the body in FileParser object, then setting Last-Modified header
 			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
-			// fillLastModifiedHeader(realUri.c_str());
+			fillLastModifiedHeader(realUri.c_str());
 			_buffer += CLRF;
 
 			// For GET, writing the body previously stored to the buffer
@@ -127,12 +128,10 @@ void Response::fillBuffer()
 		}
 	}
 
-	// If an error occured, filling the buffer with the error response
+	// If an error occured during URI reconstruction and file searching
 	catch (const StatusLine& errorStaLine)
 	{
-		fillStatusLine(errorStaLine);
-		fillServerHeader();
-		// fillDateHeader();
+		fillError(errorStaLine);
 	}
 }
 
@@ -233,10 +232,10 @@ std::string Response::addIndex(const std::string& uri, const std::vector<std::st
 	
 	for (std::vector<std::string>::const_iterator it = indexs.begin(); it != indexs.end(); ++it)
 	{
+		// Add each index to the uri
 		std::string uriWithIndex(uri + *it);
 
-		std::cerr << "TRYING URI + INDEX: |" << uriWithIndex << "\n";
-
+		// And then try to access the URI resulting from this concatenation
 		if (!stat(uriWithIndex.c_str(), &infFile))
 			return uriWithIndex;
 	}
@@ -248,15 +247,10 @@ void Response::checkMethods(int method, const std::vector<std::string>& methodsA
 {
 	std::string tab[5] = { "GET", "HEAD", "PUT", "POST", "DELETE" };
 
-	std::cout << "le numero de method = " << method << "\n";
-
 	for (std::vector<std::string>::const_iterator it = methodsAllowed.begin();
 			it != methodsAllowed.end(); ++it)
-	{
-		std::cerr << "method = |" << tab[method] << "| && la mehode comparee = |" << *it << "|\n";
 		if (!it->compare(tab[method]))
 			return ;
-	}
 
 	throw StatusLine(405, REASON_405, "checkMethods method");
 }
@@ -269,7 +263,7 @@ std::string Response::reconstructFullURI(int method,
 	// zero location block match the URI so the URI isn't modified
 	if (!loc.second)
 	{
-		// Checking if the file exist or if it's  directory
+		// Checking if the file exist or if it's a directory
 		if (stat(uri.c_str(), &infFile) == -1)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
 		if (S_ISDIR(infFile.st_mode))
@@ -282,16 +276,59 @@ std::string Response::reconstructFullURI(int method,
 	if (!loc.second->getRoot().empty())
 		addRoot(&uri, loc.second->getRoot(), loc.first);
 
+	// Checking if the path after root substitution is correct, and if it's a directory trying
+	// to add indexs
 	if (stat(uri.c_str(), &infFile) == -1)
 		throw StatusLine(404, REASON_404, "reconstructFullURI method: " + uri);
 	if (S_ISDIR(infFile.st_mode))
 		uri = addIndex(uri, loc.second->getIndex());
 	
-	printLoc(loc.second);
-
 	checkMethods(method, loc.second->getMethods());
 
 	return uri;
+}
+
+void Response::fillError(const StatusLine& sta)
+{
+	// Filling buffer with error code + some basic headers
+	fillStatusLine(sta);
+	fillServerHeader();
+	fillDateHeader();
+
+	// Value of host header field in request
+	const std::string* hostField = &_req->getHeaders().find("host")->second;
+	const std::string hostValue(hostField->substr(0, hostField->find(':')));
+	const ServerInfo* servMatch = 0;
+
+	// Looking in each virtual server names if one match host header field value
+	for (std::vector<ServerInfo>::const_iterator virtServ = _servInfo->begin(); virtServ != _servInfo->end(); ++virtServ)
+	{
+		for (std::vector<std::string>::const_iterator servNames = virtServ->getNames().begin();
+				servNames != virtServ->getNames().end(); ++servNames)
+		{
+			// If we match one server name, saving this virtual server
+			if (*servNames == hostValue)
+				servMatch = &(*virtServ);
+		}
+	}
+
+	std::string pathError;
+	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
+
+	if (servMatch && !servMatch->getError().empty())
+	{
+		pathError = servMatch->getError() + errorCodeHTML;
+		struct stat infFile;
+		if (stat(pathError.c_str(), &infFile) == -1)
+			pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
+	}
+	else
+		pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
+
+	FileParser body(pathError.c_str(), true);
+
+	fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+	_buffer += CLRF + body.getRequestFile();
 }
 
 

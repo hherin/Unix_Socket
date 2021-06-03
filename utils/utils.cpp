@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 16:57:08 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/03 18:17:22 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ std::vector<std::string> splitWithSep(std::string line, char sep)
 	std::istringstream s(line);
 
 	while (std::getline(s, line, sep))
-		res.push_back(line);
+		if (!line.empty())
+			res.push_back(line);
 	
 	return res;
 }
@@ -119,7 +120,8 @@ void printLog(const std::string &msg, const std::string& addInfo)
 	std::string date(ctime(&now));
 	date.resize(date.length() - 1);
 
-	std::cout << "[" << date << "] " << msg;
+	if (!msg.empty())
+		std::cout << "[" << date << "] " << msg;
 
 	#if defined DEBUG
 		if (!addInfo.empty())

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 16:51:26 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/10 16:10:19 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 12:06:36 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,13 @@ class RequestLine
 
 		// Returns true if no path has been set in RequestLine object, false otherwise
 		bool empty() const { return _path.empty(); }
+
+		// Print on stdout RequestLine object
+		void print() const
+		{
+			std::cout << "------ REQUEST LINE ------\nmet: " << _method << ", path: |" << _path
+				<< "|, query: |" << _query << "|\n";
+		}
 
 
 		/* ------------------------------------------------------------- */
