@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/02 16:23:42 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:17:24 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <ctime>
 #include <sys/stat.h>
+#include <cstdio>
 
 #include "Request.hpp"
 #include "msg_format/StatusLine.hpp"

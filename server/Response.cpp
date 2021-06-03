@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 11:58:23 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:45:35 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,6 @@ void Response::fillBuffer()
 	// If an error occured during request parsing
 	if (_staLine.getCode() >= 300)
 		return fillError(_staLine);
-	
-	// Storing status line and some headers in buffer
-	fillStatusLine(_staLine);
-	fillServerHeader();
-	fillDateHeader();
 
 	try
 	{
@@ -105,10 +100,17 @@ void Response::fillBuffer()
 				std::cout << "LOCATION: no match\n";
 		#endif
 
-		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath()); 
-		
+		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
+
+		std::cerr << "URI AFTER RECONST: |" << realUri << "|\n";
+
 		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
+			// Storing status line and some headers in buffer
+			fillStatusLine(_staLine);
+			fillServerHeader();
+			fillDateHeader();
+			
 			FileParser body(realUri.c_str(), true); // CAHNGER
 
 			// Setting size after storing the body in FileParser object, then setting Last-Modified header
@@ -119,6 +121,19 @@ void Response::fillBuffer()
 			// For GET, writing the body previously stored to the buffer
 			if (_req->getMethod() == GET)
 				_buffer += body.getRequestFile();
+		}
+
+		else if (_req->getMethod() == DELETE)
+		{
+			std::cerr << "URI IS IN DELETE: |" << realUri << "|\n";
+			
+			if (!remove(realUri.c_str()))
+				throw(StatusLine(500, REASON_500, "remove function failed in DELETE method"));
+
+			// Storing status line and some headers in buffer
+			fillStatusLine(_staLine);
+			fillServerHeader();
+			fillDateHeader();
 		}
 
 		else
@@ -280,6 +295,8 @@ std::string Response::reconstructFullURI(int method,
 
 void Response::fillError(const StatusLine& sta)
 {
+	_buffer.clear();
+	
 	// Filling buffer with error code + some basic headers
 	fillStatusLine(sta);
 	fillServerHeader();

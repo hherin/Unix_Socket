@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/04 15:40:02 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 12:07:41 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:28:43 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,14 @@ class StatusLine
 			return *this;
 		}
 		
-		
+		/* ------------------------------------------------------------- */
+		/* --------------------------- SETTERS ------------------------- */
+
+		void setCode(int code)								{ _code = code; }
+		void setReason(const std::string& reason)			{ _reason = reason; }
+		void setAdditionalInfo(const std::string& addInfos)	{ _addInfos  = addInfos; }
+
+
 		/* ------------------------------------------------------------- */
 		/* --------------------------- GETTERS ------------------------- */
 

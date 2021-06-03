@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/02 14:35:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:33:47 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void Location::setAutoIndex(char const *i) { _autoindex = (!strncmp("on", i, 3))
 void Location::printLocation(const std::string& locName) const
 {
 	std::cout << "\nLOCATION\n-------------------------\n"
-			<< "root = |" << locName << "|\n"
+			<< "name = |" << locName << "|\n"
 			<< "root = |" << _root << "|\n"
 			<< "auth_basic = |" << _auth_basic << "|\n"
 			<< "auth_b_usr_file = |" << _auth_b_usr_file << "|\n"

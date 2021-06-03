@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 11:54:02 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/03 17:50:15 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,23 @@ std::pair<const std::string, const Location*>
 	// they're already sorted form smaller to longest same words, no need to check size: the last match will 
 	// be the longest possible match (ex: if searching for "bla", "bl" location will be stored after "b" location)
 	for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
+	{
+		std::cerr << "locname is : " << locName << " and actual loc name comp is " << it->first << "\n";
+		
 		if (!it->first.compare(0, std::string::npos, locName, 0, it->first.size()))
 		{
+			std::cerr << "LOCATION MATCH :|" << it->first << "|\n";
+
 			bestMatch.first = true;
 			bestMatch.second = it;
 		}
+	}
 	
 	// Case there was no match
 	if (!bestMatch.first)
 		return std::pair<const std::string, const Location*>("", 0);
+
+	std::cerr << "BEST MATCH :|" << bestMatch.second->first << "|\n";
 
 	return std::pair<const std::string, const Location*>(bestMatch.second->first, &bestMatch.second->second);
 }
@@ -111,12 +119,7 @@ std::pair<const std::string, const Location*>
 		{
 			// virtual server is found
             if (!sinfoNames[j].compare(0, names.first.size() + 1, names.first))
-			{
-				#if DEBUG
-					
-				#endif
                 return matchLocation((*srv)[i].getLocation(), names.second);
-			}
         }
 	}
 	
@@ -144,13 +147,11 @@ void printLog(const std::string &msg, const std::string& addInfo)
 	std::string date(ctime(&now));
 	date.resize(date.length() - 1);
 
-	if (!msg.empty())
-		std::cout << "[" << date << "] " << msg;
-
 	#if defined DEBUG
 		if (!addInfo.empty())
-			std::cout << "-------------------------\n" << addInfo << "-------------------------\n\n";
+			std::cout << "[" << date << "] " << msg
+				<< "-------------------------\n" << addInfo << "-------------------------\n\n";
 	#else
-		(void)addInfo;
+		std::cout << "[" << date << "] " << msg;
 	#endif
 }
