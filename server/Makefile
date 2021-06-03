@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 14:42:26 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/02 15:14:41 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 all			:	${NAME}
 
 %.o			:	%.cpp
-				@${CC} ${FLAGS} -o $@ -c $<
+				@${CC} -DDEBUG=${debug} ${FLAGS} -o $@ -c $<
 
 ${NAME}		:	${OBJS} 
 				@ar rcs ${NAME} ${OBJS}
