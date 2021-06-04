@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/03 12:11:11 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/04 17:59:47 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void Request::parsingCheck()
 			{
 				_body.startReceiving();
 				_body.setSize(atol(it->second.c_str()));
+				_body.setMaxSize(findMaxSize(_headers.find("host")->second())); // REPRENDRE ICI, IMPLEMENTER FONCTION MAX SIZE
 			}
 			
 			// Case no content-lenght header, so no body

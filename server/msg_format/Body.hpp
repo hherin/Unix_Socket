@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Body.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/05/21 13:45:07 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/04 17:54:14 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ class Body
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 		
-			bool								_recv;	// Indicates when request line + headers have been received
-			size_t								_size;	// Content-lenght size
-			std::string							_buff;	// Buffer containing the body
+			bool								_recv;		// Indicates when request line + headers have been received
+			size_t								_size;		// Content-lenght size
+			size_t								_maxSize;	// Max octets that Body object can receive
+			std::string							_buff;		// Buffer containing the payload
 
 
 	public:
@@ -32,9 +33,9 @@ class Body
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		Body() : _recv(false), _size() {}
+		Body() : _recv(false), _size(), _maxSize() {}
 		Body(const Body& c) :
-				_recv(c._recv), _size(c._size), _buff(c._buff) {}
+				_recv(c._recv), _size(c._size), _maxSize(c._maxSize), _buff(c._buff) {}
 		~Body() {}
 		Body& operator=(Body a)
 		{
@@ -48,12 +49,14 @@ class Body
 
 		const std::string& getBody() const { return _buff; }
 		size_t getSize() const { return _size; }
+		size_t getMaxSize() const { return _maxSize; }
 
 
 		/* ------------------------------------------------------------- */
 		/* --------------------------- SETTERS ------------------------- */
 		
 		void setSize(size_t size) { _size = size; }
+		void setMaxSize(size_t maxSize) { _maxSize = maxSize; }
 		void setBuff(std::string const &buf) { _buff = buf; }
 		void startReceiving() { _recv = true; }
 
@@ -87,6 +90,7 @@ class Body
 		{
 			std::swap(a._recv, b._recv);
 			std::swap(a._size, b._size);
+			std::swap(a._maxSize, b._maxSize);
 			std::swap(a._buff, b._buff);
 		}
 		
