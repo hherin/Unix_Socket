@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 17:45:35 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/04 16:22:03 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void Response::fillBuffer()
 		{
 			std::cerr << "URI IS IN DELETE: |" << realUri << "|\n";
 			
-			if (!remove(realUri.c_str()))
+			if (remove(realUri.c_str()))
 				throw(StatusLine(500, REASON_500, "remove function failed in DELETE method"));
 
 			// Storing status line and some headers in buffer
@@ -245,7 +245,7 @@ std::string Response::addIndex(const std::string& uri, const std::vector<std::st
 			return uriWithIndex;
 	}
 	
-	throw StatusLine(301, REASON_301, "trying to access a directory");
+	throw StatusLine(301, REASON_301, "trying to access a directory addIndex method");
 }
 
 void Response::checkMethods(int method, const std::vector<std::string>& methodsAllowed) const
@@ -272,7 +272,7 @@ std::string Response::reconstructFullURI(int method,
 		if (stat(uri.c_str(), &infFile) == -1)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
 		if (S_ISDIR(infFile.st_mode))
-			throw StatusLine(301, REASON_301, "trying to access a directory");
+			throw StatusLine(301, REASON_301, "trying to access a directory case no match with location block in reconstructlFullURI method");
 
 		return uri;
 	}

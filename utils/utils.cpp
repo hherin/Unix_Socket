@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 17:50:15 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/04 16:16:59 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,8 @@ std::pair<const std::string, const Location*>
 	// be the longest possible match (ex: if searching for "bla", "bl" location will be stored after "b" location)
 	for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
 	{
-		std::cerr << "locname is : " << locName << " and actual loc name comp is " << it->first << "\n";
-		
 		if (!it->first.compare(0, std::string::npos, locName, 0, it->first.size()))
 		{
-			std::cerr << "LOCATION MATCH :|" << it->first << "|\n";
-
 			bestMatch.first = true;
 			bestMatch.second = it;
 		}
@@ -99,8 +95,6 @@ std::pair<const std::string, const Location*>
 	// Case there was no match
 	if (!bestMatch.first)
 		return std::pair<const std::string, const Location*>("", 0);
-
-	std::cerr << "BEST MATCH :|" << bestMatch.second->first << "|\n";
 
 	return std::pair<const std::string, const Location*>(bestMatch.second->first, &bestMatch.second->second);
 }
