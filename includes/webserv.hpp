@@ -33,6 +33,9 @@ enum methods { GET, HEAD, PUT, POST, DELETE };
 #define CLRF "\r\n"
 #define CLRF_OCTET_SIZE 2
 
+#define MAX_SEC_TIMEOUT 1000
+#define MAX_USEC_TIMEOUT 0
+
 // The reason for each status line cose
 #define REASON_100 "Continue"
 #define REASON_101 "Switching Protocols"

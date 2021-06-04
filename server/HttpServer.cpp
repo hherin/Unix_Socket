@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/02 12:12:31 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/04 17:43:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,13 @@ void HttpServer::addClientSocket(int fdNewClient, int port, std::map<int, std::v
 
 void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv)
 {
+	struct timeval tv;
+
 	while (true)
 	{
+		tv.tv_sec = MAX_SEC_TIMEOUT;
+		tv.tv_usec = MAX_USEC_TIMEOUT;
+
 		// Setting readFd with all passive accept sockets and all clients previously connected
 		FD_ZERO(&_readFds);
 		FD_ZERO(&_writeFds);
@@ -60,8 +65,10 @@ void HttpServer::etablishConnection(std::map<int, std::vector<ServerInfo> >& mSr
 		addSocketsToWriteFdSet<ClientSocket>(_clientSocks);
 
 		// Waiting for incoming connections on server sockets / client sockets
-		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, &_writeFds, NULL, NULL)) < 0)
+		if ((_nbReadyFds = select(FD_SETSIZE, &_readFds, &_writeFds, NULL, &tv)) < 0)
 			throw std::runtime_error("Fatal error: select function failed\n");
+		else if (!_nbReadyFds)
+			throw std::runtime_error("Webserv timeout\n");
 
 		// Send responses to clients
 		sendToClients();
