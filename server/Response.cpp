@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:04:26 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 20:28:40 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ void Response::fillBuffer()
 
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
 
-		std::cerr << "URI AFTER RECONST: |" << realUri << "|\n";
-
 		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
 			// Storing status line and some headers in buffer
@@ -123,10 +121,22 @@ void Response::fillBuffer()
 				_buffer += body.getRequestFile();
 		}
 
+		else if (_req->getMethod() == POST)
+		{
+			// need to open
+			struct stat infoFile;
+			if (stat(realUri.c_str(), &infoFile) == -1)
+				;
+
+			// need to append
+			else
+				;
+		}
+
 		else if (_req->getMethod() == DELETE)
 		{
 			if (remove(realUri.c_str()))
-				throw(StatusLine(500, REASON_500, "remove function failed in DELETE method"));
+				throw (StatusLine(500, REASON_500, "remove function failed in DELETE method"));
 
 			// Storing status line and some headers in buffer
 			fillStatusLine(_staLine);
@@ -135,10 +145,7 @@ void Response::fillBuffer()
 		}
 
 		else
-		{
-			fillContentLenghtHeader(convertNbToString(0));
-			_buffer += CLRF;
-		}
+			throw (StatusLine(400, REASON_400, "request method do not exist"));
 	}
 
 	// If an error occured during URI reconstruction and file searching
@@ -258,7 +265,7 @@ std::string Response::addIndex(const std::string& uri, const std::vector<std::st
 
 void Response::checkMethods(int method, const std::vector<std::string>& methodsAllowed) const
 {
-	std::string tab[5] = { "GET", "HEAD", "PUT", "POST", "DELETE" };
+	std::string tab[NB_METHODS] = { "GET", "HEAD", "POST", "DELETE" };
 
 	for (std::vector<std::string>::const_iterator it = methodsAllowed.begin();
 			it != methodsAllowed.end(); ++it)
@@ -271,16 +278,18 @@ void Response::checkMethods(int method, const std::vector<std::string>& methodsA
 std::string Response::reconstructFullURI(int method,
 		const std::pair<const std::string, const Location*>& loc, std::string uri)
 {
+	bool fileExist = true;
 	struct stat infFile;
 
 	// zero location block match the URI so the URI isn't modified
 	if (!loc.second)
 	{
-		// Checking if the file exist or if it's a directory
-		if (stat(uri.c_str(), &infFile) == -1)
+		// Checking if the file exist or if it's a directory. Case POST method, no 404 because it can create the file.
+		if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
-		if (S_ISDIR(infFile.st_mode))
-			throw StatusLine(301, REASON_301, "trying to access a directory case no match with location block in reconstructlFullURI method");
+		if (fileExist && S_ISDIR(infFile.st_mode))
+			throw StatusLine(301, REASON_301, "trying to access a directory case no match with"
+					" location block in reconstructlFullURI method");
 
 		return uri;
 	}
@@ -290,10 +299,13 @@ std::string Response::reconstructFullURI(int method,
 		addRoot(&uri, loc.second->getRoot(), loc.first);
 
 	// Checking if the path after root substitution is correct, and if it's a directory trying
-	// to add indexs
-	if (stat(uri.c_str(), &infFile) == -1)
+	// to add indexs. Case POST method, no 404 because it can create the file.
+	if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
+	{
+		std::cerr << "ICIICICICICIIC: " << method << "\n";
 		throw StatusLine(404, REASON_404, "reconstructFullURI method: " + uri);
-	if (S_ISDIR(infFile.st_mode))
+	}
+	if (fileExist && S_ISDIR(infFile.st_mode))
 		uri = addIndex(uri, loc.second->getIndex());
 	
 	checkMethods(method, loc.second->getMethods());
@@ -334,6 +346,18 @@ void Response::fillError(const StatusLine& sta)
 
 	fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
 	_buffer += CLRF + body.getRequestFile();
+}
+
+void Response::postToFile(const std::string& uri)
+{
+	std::fstream postFile;
+
+	postFile.open(uri.c_str(), std::ios::app);
+
+	if (!postFile.is_open())
+		throw (StatusLine(500, REASON_500, "failed to open file in post method"));
+	
+	postFile << _req->getBody().getBody();
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:04:19 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 20:16:53 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <ctime>
 #include <sys/stat.h>
 #include <cstdio>
+#include <fstream>
+#include <iostream>
 
 #include "Request.hpp"
 #include "msg_format/StatusLine.hpp"
@@ -122,6 +124,8 @@ class Response
 		// Fill the buffer with status line + 2 headers (server and date), then with the appropriate 
 		// error page as body (by default or the one set in the server block from the config file)
 		void fillError(const StatusLine& sta);
+
+		void postToFile(const std::string& uri);
 
 
 	public:

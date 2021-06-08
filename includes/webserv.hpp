@@ -20,7 +20,10 @@
 
 #include "../utils/utils.hpp"
 
-enum methods { GET, HEAD, PUT, POST, DELETE };
+enum methods { GET, HEAD, POST, DELETE };
+
+// Number of methods implemented in webserv
+#define NB_METHODS 4
 
 // Max octets lenght of a status / request / header line
 #define MAX_URI_LEN 8000
@@ -33,8 +36,11 @@ enum methods { GET, HEAD, PUT, POST, DELETE };
 #define CLRF "\r\n"
 #define CLRF_OCTET_SIZE 2
 
+// Webserv will timeout in select function if no data is received / send during
+// this time
 #define MAX_SEC_TIMEOUT 1000
 #define MAX_USEC_TIMEOUT 0
+
 
 // The reason for each status line cose
 #define REASON_100 "Continue"

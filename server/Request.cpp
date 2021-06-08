@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 19:19:20 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 20:27:52 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,9 +222,9 @@ void Request::parseRequestLine(size_t posCLRF)
 
 void Request::parseMethodToken(const std::string& token)
 {
-	std::string methods[5] = {"GET", "HEAD", "PUT", "POST", "DELETE"};
+	std::string methods[NB_METHODS] = {"GET", "HEAD", "POST", "DELETE"};
 	
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < NB_METHODS; ++i)
 	{
 		// Token should exactly match one of the five methods
 		if (!token.compare(_index, methods[i].size(), methods[i]) &&
