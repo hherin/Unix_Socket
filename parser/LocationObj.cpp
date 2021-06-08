@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:00:09 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:19:02 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,9 @@ void Location::setUploadStore(char const *u)
 void Location::setMethods(char const *n) 
 {
 	setStringArray(n, _allow_methd);
-	const char *method_checking[] = { "POST", "GET", "HEAD", "DELETE", "PUT"};
+	const char *method_checking[] = { "POST", "GET", "HEAD", "DELETE"};
 	for (size_t i = 0; i < _allow_methd.size(); i++){
-		for (size_t j = 0; j < 5; j++){
+		for (size_t j = 0; j < 4; j++){
 			if (!strcmp(method_checking[j], _allow_methd[i].c_str()))
 				break;
 			if (j == 4)

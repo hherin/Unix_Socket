@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:03:55 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:21:02 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ void Request::parsingCheck()
 				_body.startReceiving();
 				_body.setSize(atol(it->second.c_str()));
 				_body.setMaxSize(findMaxSize(_headers.find("host")->second));
-
-				// >> A RAJOUTER renvoie erreur 413 si trop long
 			}
 			
 			// Case no content-lenght header, so no body
@@ -146,7 +144,8 @@ void Request::parseBody()
 		_body.setSize(lenToRead);
 	
 	// Storing the part of body received until content-lenght octects are received
-	_body.recvBuffer(_buffer, _index, lenToRead);
+	if (_body.recvBuffer(_buffer, _index, lenToRead) == -1)
+		throw StatusLine(413, REASON_413, "received more octets than max body size limit");
 	_index += lenToRead;
 
 	if (!_body.getSize())

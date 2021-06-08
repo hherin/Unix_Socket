@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/04 17:54:14 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:19:39 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,14 @@ class Body
 		}
 		
 		// Append buffer received from client until content-lenght octets have been received
-		void recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
+		int recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
 		{
+			if (_maxSize -= lenToRead < 0)
+				return -1;
+			
 			_buff.append(buffer, index, _size);
 			_size -= lenToRead;
+			return 0;
 		}
 		
 	
