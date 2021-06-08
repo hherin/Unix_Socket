@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/02 14:32:53 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 16:37:53 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <vector>
 # include "ServerInfo.hpp"
 # include "../utils/utils.hpp"
+# include "parser.hpp"
 
 class ServerInfo;
 
@@ -30,14 +31,11 @@ class Location
 		*/
 		ServerInfo *_srv;
 		std::string _root;
-		std::string _auth_basic;
-		std::string _auth_b_usr_file;
 		std::string _upload_store;
-		std::string	_cgi_exe;
 		std::string	_cgi_path;
+		std::vector<std::string> _cgi_exe;
 		std::vector<std::string> _allow_methd;
 		std::vector<std::string> _index;
-		bool _autoindex;
 		
 	public:
 		/*	===========================================
@@ -53,14 +51,11 @@ class Location
 			================= GETTERS =================
 		*/
 		std::string const &getRoot() const;
-		std::string const &getAuthBasic() const;
-		std::string const &getAuthBasicFile() const;
 		std::string const &getUploadStore() const;
-		std::string const &getCgiExe() const;
 		std::string const &getCgiPath() const;
+		std::vector<std::string> const &getCgiExe() const;
 		std::vector<std::string> const &getMethods() const;
 		std::vector<std::string> const &getIndex() const;
-		bool const &getAutoIndex() const;
 		
 		/*	===========================================
 			================= SETTERS =================
@@ -76,14 +71,11 @@ class Location
 
 	private:	
 		void setRoot(char const*);
-		void setAuthBasic(char const*);
-		void setAuthBasicFile(char const*);
 		void setUploadStore(char const*);
 		void setMethods(char const*);
 		void setIndex(char const*);
 		void setCgiExe(char const *);
 		void setCgiPath(char const *);
-		void setAutoIndex(char const*);
 		
 		/*	===========================================
 			============ Private methods ==============

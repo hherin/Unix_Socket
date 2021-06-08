@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 16:44:07 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:01:05 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@ std::vector<std::string> stringDelimSplit(std::string const &str, const char *de
 // Return a vector of string containing a line splitted with a sep
 std::vector<std::string> splitWithSep(std::string line, char sep);
 
-// Push each word of n in the vector v
-void setStringArray(char const *n, std::vector<std::string> &v);
-
 // Search inside a map of location names /location block the best possible match with locName. Return NULL
 // if no match
 std::pair<const std::string, const Location*> 
@@ -47,9 +44,6 @@ std::pair<const std::string, const Location*>
 // Return the best possible location block for a specific host+URI. Return NULL if no match
 std::pair<const std::string, const Location*>
 		locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names);
-
-// Remove whitespaces of given buffer and return its pointer
-std::string *wsTrim(std::string &buf);
 
 // Prints the time of the day and the msg on std::cout
 void printLog(const std::string &msg, const std::string& addInfo = "");

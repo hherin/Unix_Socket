@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 16:47:02 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:00:33 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,16 @@ void Response::fillStatusLine(const StatusLine& staLine)
 	if (!staLine.getAdditionalInfo().empty())
 		_buffer += " (" + staLine.getAdditionalInfo() + ")";
 	_buffer += CLRF;
+}
+
+void printLoc(const Location* loc)
+{
+	std::cout << "root: " << loc->getRoot() << "\n";
+	for (std::vector<std::string>::const_iterator it = loc->getMethods().begin(); it != loc->getMethods().end(); it++)
+		std::cout << "methods: " << *it << "\n";
+		
+	for (std::vector<std::string>::const_iterator it = loc->getIndex().begin(); it != loc->getIndex().end(); it++)
+		std::cout << "index: " << *it << "\n";
 }
 
 void Response::addRoot(std::string* uri, const std::string& root, const std::string& locName)

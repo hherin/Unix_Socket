@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 16:43:07 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/03 17:44:43 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,8 @@ int main(int ac, char **av)
 					std::cout << "LOC " << it2->first << ": \n";
 					
 					(it2->second.getRoot().size()) ? std::cout << "root : " << it2->second.getRoot() << std::endl : 0;
-					(it2->second.getAuthBasic().size()) ? std::cout << "auth_basic : " << it2->second.getAuthBasic() << std::endl : 0;
-					(it2->second.getAuthBasicFile().size()) ? std::cout << "AuthBasicFile : " << it2->second.getAuthBasicFile() << std::endl : 0;
 					(it2->second.getUploadStore().size()) ? std::cout << "upload store : " << it2->second.getUploadStore() << std::endl : 0;
-					(it2->second.getCgiExe().size()) ? std::cout << "cgi : " << it2->second.getCgiExe() << std::endl : 0;
+					// (it2->second.getCgiExe().size()) ? std::cout << "cgi : " << it2->second.getCgiExe() << std::endl : 0;
 					(it2->second.getCgiPath().size()) ? std::cout << "cgi_path : " << it2->second.getCgiPath() << std::endl : 0;
 
 					std::vector<std::string> v1 = it2->second.getMethods();
@@ -70,7 +68,6 @@ int main(int ac, char **av)
 						std::cout << v2[i] << " ";
 					(it2->second.getIndex().size()) ? std::cout << std::endl : 0;				
 					
-					std::cout << "autoindex : " << it2->second.getAutoIndex() << "\n\n";
 				}
 			std::cout << "=====================================\n\n";
 			}
