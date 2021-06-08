@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 17:17:24 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 16:42:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		std::vector<ServerInfo>*			_servInfo;	// Servers blocks from config file that match a specific port
-		Request*							_req;		// Request object when the request is fully received, used to create response
+		std::vector<ServerInfo>*			_infoVirServs;	// Servers blocks from config file that match a specific port
+		Request*							_req;			// Request object when the request is fully received, used to create response
 
-		StatusLine							_staLine;	// Fist line of http response
-		Body								_body;		// Body (= webpage content for example)
+		StatusLine							_staLine;		// Fist line of http response
+		Body								_body;			// Body (= webpage content for example)
 	
-		std::string							_buffer;	// Buffer containing the response that will be send. Directly writing
-														// headers into it.
+		std::string							_buffer;		// Buffer containing the response that will be send. Directly writing
+															// headers into it.
 
 	public:
 
@@ -119,7 +119,10 @@ class Response
 		// throws a StatusLine object with a 405 error code
 		void checkMethods(int method, const std::vector<std::string>& methodsAllowed) const;
 
+		// Fill the buffer with status line + 2 headers (server and date), then with the appropriate 
+		// error page as body (by default or the one set in the server block from the config file)
 		void fillError(const StatusLine& sta);
+
 
 	public:
 	

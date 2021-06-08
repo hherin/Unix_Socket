@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/04 16:16:59 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 16:44:00 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,24 @@ std::pair<const std::string, const Location*>
 	
 	// Case no server_names match, using default server block (the first one)
 	return matchLocation((*srv)[0].getLocation(), names.second);
+}
+
+ServerInfo* findVirtServ(std::vector<ServerInfo>* infoVirServs, const std::string& hostValue)
+{
+	// Looking in each virtual server names if one match host header field value
+	for (std::vector<ServerInfo>::iterator virtServ = infoVirServs->begin(); virtServ != infoVirServs->end(); ++virtServ)
+	{
+		for (std::vector<std::string>::const_iterator servNames = virtServ->getNames().begin();
+				servNames != virtServ->getNames().end(); ++servNames)
+		{
+			// If we match one server name, saving this virtual server
+			if (*servNames == hostValue)
+				return &(*virtServ);
+		}
+	}
+	
+	// Case no match
+	return 0;
 }
 
 // erase all whitespaces in buf

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/04 16:22:03 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 16:47:02 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 
 Response::Response() {}
 
-Response::Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* servInfo) :
-	_servInfo(servInfo), _req(req), _staLine(staLine) {}
+Response::Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* infoVirServs) :
+	_infoVirServs(infoVirServs), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 
-	_servInfo(c._servInfo), _req(c._req), _staLine(c._staLine), _body(c._body), _buffer(c._buffer) {}
+	_infoVirServs(c._infoVirServs), _req(c._req), _staLine(c._staLine), _body(c._body), _buffer(c._buffer) {}
 
 Response::~Response() {}
 
@@ -90,7 +90,7 @@ void Response::fillBuffer()
 		
 		// Looking for the location block matching the URI. If returns NULL, then no appropriate block was found
 		// and no additionnal configuration (index, root...) will change the URI
-		std::pair<const std::string, const Location*> loc = locationSearcher(_servInfo,
+		std::pair<const std::string, const Location*> loc = locationSearcher(_infoVirServs,
 				std::pair<std::string, std::string>(hostName, _req->getPath()));
 		
 		#if DEBUG
@@ -125,8 +125,6 @@ void Response::fillBuffer()
 
 		else if (_req->getMethod() == DELETE)
 		{
-			std::cerr << "URI IS IN DELETE: |" << realUri << "|\n";
-			
 			if (remove(realUri.c_str()))
 				throw(StatusLine(500, REASON_500, "remove function failed in DELETE method"));
 
@@ -305,19 +303,9 @@ void Response::fillError(const StatusLine& sta)
 	// Value of host header field in request
 	const std::string* hostField = &_req->getHeaders().find("host")->second;
 	const std::string hostValue(hostField->substr(0, hostField->find(':')));
-	const ServerInfo* servMatch = 0;
 
-	// Looking in each virtual server names if one match host header field value
-	for (std::vector<ServerInfo>::const_iterator virtServ = _servInfo->begin(); virtServ != _servInfo->end(); ++virtServ)
-	{
-		for (std::vector<std::string>::const_iterator servNames = virtServ->getNames().begin();
-				servNames != virtServ->getNames().end(); ++servNames)
-		{
-			// If we match one server name, saving this virtual server
-			if (*servNames == hostValue)
-				servMatch = &(*virtServ);
-		}
-	}
+	// // Looking in each virtual server names if one match host header field value
+	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
 
 	std::string pathError;
 	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
@@ -344,7 +332,7 @@ void Response::fillError(const StatusLine& sta)
 
 void swap(Response& a, Response& b)
 {
-	std::swap(a._servInfo, b._servInfo);
+	std::swap(a._infoVirServs, b._infoVirServs);
 	std::swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
 	std::swap(a._body, b._body);

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/02 12:25:59 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 16:44:07 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,9 @@ std::string *wsTrim(std::string &buf);
 
 // Prints the time of the day and the msg on std::cout
 void printLog(const std::string &msg, const std::string& addInfo = "");
+
+// Returns a pointer to the virtual server block that matches hostValue from host header field. 
+// If no match, returns NULL.
+ServerInfo* findVirtServ(std::vector<ServerInfo>* infoVirServs, const std::string& hostValue);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 16:51:26 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 12:06:36 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 17:03:26 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,5 @@ inline std::ostream& operator<<(std::ostream& stream, const RequestLine& reqLine
 		
 	return stream;
 }
+
 #endif

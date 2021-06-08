@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/03 12:08:24 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 16:49:28 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ class Request
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		std::string	_buffer;	// Store the request received
-		size_t		_index;		// Indicates which part of the buffer is left to treat
+		std::string						_buffer;		// Store the request received
+		size_t							_index;			// Indicates which part of the buffer is left to treat
+		std::vector<ServerInfo>*		_infoVirServs;	// Server blocks from config file that match the appropriate port
         
 		RequestLine							_reqLine;	// Contains all the information from the request line
         std::map<std::string, std::string>	_headers;	// Store the headers
@@ -46,6 +47,7 @@ class Request
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Request();
+		Request(std::vector<ServerInfo>* infoVirServs);
 		Request(const Request& c);
 		~Request();
 		Request& operator=(Request a);
@@ -110,6 +112,8 @@ class Request
 		// a status line with the appropriate code.
 		void parseBody();
 		
+		size_t findMaxSize(const std::string& hostName);
+
 		
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
