@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:15:28 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/08 18:16:43 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void Location::setCgiPath(char const *c)
 void Location::printLocation(const std::string& locName) const
 {
 	std::cout << "\nLOCATION\n-------------------------\n"
-			<< "root = |" << locName << "|\n"
+			<< "name = |" << locName << "|\n"
 			<< "root = |" << _root << "|\n"
 			<< "upload_store = |" << _upload_store << "|\n"
 			<< "cgi_exe = |" << _cgi_exe[0] << " " << _cgi_exe[1] << "|\n"

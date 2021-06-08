@@ -6,7 +6,7 @@
 #    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/03 12:19:00 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/03 12:19:20 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,6 @@ ${NAME}		:	${LIBS} ${OBJS}
 				@${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
 				@echo "webserv is ready";
 # ifeq ($(SETDEBUG), 0)
-# 					@echo ${CACA}
 # 					@echo "webserv is ready";
 # else
 # 					@echo "debug webserv is ready";

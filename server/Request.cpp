@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/03 12:11:11 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:03:55 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@
 Request::Request() :
 	_index() {}
 
+Request::Request(const std::vector<ServerInfo>* infoVirServs) :
+	_index(), _infoVirServs(infoVirServs) {}
+
 Request::~Request() {}
 
 Request::Request(const Request& c) :
-	_buffer(c._buffer), _index(c._index), _reqLine(c._reqLine), 
+	_buffer(c._buffer), _index(c._index), _infoVirServs(c._infoVirServs), _reqLine(c._reqLine), 
 	_headers(c._headers),  _body(c._body) {}
 
 Request& Request::operator=(Request a)
@@ -85,6 +88,9 @@ void Request::parsingCheck()
 			{
 				_body.startReceiving();
 				_body.setSize(atol(it->second.c_str()));
+				_body.setMaxSize(findMaxSize(_headers.find("host")->second));
+
+				// >> A RAJOUTER renvoie erreur 413 si trop long
 			}
 			
 			// Case no content-lenght header, so no body
@@ -264,6 +270,17 @@ void Request::parseHTTPVersion(const std::string& token)
 		throw StatusLine(505, REASON_505);
 }
 
+size_t Request::findMaxSize(const std::string& hostValue)
+{
+	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
+
+	// Case no match with host header, using default virtual server
+	if (!servMatch)
+		servMatch = &_infoVirServs->front();
+
+	return servMatch->getMaxClientsBS();
+}
+
 
 /* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
@@ -272,6 +289,7 @@ void swap(Request& a, Request& b)
 {
 	std::swap(a._buffer, b._buffer);
 	std::swap(a._index, b._index);
+	std::swap(a._infoVirServs, b._infoVirServs);
 	
 	swap(a._reqLine, b._reqLine);
 	std::swap(a._headers, b._headers);

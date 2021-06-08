@@ -424,3 +424,5 @@ int select(int  nfds, fd_set  *readfds, fd_set  *writefds, fd_set *errorfds, str
 <details>
 
 https://www.tutorialspoint.com/unix_sockets/socket_helper_functions.htm
+cgi info >> https://www.oreilly.com/library/view/cgi-programming-on/9781565921689/07_chapter-04.html
+launching cgi with execve >> https://stackoverflow.com/questions/11498031/how-to-call-php-cgi-from-c

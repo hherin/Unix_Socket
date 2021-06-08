@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/03 18:17:17 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/08 18:04:26 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 
 Response::Response() {}
 
-Response::Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* servInfo) :
-	_servInfo(servInfo), _req(req), _staLine(staLine) {}
+Response::Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* infoVirServs) :
+	_infoVirServs(infoVirServs), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 
-	_servInfo(c._servInfo), _req(c._req), _staLine(c._staLine), _body(c._body), _buffer(c._buffer) {}
+	_infoVirServs(c._infoVirServs), _req(c._req), _staLine(c._staLine), _body(c._body), _buffer(c._buffer) {}
 
 Response::~Response() {}
 
@@ -81,11 +81,6 @@ void Response::fillBuffer()
 	// If an error occured during request parsing
 	if (_staLine.getCode() >= 300)
 		return fillError(_staLine);
-	
-	// Storing status line and some headers in buffer
-	fillStatusLine(_staLine);
-	fillServerHeader();
-	fillDateHeader();
 
 	try
 	{
@@ -95,7 +90,7 @@ void Response::fillBuffer()
 		
 		// Looking for the location block matching the URI. If returns NULL, then no appropriate block was found
 		// and no additionnal configuration (index, root...) will change the URI
-		std::pair<const std::string, const Location*> loc = locationSearcher(_servInfo,
+		std::pair<const std::string, const Location*> loc = locationSearcher(_infoVirServs,
 				std::pair<std::string, std::string>(hostName, _req->getPath()));
 		
 		#if DEBUG
@@ -105,10 +100,17 @@ void Response::fillBuffer()
 				std::cout << "LOCATION: no match\n";
 		#endif
 
-		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath()); 
-		
+		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
+
+		std::cerr << "URI AFTER RECONST: |" << realUri << "|\n";
+
 		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
+			// Storing status line and some headers in buffer
+			fillStatusLine(_staLine);
+			fillServerHeader();
+			fillDateHeader();
+			
 			FileParser body(realUri.c_str(), true); // CAHNGER
 
 			// Setting size after storing the body in FileParser object, then setting Last-Modified header
@@ -119,6 +121,17 @@ void Response::fillBuffer()
 			// For GET, writing the body previously stored to the buffer
 			if (_req->getMethod() == GET)
 				_buffer += body.getRequestFile();
+		}
+
+		else if (_req->getMethod() == DELETE)
+		{
+			if (remove(realUri.c_str()))
+				throw(StatusLine(500, REASON_500, "remove function failed in DELETE method"));
+
+			// Storing status line and some headers in buffer
+			fillStatusLine(_staLine);
+			fillServerHeader();
+			fillDateHeader();
 		}
 
 		else
@@ -240,7 +253,7 @@ std::string Response::addIndex(const std::string& uri, const std::vector<std::st
 			return uriWithIndex;
 	}
 	
-	throw StatusLine(301, REASON_301, "trying to access a directory");
+	throw StatusLine(301, REASON_301, "trying to access a directory addIndex method");
 }
 
 void Response::checkMethods(int method, const std::vector<std::string>& methodsAllowed) const
@@ -267,7 +280,7 @@ std::string Response::reconstructFullURI(int method,
 		if (stat(uri.c_str(), &infFile) == -1)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
 		if (S_ISDIR(infFile.st_mode))
-			throw StatusLine(301, REASON_301, "trying to access a directory");
+			throw StatusLine(301, REASON_301, "trying to access a directory case no match with location block in reconstructlFullURI method");
 
 		return uri;
 	}
@@ -290,6 +303,8 @@ std::string Response::reconstructFullURI(int method,
 
 void Response::fillError(const StatusLine& sta)
 {
+	_buffer.clear();
+	
 	// Filling buffer with error code + some basic headers
 	fillStatusLine(sta);
 	fillServerHeader();
@@ -298,19 +313,9 @@ void Response::fillError(const StatusLine& sta)
 	// Value of host header field in request
 	const std::string* hostField = &_req->getHeaders().find("host")->second;
 	const std::string hostValue(hostField->substr(0, hostField->find(':')));
-	const ServerInfo* servMatch = 0;
 
-	// Looking in each virtual server names if one match host header field value
-	for (std::vector<ServerInfo>::const_iterator virtServ = _servInfo->begin(); virtServ != _servInfo->end(); ++virtServ)
-	{
-		for (std::vector<std::string>::const_iterator servNames = virtServ->getNames().begin();
-				servNames != virtServ->getNames().end(); ++servNames)
-		{
-			// If we match one server name, saving this virtual server
-			if (*servNames == hostValue)
-				servMatch = &(*virtServ);
-		}
-	}
+	// // Looking in each virtual server names if one match host header field value
+	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
 
 	std::string pathError;
 	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
@@ -337,7 +342,7 @@ void Response::fillError(const StatusLine& sta)
 
 void swap(Response& a, Response& b)
 {
-	std::swap(a._servInfo, b._servInfo);
+	std::swap(a._infoVirServs, b._infoVirServs);
 	std::swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
 	std::swap(a._body, b._body);
