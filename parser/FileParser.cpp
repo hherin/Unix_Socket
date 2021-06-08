@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   FileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 17:59:56 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:20:12 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,17 +111,17 @@ void FileParser::newLocation(ServerInfo &srv)
 		cleanLineFromSpaces(_buf);
 		bracketRegulator(brack, _buf);
 
-		if (!_buf.compare(0, 13, "allow_method\t"))
+		if (!_buf.compare(0, 13, "allow_method "))
 			n_loc.setLocation(METHO, 13, _buf);
-		else if (!_buf.compare(0, 6, "index\t"))
+		else if (!_buf.compare(0, 6, "index "))
 			n_loc.setLocation(IDX, 6, _buf);
-		else if (!_buf.compare(0, 13, "upload_store\t"))
+		else if (!_buf.compare(0, 13, "upload_store "))
 			n_loc.setLocation(STORE, 13, _buf);
-		else if (!_buf.compare(0, 5, "root\t"))
+		else if (!_buf.compare(0, 5, "root "))
 			n_loc.setLocation(ROOT, 5, _buf);
-		else if (!_buf.compare(0, 9, "cgi_path\t"))
+		else if (!_buf.compare(0, 9, "cgi_path "))
 			n_loc.setLocation(CGI_PATH, 9, _buf);
-		else if (!_buf.compare(0, 4, "cgi\t"))
+		else if (!_buf.compare(0, 4, "cgi "))
 			n_loc.setLocation(CGI_EXE, 4, _buf);
 		else if (!_buf.compare(0, 1, "}")) continue;
 		else throw std::runtime_error(errParseMessage("error line : ", _buf.c_str(), ". Wrong input in block location\n"));
@@ -141,15 +141,15 @@ void FileParser::newServer(void)
 
 		if (!_buf.compare(0, 9, "location "))	
 			newLocation(n_srv);
-		else if (!_buf.compare(0, 7, "listen\t"))
+		else if (!_buf.compare(0, 7, "listen "))
 			n_srv.setServer(LIS, 7, _buf);
-		else if (!_buf.compare(0, 6, "error\t"))
+		else if (!_buf.compare(0, 6, "error "))
 			n_srv.setServer(ERR, 6, _buf);
-		else if (!_buf.compare(0, 12, "server_name\t"))
+		else if (!_buf.compare(0, 12, "server_name "))
 			n_srv.setServer(SRV_N, 12, _buf);
-		else if (!_buf.compare(0, 9, "max_body\t"))
+		else if (!_buf.compare(0, 9, "max_body "))
 			n_srv.setServer(BODY, 9, _buf);
-		else if (!_buf.compare(0, 5, "host\t"))
+		else if (!_buf.compare(0, 5, "host "))
 			n_srv.setServer(HOST, 5, _buf);
 		else if (!_buf.compare(0, 1, "}")) continue;
 		else std::runtime_error(errParseMessage("error line : ", _buf.c_str(), ". Not accepting this input\n"));
