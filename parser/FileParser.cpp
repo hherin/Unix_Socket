@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fileParser.cpp                                     :+:      :+:    :+:   */
+/*   FileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/03 18:04:31 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/08 16:42:05 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void FileParser::newServer(void)
 void FileParser::addNewServerToMap(ServerInfo &srv)
 {
 	int s_port = srv.getPort();
-	srv.getLocation()->insert(_m_loc.begin(), _m_loc.end());
+	srv.setSrvLocation()->insert(_m_loc.begin(), _m_loc.end());
 	std::map<int, std::vector<ServerInfo> >::iterator it = _m_srv.find(s_port);
 		
 	if (it == _m_srv.end()){

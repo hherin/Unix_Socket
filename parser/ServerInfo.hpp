@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerInfo.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 15:42:16 by hherin            #+#    #+#             */
-/*   Updated: 2021/05/25 14:51:02 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/08 16:42:42 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,13 @@ class ServerInfo
 		std::string const &getHost() const;
 		std::vector<std::string> const &getNames() const;
 		int const &getPort() const;
-		std::map<std::string, Location> *getLocation();
+		std::map<std::string, Location> const *getLocation() const;
 		
 		/*	===========================================
 			================= SETTERS =================
 		*/
 		void setServer(int, int const&, std::string const&);
+		std::map<std::string, Location> *setSrvLocation();
 		
 	private:
 		void setMaxClientsBS(char const*);

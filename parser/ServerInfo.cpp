@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerInfo.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/03 17:46:56 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/08 16:42:33 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ std::vector<std::string> const &ServerInfo::getNames() const { return _names; }
 
 int const &ServerInfo::getPort() const { return _port; }
 
-std::map<std::string, Location> *ServerInfo::getLocation() { return &_location; }
+std::map<std::string, Location> const *ServerInfo::getLocation() const { return &_location; }
 
 std::string const &ServerInfo::getHost() const { return _host; }
 
@@ -110,6 +110,7 @@ void ServerInfo::setPort(char const *p)
     _port = atoi(p);
 }
 
+std::map<std::string, Location> *ServerInfo::setSrvLocation() { return &_location; }
 
 // ============================================================================
 // ========================== PRIVATE METHODS =================================
