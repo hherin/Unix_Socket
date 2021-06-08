@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:19:39 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:51:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Body
 		
 			bool								_recv;		// Indicates when request line + headers have been received
 			size_t								_size;		// Content-lenght size
-			size_t								_maxSize;	// Max octets that Body object can receive
+			long								_maxSize;	// Max octets that Body object can receive
 			std::string							_buff;		// Buffer containing the payload
 
 
@@ -33,7 +33,7 @@ class Body
 		/* ------------------------------------------------------------- */
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
-		Body() : _recv(false), _size(), _maxSize() {}
+		Body() : _recv(false), _size(), _maxSize(-1) {}
 		Body(const Body& c) :
 				_recv(c._recv), _size(c._size), _maxSize(c._maxSize), _buff(c._buff) {}
 		~Body() {}
@@ -56,7 +56,7 @@ class Body
 		/* --------------------------- SETTERS ------------------------- */
 		
 		void setSize(size_t size) { _size = size; }
-		void setMaxSize(size_t maxSize) { _maxSize = maxSize; }
+		void setMaxSize(long maxSize) { _maxSize = maxSize; }
 		void setBuff(std::string const &buf) { _buff = buf; }
 		void startReceiving() { _recv = true; }
 
@@ -75,12 +75,14 @@ class Body
 			_buff.clear();
 		}
 		
-		// Append buffer received from client until content-lenght octets have been received
+		// Append buffer received from client until content-lenght octets have been received.
 		int recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
 		{
-			if (_maxSize -= lenToRead < 0)
+			// maxSize will be evaluated only if previously set using setMaxSize before, because 
+			// default constructor initilized it to -1
+			if (_maxSize >= 0 && (_maxSize -= lenToRead) < 0)
 				return -1;
-			
+
 			_buff.append(buffer, index, _size);
 			_size -= lenToRead;
 			return 0;
