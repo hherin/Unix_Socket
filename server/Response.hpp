@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 16:42:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:04:19 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ------------------------- ATTRIBUTES ------------------------ */
 
-		std::vector<ServerInfo>*			_infoVirServs;	// Servers blocks from config file that match a specific port
+		const std::vector<ServerInfo>*		_infoVirServs;	// Servers blocks from config file that match a specific port
 		Request*							_req;			// Request object when the request is fully received, used to create response
 
 		StatusLine							_staLine;		// Fist line of http response
@@ -46,7 +46,7 @@ class Response
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* servInfo);
+		Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo);
 		Response(const Response& c);
 		~Response();
 		Response& operator=(Response a);

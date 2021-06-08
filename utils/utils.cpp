@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/08 16:44:00 by llefranc         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/03 18:17:22 by hherin           ###   ########.fr       */
->>>>>>> origin/hherin
+/*   Updated: 2021/06/08 18:07:07 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +62,15 @@ std::vector<std::string> splitWithSep(std::string line, char sep)
 }
 
 std::pair<const std::string, const Location*> 
-		matchLocation(std::map<std::string, Location> *loc, const std::string& locName)
+		matchLocation(const std::map<std::string, Location>* loc, const std::string& locName)
 {
-	std::pair<bool, std::map<std::string, Location>::iterator> 
+	std::pair<bool, std::map<std::string, Location>::const_iterator> 
 						bestMatch(0, loc->begin());
 
 	// Checking each location name, and saving the most long match. As we stored location names in a map,
 	// they're already sorted form smaller to longest same words, no need to check size: the last match will 
 	// be the longest possible match (ex: if searching for "bla", "bl" location will be stored after "b" location)
-	for (std::map<std::string, Location>::iterator it = loc->begin(); it != loc->end(); ++it)
+	for (std::map<std::string, Location>::const_iterator it = loc->begin(); it != loc->end(); ++it)
 	{
 		if (!it->first.compare(0, std::string::npos, locName, 0, it->first.size()))
 		{
@@ -92,7 +88,7 @@ std::pair<const std::string, const Location*>
 
 // srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
 std::pair<const std::string, const Location*> 
-		locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
+		locationSearcher(const std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names)
 {
 	// loop for each virtual server for a specific port
 	for (size_t i = 0; i < srv->size(); i++){
@@ -112,10 +108,11 @@ std::pair<const std::string, const Location*>
 	return matchLocation((*srv)[0].getLocation(), names.second);
 }
 
-ServerInfo* findVirtServ(std::vector<ServerInfo>* infoVirServs, const std::string& hostValue)
+const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, const std::string& hostValue)
 {
 	// Looking in each virtual server names if one match host header field value
-	for (std::vector<ServerInfo>::iterator virtServ = infoVirServs->begin(); virtServ != infoVirServs->end(); ++virtServ)
+	for (std::vector<ServerInfo>::const_iterator virtServ = infoVirServs->begin(); 
+			virtServ != infoVirServs->end(); ++virtServ)
 	{
 		for (std::vector<std::string>::const_iterator servNames = virtServ->getNames().begin();
 				servNames != virtServ->getNames().end(); ++servNames)
@@ -131,15 +128,15 @@ ServerInfo* findVirtServ(std::vector<ServerInfo>* infoVirServs, const std::strin
 }
 
 // erase all whitespaces in buf
-std::string *wsTrim(std::string &buf)
-{
-    if (buf.empty())
-        return &buf;
-    for (std::string::iterator it = buf.end(); it != buf.begin(); --it)
-        if (isspace(*it))
-            buf.erase(it);            
-    return &buf;
-}
+// std::string *wsTrim(std::string &buf)
+// {
+//     if (buf.empty())
+//         return &buf;
+//     for (std::string::iterator it = buf.end(); it != buf.begin(); --it)
+//         if (isspace(*it))
+//             buf.erase(it);            
+//     return &buf;
+// }
 
 void printLog(const std::string &msg, const std::string& addInfo)
 {

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:00:33 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:04:26 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 Response::Response() {}
 
-Response::Response(Request* req, const StatusLine& staLine, std::vector<ServerInfo>* infoVirServs) :
+Response::Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* infoVirServs) :
 	_infoVirServs(infoVirServs), _req(req), _staLine(staLine) {}
 
 Response::Response(const Response& c) : 

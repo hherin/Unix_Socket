@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 17:33:17 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:03:55 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 Request::Request() :
 	_index() {}
 
-Request::Request(std::vector<ServerInfo>* infoVirServs) :
+Request::Request(const std::vector<ServerInfo>* infoVirServs) :
 	_index(), _infoVirServs(infoVirServs) {}
 
 Request::~Request() {}

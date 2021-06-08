@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:01:05 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:06:24 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,18 @@ std::vector<std::string> splitWithSep(std::string line, char sep);
 // Search inside a map of location names /location block the best possible match with locName. Return NULL
 // if no match
 std::pair<const std::string, const Location*> 
-		matchLocation(std::map<std::string, Location> *loc, const std::string& locName);
+		matchLocation(const std::map<std::string, Location> *loc, const std::string& locName);
 
 // srv = list of virtual server for one port, names.first = name of virtual server, names.second = location name
 // Return the best possible location block for a specific host+URI. Return NULL if no match
 std::pair<const std::string, const Location*>
-		locationSearcher(std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names);
+		locationSearcher(const std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names);
 
 // Prints the time of the day and the msg on std::cout
 void printLog(const std::string &msg, const std::string& addInfo = "");
 
 // Returns a pointer to the virtual server block that matches hostValue from host header field. 
 // If no match, returns NULL.
-ServerInfo* findVirtServ(std::vector<ServerInfo>* infoVirServs, const std::string& hostValue);
+const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, const std::string& hostValue);
 
 #endif
