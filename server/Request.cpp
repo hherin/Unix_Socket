@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:49:16 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 19:19:20 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ void Request::parseHTTPVersion(const std::string& token)
 		throw StatusLine(505, REASON_505);
 }
 
-size_t Request::findMaxSize(const std::string& hostValue)
+long Request::findMaxSize(const std::string& hostValue)
 {
 	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
 

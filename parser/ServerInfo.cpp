@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 16:58:27 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:00:26 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 19:15:48 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // ============================================================================
 // =========================== COPLIEN FORM ===================================
 
-ServerInfo::ServerInfo() : _port(-1), _max_cli_body(5) { }
+ServerInfo::ServerInfo() : _port(-1), _max_cli_body(-1) { }
 
 ServerInfo::ServerInfo(ServerInfo const &copy) : _port(copy._port),
  _error_path(copy._error_path), _names(copy._names), _max_cli_body(copy._max_cli_body),

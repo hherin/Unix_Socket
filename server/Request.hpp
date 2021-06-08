@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:04:03 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/08 19:09:38 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,10 @@ class Request
 		// a status line with the appropriate code.
 		void parseBody();
 		
-		size_t findMaxSize(const std::string& hostName);
+		// Search for the correct server block (matching host header field, if not using default server
+		// block) and returns an unsigned max_body_size if the field is existing in the config file, otherwise
+		// returns -1.
+		long findMaxSize(const std::string& hostName);
 
 		
 		/* ------------------------------------------------------------- */
