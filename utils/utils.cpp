@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/09 13:13:14 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 18:45:04 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,33 @@ const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, cons
 	
 	// Case no match
 	return 0;
+}
+
+size_t isCgi(const std::string& uri)
+{
+	size_t dotPos = uri.find_last_of(".");
+
+	if (dotPos == std::string::npos)
+		return std::string::npos;
+	
+	size_t slashPos = uri.find_last_of("/");
+
+	if (dotPos ) >> reprendrec ici
+}
+
+std::string* getCgiFromLocationBlock(const std::string& uri, const Location* loc)
+{
+	// Case no match with a location block or cgi field isn't filled
+	if (!loc || !loc->getCgiExe().size())
+		return 0;
+	
+	std::string::const_reverse_iterator it = isCgi(uri);
+
+	// Target ends with a '/', no extension so no cgi
+	if (it == uri.rend())
+		return 0;
+	
+	
 }
 
 void printLog(const std::string &msg, const std::string& addInfo)

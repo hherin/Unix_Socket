@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:06:24 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 16:36:11 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ std::vector<std::string> stringDelimSplit(std::string const &str, const char *de
 // Return a vector of string containing a line splitted with a sep
 std::vector<std::string> splitWithSep(std::string line, char sep);
 
-// Search inside a map of location names /location block the best possible match with locName. Return NULL
-// if no match
+// Search inside a map of location names /location block the best possible match with locName. Return 
+// std::pair<empty string, null ptr> if no match.
 std::pair<const std::string, const Location*> 
 		matchLocation(const std::map<std::string, Location> *loc, const std::string& locName);
 
@@ -45,11 +45,13 @@ std::pair<const std::string, const Location*>
 std::pair<const std::string, const Location*>
 		locationSearcher(const std::vector<ServerInfo> *srv, std::pair<std::string, std::string> const &names);
 
-// Prints the time of the day and the msg on std::cout
-void printLog(const std::string &msg, const std::string& addInfo = "");
-
 // Returns a pointer to the virtual server block that matches hostValue from host header field. 
 // If no match, returns NULL.
 const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, const std::string& hostValue);
+
+std::string::const_reverse_iterator isCgi(const std::string& uri);
+
+// Prints the time of the day and the msg on std::cout
+void printLog(const std::string &msg, const std::string& addInfo = "");
 
 #endif
