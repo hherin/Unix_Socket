@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:30:24 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 13:11:25 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		std::cerr << "Fatal error: wrong arguments\n";
+		printLog(" >> Fatal error: wrong arguments\n");
 		exit(EXIT_FAILURE);
 	}
 	
@@ -54,7 +54,7 @@ int main(int ac, char **av)
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << e.what();
+		printLog(" >> " + std::string(e.what()));
 		exit(EXIT_FAILURE);
 	}
 

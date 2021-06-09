@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:07:07 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 13:13:14 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,17 +127,6 @@ const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, cons
 	return 0;
 }
 
-// erase all whitespaces in buf
-// std::string *wsTrim(std::string &buf)
-// {
-//     if (buf.empty())
-//         return &buf;
-//     for (std::string::iterator it = buf.end(); it != buf.begin(); --it)
-//         if (isspace(*it))
-//             buf.erase(it);            
-//     return &buf;
-// }
-
 void printLog(const std::string &msg, const std::string& addInfo)
 {
 	// current date and time on the current system
@@ -148,9 +137,9 @@ void printLog(const std::string &msg, const std::string& addInfo)
 	date.resize(date.length() - 1);
 
 	#if defined DEBUG
+		std::cout << "[" << date << "] " << msg;
 		if (!addInfo.empty())
-			std::cout << "[" << date << "] " << msg
-				<< "-------------------------\n" << addInfo << "-------------------------\n\n";
+				std::cout << "-------------------------\n" << addInfo << "-------------------------\n\n";
 	#else
 		std::cout << "[" << date << "] " << msg;
 	#endif

@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 20:28:40 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 13:24:34 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,14 +123,19 @@ void Response::fillBuffer()
 
 		else if (_req->getMethod() == POST)
 		{
-			// need to open
+			// Need to create file so changing code 200 ("OK") to 201 ("created")
 			struct stat infoFile;
 			if (stat(realUri.c_str(), &infoFile) == -1)
-				;
+				_staLine = StatusLine(201, REASON_201);
+			
+			// Creating a new file or appending to existing file post request payload. If 
+			// opening failed, throws StatusLine object with error 500 (internal error)
+			postToFile(realUri);
 
-			// need to append
-			else
-				;
+			// Storing status line and some headers in buffer
+			fillStatusLine(_staLine);
+			fillServerHeader();
+			fillDateHeader();
 		}
 
 		else if (_req->getMethod() == DELETE)
@@ -301,10 +306,7 @@ std::string Response::reconstructFullURI(int method,
 	// Checking if the path after root substitution is correct, and if it's a directory trying
 	// to add indexs. Case POST method, no 404 because it can create the file.
 	if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
-	{
-		std::cerr << "ICIICICICICIIC: " << method << "\n";
 		throw StatusLine(404, REASON_404, "reconstructFullURI method: " + uri);
-	}
 	if (fileExist && S_ISDIR(infFile.st_mode))
 		uri = addIndex(uri, loc.second->getIndex());
 	
