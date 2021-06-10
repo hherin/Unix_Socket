@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:06:24 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 16:05:22 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,9 @@ void printLog(const std::string &msg, const std::string& addInfo = "");
 // Returns a pointer to the virtual server block that matches hostValue from host header field. 
 // If no match, returns NULL.
 const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, const std::string& hostValue);
+
+// Split the path string into :
+// first = path to the requested file | second = name of executable
+std::pair<std::string, std::string> *SplitPathForExec(std::string const &path);
 
 #endif

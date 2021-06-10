@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:07:07 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/09 16:04:07 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,21 @@ void printLog(const std::string &msg, const std::string& addInfo)
 				<< "-------------------------\n" << addInfo << "-------------------------\n\n";
 	#else
 		std::cout << "[" << date << "] " << msg;
+		(void)addInfo;
 	#endif
+}
+
+std::pair<std::string, std::string> *SplitPathForExec(std::string const &path)
+{
+	static std::pair<std::string, std::string> pathAndFile;
+	size_t posLastSlash = path.find_last_of("/");
+
+	pathAndFile.first.clear();
+	pathAndFile.second.clear();
+
+	pathAndFile.first = ".";
+	pathAndFile.first += path.substr(0, posLastSlash);
+	pathAndFile.second = ".";
+	pathAndFile.second += path.substr(posLastSlash);
+	return &pathAndFile;
 }
