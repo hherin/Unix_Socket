@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 16:28:31 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:45:59 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class Response
 		/* ------------------------ COPLIEN FORM ----------------------- */
 
 		Response();
-		Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* servInfo);
+		Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* infoVirServs);
 		Response(const Response& c);
 		~Response();
 		Response& operator=(Response a);
@@ -59,6 +59,7 @@ class Response
 
 		void setRequest(Request* req);
 		void setStatusLine(const StatusLine& staLine);
+		void setInfoVirtualServs(const std::vector<ServerInfo>* infoVirServs);
 
 
 		/* ------------------------------------------------------------- */
@@ -86,8 +87,6 @@ class Response
 
 		/* ------------------------------------------------------------- */
 		/* ----------------------- PRIVATE METHODS --------------------- */
-
-		void setHeader(std::string e);
 
 		// Fills buffer with Content-lenght header
 		void fillContentLenghtHeader(const std::string& size);
@@ -123,6 +122,8 @@ class Response
 		// error page as body (by default or the one set in the server block from the config file)
 		void fillError(const StatusLine& sta);
 
+		// Creates a file and wrote the post body to it (or if the file is already existing,
+		// appends it at the end)
 		void postToFile(const std::string& uri);
 
 		void fillCgi(const std::string& realUri, std::string* cgiName);

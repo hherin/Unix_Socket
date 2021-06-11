@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 16:29:48 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 17:26:58 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ void Response::setRequest(Request* req)
 void Response::setStatusLine(const StatusLine& staLine)
 {
 	_staLine = staLine;
+}
+
+void Response::setInfoVirtualServs(const std::vector<ServerInfo>* infoVirServs)
+{
+	_infoVirServs = infoVirServs;
 }
 
 
@@ -103,52 +108,43 @@ void Response::fillBuffer()
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
 		std::string *cgiName = getCgiExecutableName(realUri, loc.second);
 
-		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
+		if (cgiName && (_req->getMethod() == GET || _req->getMethod() == POST))
+			fillCgi(realUri, cgiName);
+
+		else if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
 			// Storing status line and some headers in buffer
 			fillStatusLine(_staLine);
 			fillServerHeader();
 			fillDateHeader();
 			
-			if (!cgiName)
-			{
-				FileParser body(realUri.c_str(), true); // CAHNGER
+			FileParser body(realUri.c_str(), true); // CAHNGER
 
-				// Setting size after storing the body in FileParser object, then setting Last-Modified header
-				fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
-				fillLastModifiedHeader(realUri.c_str());
-				_buffer += CLRF;
+			// Setting size after storing the body in FileParser object, then setting Last-Modified header
+			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+			fillLastModifiedHeader(realUri.c_str());
+			_buffer += CLRF;
 
-				// For GET, writing the body previously stored to the buffer
-				if (_req->getMethod() == GET)
-					_buffer += body.getRequestFile();
-			}
-
-			else
-				fillCgi(realUri, cgiName);
+			// For GET, writing the body previously stored to the buffer
+			if (_req->getMethod() == GET)
+				_buffer += body.getRequestFile();
 		}
 
 		else if (_req->getMethod() == POST)
 		{
-			if (!cgiName)
-			{
-				// Need to create file so changing code 200 ("OK") to 201 ("created")
-				struct stat infoFile;
-				if (stat(realUri.c_str(), &infoFile) == -1)
-					_staLine = StatusLine(201, REASON_201);
-				
-				// Creating a new file or appending to existing file post request payload. If 
-				// opening failed, throws StatusLine object with error 500 (internal error)
-				postToFile(realUri);
-			}
+			// Need to create file so changing code 200 ("OK") to 201 ("created")
+			struct stat infoFile;
+			if (stat(realUri.c_str(), &infoFile) == -1)
+				_staLine = StatusLine(201, REASON_201);
+			
+			// Creating a new file or appending to existing file post request payload. If 
+			// opening failed, throws StatusLine object with error 500 (internal error)
+			postToFile(realUri);
 			
 			// Storing status line and some headers in buffer
 			fillStatusLine(_staLine);
 			fillServerHeader();
 			fillDateHeader();
-
-			if (cgiName)
-				fillCgi(realUri, cgiName);
 		}
 
 		else if (_req->getMethod() == DELETE)
@@ -173,18 +169,19 @@ void Response::fillBuffer()
 	}
 }
 
+
 /* ------------------------------------------------------------- */
 /* ----------------------- PRIVATE METHODS --------------------- */
 
 void Response::fillCgi(const std::string& realUri, std::string* cgiName)
 {
+	Body cgiRep;
+	
 	(void)realUri;
 	(void)cgiName;
-}
+	(void)cgiRep;
 
-void Response::setHeader(std::string e)
-{
-	_buffer += e + CLRF;
+	// fonction_helene(realUri, cgiName, &_req, &cgiRep);
 }
 
 void Response::fillContentLenghtHeader(const std::string& size) 
