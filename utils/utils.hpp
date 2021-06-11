@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/09 16:36:11 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/11 15:12:04 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,15 @@ std::pair<const std::string, const Location*>
 // If no match, returns NULL.
 const ServerInfo* findVirtServ(const std::vector<ServerInfo>* infoVirServs, const std::string& hostValue);
 
-std::string::const_reverse_iterator isCgi(const std::string& uri);
+// If the URI ends by an extenstion, returns the dot position. Else returns std::string::npos
+size_t isExtension(const std::string& uri);
+
+// Compare the end of the URI, and it ends with an extension:
+// 	- if the extension is ".cgi", returns an allocated std::string with ".cgi"
+//	- if the extension matches an extension from location block passed as argument,
+//	  returns an allocated std::string with the name of the executable to run for this file
+//  - in all other cases, returns NULL.
+std::string* getCgiExecutableName(const std::string& uri, const Location* loc);
 
 // Prints the time of the day and the msg on std::cout
 void printLog(const std::string &msg, const std::string& addInfo = "");

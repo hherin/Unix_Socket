@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:19:02 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/11 15:26:06 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,11 +127,12 @@ void Location::printLocation(const std::string& locName) const
 {
 	std::cout << "\nLOCATION\n-------------------------\n"
 			<< "name = |" << locName << "|\n"
-			<< "root = |" << _root << "|\n"
-			<< "upload_store = |" << _upload_store << "|\n"
-			<< "cgi_exe = |" << _cgi_exe[0] << " " << _cgi_exe[1] << "|\n"
-			<< "cgi_path = |" << _cgi_path << "|\n"
-			<< "autoindex = |" << _root << "|\n";
+			<< "root = |" << _root << "|\n";
+	
+	if (_cgi_exe.size() == 2)
+		std::cout << "cgi_exe size = 2  and .ext and exe =  |" << _cgi_exe[0] << "| |" << _cgi_exe[1] << "|\n";
+	else
+		std::cout << "cgi_exe size = " << _cgi_exe.size() << "\n";
 	
 	for (std::vector<std::string>::const_iterator it = _allow_methd.begin(); it != _allow_methd.end(); ++it)
 		std::cout << "method = |" << *it << "|\n";

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/09 13:24:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/11 15:26:25 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,18 @@ void Response::fillBuffer()
 		#endif
 
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
+
+
+		loc.second->printLocation(loc.first);
+		// std::cerr << "size:" << loc.second->getCgiExe().size() << "\n";
+		// std::cerr << "front:" << loc.second->getCgiExe().front() << "\n";
+		// std::cerr << "back:" << loc.second->getCgiExe().back() << "\n";
+		std::string *test = getCgiExecutableName(realUri, loc.second);
+		if (!test)
+			std::cerr << "\n\n----------\nON A RIEN MATCH\n";
+		else
+			std::cerr << "\n\n----------\n" << *test << "\n";
+		exit(1);
 
 		if (_req->getMethod() == GET || _req->getMethod() == HEAD)
 		{
