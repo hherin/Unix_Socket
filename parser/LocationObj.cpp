@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 15:49:30 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:44:29 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,6 @@ void Location::setIndex(char const *n) { setStringArray(n, _index); }
 void Location::setCgiExe(char const *c) 
 {
 	setStringArray(c, _cgi_exe);
-
-					for (size_t i = 0; i < _cgi_exe.size(); i++)
-						std::cout << _cgi_exe[i] << " ";
-					std::cout << "\n\n";
 	if (_cgi_exe.size() != 2)
 		throw std::runtime_error("Wrong cgi input in the config file\n"); 
 }
