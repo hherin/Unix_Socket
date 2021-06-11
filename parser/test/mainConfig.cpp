@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:29:44 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/11 15:49:39 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ int main(int ac, char **av)
 					std::cout << "LOC " << it2->first << ": \n";
 					
 					(it2->second.getRoot().size()) ? std::cout << "root : " << it2->second.getRoot() << std::endl : 0;
-					// (it2->second.getCgiExe().size()) ? std::cout << "cgi : " << it2->second.getCgiExe() << std::endl : 0;
-					(it2->second.getCgiPath().size()) ? std::cout << "cgi_path : " << it2->second.getCgiPath() << std::endl : 0;
-
 					std::vector<std::string> v1 = it2->second.getMethods();
 					(it2->second.getMethods().size()) ? std::cout << "methods : " : 0;
 					for (size_t i = 0; i < v1.size(); i++)
@@ -65,8 +62,16 @@ int main(int ac, char **av)
 					(it2->second.getIndex().size()) ? std::cout << "index : " : 0;
 					for (size_t i = 0; i < v2.size(); i++)
 						std::cout << v2[i] << " ";
-					(it2->second.getIndex().size()) ? std::cout << std::endl : 0;				
+					(it2->second.getIndex().size()) ? std::cout << std::endl : 0;
+
+					std::vector<std::string> v3 = it2->second.getCgiExe();
+					(it2->second.getCgiExe().size()) ? std::cout << "cgi : " : 0;
+					for (size_t i = 0; i < v3.size(); i++)
+						std::cout << v3[i] << " ";
+					(it2->second.getCgiExe().size()) ? std::cout << std::endl : 0;				
 					std::cout << "\n\n";
+
+					
 				}
 			std::cout << "=====================================\n\n";
 			}

@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 18:20:12 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/11 15:50:45 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ void FileParser::newLocation(ServerInfo &srv)
 			n_loc.setLocation(STORE, 13, _buf);
 		else if (!_buf.compare(0, 5, "root "))
 			n_loc.setLocation(ROOT, 5, _buf);
-		else if (!_buf.compare(0, 9, "cgi_path "))
-			n_loc.setLocation(CGI_PATH, 9, _buf);
 		else if (!_buf.compare(0, 4, "cgi "))
 			n_loc.setLocation(CGI_EXE, 4, _buf);
 		else if (!_buf.compare(0, 1, "}")) continue;
