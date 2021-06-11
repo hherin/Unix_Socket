@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 14:35:25 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:17:13 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ CGI::CGI(Body *body, Request *req, const std::string& exec)
 	
 	// set environment variable for the CGI
 	_envvar = new char*[3];
-	_envvar[0] = strdup(("PATH_INFO=" + _path_info.second).c_str());
+	_envvar[0] = strdup(("PATH_INFO=" + _path_info.first).c_str());
 	if (_req->getMethod() == GET){
 		tmpBuf = "QUERY_STRING=" + _req->getQuery();
 		_envvar[1] = strdup(tmpBuf.c_str());
@@ -73,7 +73,6 @@ void CGI::executeCGI()
 	std::streambuf *redirectOut, *backupOut, *redirectIn, *backupIn;
 	std::ifstream output;
 	std::ofstream input;
-	int post_fd[2];
 	
 	// If the method is POST cin is redirect
 	if (_req->getMethod() == POST){
@@ -94,16 +93,19 @@ void CGI::executeCGI()
 		
 		if (_req->getMethod() == POST)
 			input << _requestBody->getBody();
-		// input.close();
+		input.close();
 			
 		// The path and name of executable are separate in a pair
 		std::pair<std::string, std::string> path = *SplitPathForExec(_req->getPath());
-
 		chdir(_path_info.first.c_str());
+
 		if (execve(_path_info.second.c_str(), NULL, _envvar) < 0){
 			std::cerr << "Error with execve from cgi\n";
 			exit(1);
+		}
 	
+	}
+	else if (pid > 0){
 		// extract output from execve into msgbody, finally set the body object
 		std::string msgbody;
 		output >> msgbody;
@@ -115,17 +117,11 @@ void CGI::executeCGI()
 		std::cout.rdbuf(backupOut);
 		if (_req->getMethod() == POST)
 			std::cin.rdbuf(backupIn);
-		}
-	}
-	else if (pid > 0){
 		input.close();
-		if (_req->getMethod() == POST && 
-			write(post_fd[1], _requestBody->getBody().c_str(), atoi(_envvar[1])) < 0){
-				std::cerr << "Error with write in CGI\n";
-			}
+		
 	}
 	else{
-		output.close(); 
+		output.close();
 		input.close();
 		throw std::runtime_error("Error in fork occurs\n");
 	}
