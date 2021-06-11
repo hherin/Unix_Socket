@@ -6,61 +6,52 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 17:36:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/08 17:26:23 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/11 14:32:27 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msg_format/Body.hpp"
+#include "msg_format/StatusLine.hpp"
+#include "Request.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
+#include <cstring>
 
-// std::string cgiexecPassBody(Body *body, RequestLine *req, char **env)
-// {
-// 	std::string msgbody;
-// 	std::streambuf *redirect, *backup;
-// 	std::ifstream output;
-// 	std::pair<std::string, std::string> path;
-		
-// 	backup = std::cout.rdbuf();
-// 	redirect = output.rdbuf();
-// 	std::cout.rdbuf(redirect);
-// 	pid_t pid = fork();
 
-	
-// 	if (!pid){
-// 		path.first = req->getPath();
-// 		if (execve("./exec.cgi", NULL, NULL) < 0)
-// 			throw "Error with execve occurs\n";
-// 	}
-// 	else if (pid > 0){
-// 		output >> msgbody;
-// 		std::cout.rdbuf(backup);
-// 		output.close();
-// 	}
-// 	else{
-// 		output.close(); 
-// 		throw "Error in fork occurs\n";}
-	
-// 	return msgbody;
-// }
+// GET : QUERY_STRING + PATH_INFO >> run execve(youpi.exe, coucou.bla, env)
+// POST : PATH_INFO + CONTENT_LENGHT >> pipe + run execve(youpi.exe, coucou.bla, env) + write post body
 
-// first part contain the path to the file, second part name of file
-std::pair<std::string, std::string> *SplitPathForExec(std::string path)
-{
-	std::pair<std::string, std::string> pathAndFile;
-	
-	pathAndFile.first = path;
-	pathAndFile.second = "." + path.c_str() + path.find_last_of("/");
-	pathAndFile.second += 
-	return &pathAndFile;
-}
-
+#include <sstream>
+#include "cgi.hpp"
 int main(void)
 {
-	std::string str = "hello/coco/bono";
+	Body vide;
+	Request req;
 
-	std::cout << SplitPathForExec(str)->first << "\n";
+	try
+	{
+		// req += "GET /test/exec.cgi?dragoon HTTP/1.1\r\nhost:server\r\n\r\n";
+		req += "POST /test/cat HTTP/1.1\r\nhost:server\r\ncontent-lenght:9\r\n\r\ndragoon\r\n";
+		req.parsingCheck();
+	}
 
+	// Setting the response with the StatusLine previously sent, and with this request
+	// object containing the full request
+	catch (const StatusLine& staLine)
+	{
+		staLine.print();
+		req.print();
+		
+		CGI cgi(&vide, &req);
+		cgi.executeCGI();
+		// try{
+		// 	cgiexecPassBody(&vide, &req);
+		// }
+		// catch (const char *e){
+		// 	std::cerr << e;
+		// }
+	}
+	
 	return 0;
 }

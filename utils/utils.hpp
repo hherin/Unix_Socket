@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/11 15:12:04 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:02:22 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,9 @@ std::string* getCgiExecutableName(const std::string& uri, const Location* loc);
 
 // Prints the time of the day and the msg on std::cout
 void printLog(const std::string &msg, const std::string& addInfo = "");
+
+// Split the path string into :
+// first = path to the requested file | second = name of executable
+std::pair<std::string, std::string> *SplitPathForExec(std::string const &path);
 
 #endif

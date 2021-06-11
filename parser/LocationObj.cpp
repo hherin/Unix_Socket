@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 15:26:06 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:02:47 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 Location::Location(ServerInfo *s) : _srv(s) { }
 
 Location::Location(Location const &loc) : _srv(loc._srv), _root(loc._root), 
-_upload_store(loc._upload_store), _allow_methd(loc._allow_methd), _index(loc._index)
-{}
+_upload_store(loc._upload_store), _allow_methd(loc._allow_methd), _index(loc._index),
+_cgi_exe(loc._cgi_exe) {}
 
 Location &Location::operator=(Location const &loc)
 {
@@ -43,8 +43,6 @@ std::vector<std::string> const &Location::getIndex() const { return _index; }
 
 std::vector<std::string> const &Location::getCgiExe() const {return _cgi_exe; }
 
-std::string const &Location::getCgiPath() const {return _cgi_path; }
-
 
 // ============================================================================
 // =============================== SETTERS ====================================
@@ -58,8 +56,7 @@ void	Location::setLocation(int nb, int const &pos, std::string const &buf)
 {
 	typedef void (Location::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &Location::setMethods, &Location::setIndex,
-                        &Location::setUploadStore, &Location::setRoot, &Location::setCgiExe,
-                        &Location::setCgiPath };
+                        &Location::setUploadStore, &Location::setRoot, &Location::setCgiExe};
 
     const char *tmp = buf.c_str() + pos;
 	int i = 0;
@@ -105,19 +102,13 @@ void Location::setIndex(char const *n) { setStringArray(n, _index); }
 void Location::setCgiExe(char const *c) 
 {
 	setStringArray(c, _cgi_exe);
+
+					for (size_t i = 0; i < _cgi_exe.size(); i++)
+						std::cout << _cgi_exe[i] << " ";
+					std::cout << "\n\n";
 	if (_cgi_exe.size() != 2)
 		throw std::runtime_error("Wrong cgi input in the config file\n"); 
 }
-
-void Location::setCgiPath(char const *c) 
-{
-	std::string cString = c;
-	if (numberOfWords(c) != 1)
-		throw std::runtime_error("Error : " + std::string(cString) + " - put only one cgi path\n");
-	_cgi_path = *wsTrim(cString);
-}
-
-
 
 
 // ============================================================================
