@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 20:16:53 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/11 16:22:10 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ class Response
 
 		void setHeader(std::string e);
 
-		void execGET();
-
 		// Fills buffer with Content-lenght header
 		void fillContentLenghtHeader(const std::string& size);
 
@@ -126,6 +124,8 @@ class Response
 		void fillError(const StatusLine& sta);
 
 		void postToFile(const std::string& uri);
+
+		void fillCgi(const std::string& realUri, std::string* cgiName, const Location* loc);
 
 
 	public:

@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 16:01:34 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:14:02 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,28 +143,20 @@ size_t isExtension(const std::string& uri)
 
 std::string* getCgiExecutableName(const std::string& uri, const Location* loc)
 {
-	// Case no match with a location block or cgi field isn't filled
-	if (!loc || !loc->getCgiExe().size())
-		return 0;
-	
 	size_t dotPos = isExtension(uri);
 
 	// Target ends with a '/', no extension so no cgi
 	if (dotPos == std::string::npos)
-	{
-		std::cerr << "exiting because no dot\n";
 		return 0;
-	}
 
-	std::cerr << "locexe front : " << loc->getCgiExe().front() << " and back: " << loc->getCgiExe().back() << "\n";
-	
 	// Case target is a script (ends by .cgi)
 	if (!uri.compare(dotPos, std::string::npos, ".cgi"))
 		return new std::string(".cgi");
 	
 	// Case target match an extension in the appropriate location block,
 	// we return the executable name
-	else if (!uri.compare(dotPos, std::string::npos, loc->getCgiExe().front()))
+	else if (loc && loc->getCgiExe().size() == 2 && 
+			!uri.compare(dotPos, std::string::npos, loc->getCgiExe().front()))
 		return new std::string(loc->getCgiExe().back());
 
 	// Case the extension doesn't match anything
