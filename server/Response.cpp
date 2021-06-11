@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 16:22:23 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:29:48 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void Response::fillBuffer()
 			}
 
 			else
-				fillCgi(realUri, cgiName, loc.second);
+				fillCgi(realUri, cgiName);
 		}
 
 		else if (_req->getMethod() == POST)
@@ -148,7 +148,7 @@ void Response::fillBuffer()
 			fillDateHeader();
 
 			if (cgiName)
-				fillCgi(realUri, cgiName, loc.second);
+				fillCgi(realUri, cgiName);
 		}
 
 		else if (_req->getMethod() == DELETE)
@@ -176,9 +176,10 @@ void Response::fillBuffer()
 /* ------------------------------------------------------------- */
 /* ----------------------- PRIVATE METHODS --------------------- */
 
-void Response::fillCgi(const std::string& realUri, std::string* cgiName, const Location* loc)
+void Response::fillCgi(const std::string& realUri, std::string* cgiName)
 {
-	
+	(void)realUri;
+	(void)cgiName;
 }
 
 void Response::setHeader(std::string e)

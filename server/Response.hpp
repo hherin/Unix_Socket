@@ -6,7 +6,7 @@
 /*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 16:22:10 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/11 16:28:31 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ class Response
 
 		void postToFile(const std::string& uri);
 
-		void fillCgi(const std::string& realUri, std::string* cgiName, const Location* loc);
+		void fillCgi(const std::string& realUri, std::string* cgiName);
 
 
 	public:
