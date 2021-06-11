@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/09 18:43:44 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/11 14:35:25 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ CGI::CGI(Body *body, Request *req, const std::string& exec)
 	
 	// set environment variable for the CGI
 	_envvar = new char*[3];
-	_envvar[0] = strdup(_path_info.second.c_str());
+	_envvar[0] = strdup(("PATH_INFO=" + _path_info.second).c_str());
 	if (_req->getMethod() == GET){
 		tmpBuf = "QUERY_STRING=" + _req->getQuery();
 		_envvar[1] = strdup(tmpBuf.c_str());
@@ -70,40 +70,63 @@ CGI::~CGI()
 
 void CGI::executeCGI()
 {
-	std::streambuf *redirect, *backup;
-	std::ifstream input;
-
-	// save std::cout stream into backup then redirect input fd into std::cout
-	backup = std::cout.rdbuf();
-	redirect = input.rdbuf();
-	std::cout.rdbuf(redirect);
+	std::streambuf *redirectOut, *backupOut, *redirectIn, *backupIn;
+	std::ifstream output;
+	std::ofstream input;
+	int post_fd[2];
+	
+	// If the method is POST cin is redirect
+	if (_req->getMethod() == POST){
+		backupIn = std::cin.rdbuf();
+		redirectIn = input.rdbuf();
+		std::cin.rdbuf(redirectIn);
+	}
+	
+	// save std::cout stream into backup then redirect output fd into std::cout
+	backupOut = std::cout.rdbuf();
+	redirectOut = output.rdbuf();
+	std::cout.rdbuf(redirectOut);
 	
 	pid_t pid = fork();
+	
 	if (!pid){
+		output.close();
+		
+		if (_req->getMethod() == POST)
+			input << _requestBody->getBody();
+		// input.close();
+			
 		// The path and name of executable are separate in a pair
 		std::pair<std::string, std::string> path = *SplitPathForExec(_req->getPath());
 
 		chdir(_path_info.first.c_str());
-
-		if (execve(_path_info.second.c_str(), NULL, NULL) < 0){
+		if (execve(_path_info.second.c_str(), NULL, _envvar) < 0){
 			std::cerr << "Error with execve from cgi\n";
 			exit(1);
+	
+		// extract output from execve into msgbody, finally set the body object
+		std::string msgbody;
+		output >> msgbody;
+		output.close();
+
+		_requestBody->setBuff(msgbody);
+			
+		// retrieve std::cout fd and close the temporary stream
+		std::cout.rdbuf(backupOut);
+		if (_req->getMethod() == POST)
+			std::cin.rdbuf(backupIn);
 		}
-		
 	}
 	else if (pid > 0){
-		// write input from execve into msgbody, finally set the body object
-		std::string msgbody;
-		input >> msgbody;
-
-		body->setBuff(msgbody);
-		
-		// retrieve std::cout fd and close the temporary stream
-		std::cout.rdbuf(backup);
 		input.close();
+		if (_req->getMethod() == POST && 
+			write(post_fd[1], _requestBody->getBody().c_str(), atoi(_envvar[1])) < 0){
+				std::cerr << "Error with write in CGI\n";
+			}
 	}
 	else{
-		input.close(); 
+		output.close(); 
+		input.close();
 		throw std::runtime_error("Error in fork occurs\n");
 	}
 }
