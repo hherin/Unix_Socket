@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/14 15:58:42 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 20:15:36 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void Response::fillBuffer()
 
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
 		std::string *cgiName = getCgiExecutableName(realUri, loc.second);
-		
+
 		if (cgiName && (_req->getMethod() == GET || _req->getMethod() == POST))
 			fillCgi(realUri, cgiName);
 
@@ -311,6 +311,10 @@ std::string Response::reconstructFullURI(int method,
 	// zero location block match the URI so the URI isn't modified
 	if (!loc.second)
 	{
+        // Need to add a '.' for relative path access
+        if (!uri.empty() && uri[0] == '/')
+            uri.insert(uri.begin(), '.');
+    
 		// Checking if the file exist or if it's a directory. Case POST method, no 404 because it can create the file.
 		if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
@@ -326,7 +330,7 @@ std::string Response::reconstructFullURI(int method,
 		addRoot(&uri, loc.second->getRoot(), loc.first);
 	
 	// If no root in location block, or root doesn't start with a '.', need to add it to find the file using
-	// recursive path
+	// relative path
 	if (!uri.empty() && uri[0] == '/')
 		uri.insert(uri.begin(), '.');
 
