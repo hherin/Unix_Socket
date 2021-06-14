@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cgi.hpp                                            :+:      :+:    :+:   */
+/*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:50:03 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/09 18:06:33 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/14 09:30:04 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,18 @@ class CGI
 {
 	private:
 		char **_envvar;
-		Body *_requestBody;
+		char **_args;
+		Body *_emptyBody;
 		Request *_req;
 		std::string _exec_extension;
+		std::string _realUri;
 		std::pair<std::string, std::string> _path_info;
 		
 		
 	public:
 	/* ===================================================================
 	 ======================= COPLIEN FORM ==============================*/
-		CGI(Body *, Request *, const std::string& exec = "");
+		CGI(Body *, Request *, const std::string &, const std::string& exec = "");
 		CGI(CGI const &);
 		CGI &operator=(CGI &);
 		~CGI();

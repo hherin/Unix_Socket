@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Body.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:32:36 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/08 18:51:34 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Body
 		/* ------------------------- ATTRIBUTES ------------------------ */
 		
 			bool								_recv;		// Indicates when request line + headers have been received
-			size_t								_size;		// Content-lenght size
+			size_t								_size;		// Content-length size
 			long								_maxSize;	// Max octets that Body object can receive
 			std::string							_buff;		// Buffer containing the payload
 
@@ -75,7 +75,7 @@ class Body
 			_buff.clear();
 		}
 		
-		// Append buffer received from client until content-lenght octets have been received.
+		// Append buffer received from client until content-length octets have been received.
 		int recvBuffer(const std::string& buffer, size_t index, size_t lenToRead)
 		{
 			// maxSize will be evaluated only if previously set using setMaxSize before, because 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 19:09:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ class Request
 		// Check that the header line received respect the RFC norme.
         void parseHeaderLine(size_t posCLRF);
 		
-		// Received the body until n octets (from content-lenght header) has been received. Then throw 
+		// Received the body until n octets (from content-length header) has been received. Then throw 
 		// a status line with the appropriate code.
 		void parseBody();
 		

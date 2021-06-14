@@ -6,13 +6,13 @@ Connected to localhost.
 Escape character is '^]'.
 GET / HTTP/1.1
 host:dragoon
-content-lenght:7
+content-length:7
 
 salut
 200 OK
 GET / HTTP/1.1
 host:dragoon
-content-lenght:8
+content-length:8
 
 salut2
 200 OK

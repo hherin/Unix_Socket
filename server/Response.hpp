@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 16:45:59 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "Request.hpp"
+#include "Cgi.hpp"
 #include "msg_format/StatusLine.hpp"
 #include "msg_format/Body.hpp"
 
@@ -88,8 +89,8 @@ class Response
 		/* ------------------------------------------------------------- */
 		/* ----------------------- PRIVATE METHODS --------------------- */
 
-		// Fills buffer with Content-lenght header
-		void fillContentLenghtHeader(const std::string& size);
+		// Fills buffer with Content-length header
+		void fillContentlengthHeader(const std::string& size);
 
 		// Fills buffer with server header with server name (webserv)
 		void fillServerHeader();

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
+#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 15:14:41 by hherin           ###   ########.fr        #
+#    Updated: 2021/06/12 15:48:28 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRCS		=	HttpServer.cpp \
 				ClientSocket.cpp \
 				Request.cpp \
 				Response.cpp \
+				Cgi.cpp \
 
 OBJS		=	${SRCS:.cpp=.o}
 
@@ -25,6 +26,7 @@ HDRS		=	HttpServer.hpp \
 				ClientSocket.hpp \
 				Request.hpp \
 				Response.hpp \
+				Cgi.hpp \
 				msg_format/StatusLine.hpp \
 				msg_format/RequestLine.hpp \
 				msg_format/Body.hpp

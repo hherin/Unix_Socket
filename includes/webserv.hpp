@@ -25,7 +25,7 @@ enum methods { GET, HEAD, POST, DELETE };
 // Number of methods implemented in webserv
 #define NB_METHODS 4
 
-// Max octets lenght of a status / request / header line
+// Max octets length of a status / request / header line
 #define MAX_URI_LEN 8000
 #define MAX_HEADER_LEN 8000
 

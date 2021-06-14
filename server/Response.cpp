@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/11 17:26:58 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void Response::fillBuffer()
 
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
 		std::string *cgiName = getCgiExecutableName(realUri, loc.second);
-
+		
 		if (cgiName && (_req->getMethod() == GET || _req->getMethod() == POST))
 			fillCgi(realUri, cgiName);
 
@@ -121,7 +121,7 @@ void Response::fillBuffer()
 			FileParser body(realUri.c_str(), true); // CAHNGER
 
 			// Setting size after storing the body in FileParser object, then setting Last-Modified header
-			fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+			fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
 			fillLastModifiedHeader(realUri.c_str());
 			_buffer += CLRF;
 
@@ -176,15 +176,21 @@ void Response::fillBuffer()
 void Response::fillCgi(const std::string& realUri, std::string* cgiName)
 {
 	Body cgiRep;
+	CGI cgi(&cgiRep, _req, realUri, *cgiName);
 	
-	(void)realUri;
-	(void)cgiName;
-	(void)cgiRep;
+	cgi.executeCGI();
+	
+	fillStatusLine(_staLine);
+	fillServerHeader();
+	fillDateHeader();
+	fillContentlengthHeader(convertNbToString(cgiRep.getSize()));
 
-	// fonction_helene(realUri, cgiName, &_req, &cgiRep);
+	_buffer += cgiRep.getBody();
+	
+	delete cgiName;
 }
 
-void Response::fillContentLenghtHeader(const std::string& size) 
+void Response::fillContentlengthHeader(const std::string& size) 
 {
 	_buffer += "Content-Length: " + size + CLRF;
 }
@@ -362,7 +368,7 @@ void Response::fillError(const StatusLine& sta)
 
 	FileParser body(pathError.c_str(), true);
 
-	fillContentLenghtHeader(convertNbToString(body.getRequestFileSize()));
+	fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
 	_buffer += CLRF + body.getRequestFile();
 }
 

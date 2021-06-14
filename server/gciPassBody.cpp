@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 17:36:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 16:25:37 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 
 // GET : QUERY_STRING + PATH_INFO >> run execve(youpi.exe, coucou.bla, env)
-// POST : PATH_INFO + CONTENT_LENGHT >> pipe + run execve(youpi.exe, coucou.bla, env) + write post body
+// POST : PATH_INFO + CONTENT_length >> pipe + run execve(youpi.exe, coucou.bla, env) + write post body
 
 #include <sstream>
 #include "Cgi.hpp"
@@ -32,7 +32,7 @@ int main(void)
 	try
 	{
 		req += "GET /test/ls?dragoon HTTP/1.1\r\nhost:server\r\n\r\n";
-		// req += "POST /test/cat HTTP/1.1\r\nhost:server\r\ncontent-lenght:9\r\n\r\ndragoon\r\n";
+		// req += "POST /test/cat HTTP/1.1\r\nhost:server\r\ncontent-length:9\r\n\r\ndragoon\r\n";
 		req.parsingCheck();
 	}
 

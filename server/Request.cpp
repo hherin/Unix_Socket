@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/09 16:25:03 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,15 @@ void Request::parsingCheck()
 			if (it == _headers.end() || it->second.empty())
 				throw StatusLine(400, REASON_400, "host field missing or empty");
 
-			// Body will receive content-lenght octets
-			if ((it = _headers.find("content-lenght")) != _headers.end())
+			// Body will receive content-length octets
+			if ((it = _headers.find("content-length")) != _headers.end())
 			{
 				_body.startReceiving();
 				_body.setSize(atol(it->second.c_str()));
 				_body.setMaxSize(findMaxSize(_headers.find("host")->second));
 			}
 			
-			// Case no content-lenght header, so no body
+			// Case no content-length header, so no body
 			else
 				throw StatusLine(200, REASON_200);
 		}
@@ -143,7 +143,7 @@ void Request::parseBody()
 	if (lenToRead > _body.getSize())
 		_body.setSize(lenToRead);
 	
-	// Storing the part of body received until content-lenght octects are received
+	// Storing the part of body received until content-length octects are received
 	if (_body.recvBuffer(_buffer, _index, lenToRead) == -1)
 		throw StatusLine(413, REASON_413, "received more octets than max body size limit");
 	_index += lenToRead;
