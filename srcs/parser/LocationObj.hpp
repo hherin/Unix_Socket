@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 15:51:54 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 20:06:39 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,12 @@
 
 # include <string>
 # include <vector>
+# include <map>
 # include "ServerInfo.hpp"
 # include "../utils/utils.hpp"
 # include "parser.hpp"
 
 class ServerInfo;
-
-// ADD GETTERS FRON SRV
 
 class Location
 {
@@ -34,7 +33,7 @@ class Location
 		std::string _upload_store;
 		std::vector<std::string> _allow_methd;
 		std::vector<std::string> _index;
-		std::vector<std::string> _cgi_exe;
+		std::map<std::string, std::string> _cgi_exe;
 		
 	public:
 		/*	===========================================
@@ -51,9 +50,9 @@ class Location
 		*/
 		std::string const &getRoot() const;
 		std::string const &getUploadStore() const;
-		std::vector<std::string> const &getCgiExe() const;
 		std::vector<std::string> const &getMethods() const;
 		std::vector<std::string> const &getIndex() const;
+		std::map<std::string, std::string> const &getCgiExe() const;
 		
 		/*	===========================================
 			================= SETTERS =================

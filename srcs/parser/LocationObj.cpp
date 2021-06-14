@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 18:11:53 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/14 20:11:46 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ std::vector<std::string> const &Location::getMethods() const { return _allow_met
 
 std::vector<std::string> const &Location::getIndex() const { return _index; }
 
-std::vector<std::string> const &Location::getCgiExe() const {return _cgi_exe; }
+std::map<std::string, std::string> const &Location::getCgiExe() const {return _cgi_exe; }
 
 
 // ============================================================================
@@ -105,9 +105,11 @@ void Location::setIndex(char const *n) { setStringArray(n, _index); }
 
 void Location::setCgiExe(char const *c) 
 {
-	setStringArray(c, _cgi_exe);
-	if (_cgi_exe.size() != 2)
+	std::vector<std::string> cgiTmp;
+	setStringArray(c, cgiTmp);
+	if (cgiTmp.size() != 2)
 		throw std::runtime_error("Wrong cgi input in the config file\n"); 
+	_cgi_exe.insert(std::pair<std::string, std::string>(cgiTmp[0], cgiTmp[1]));
 }
 
 
@@ -120,8 +122,9 @@ void Location::printLocation(const std::string& locName) const
 			<< "name = |" << locName << "|\n"
 			<< "root = |" << _root << "|\n";
 	
-	if (_cgi_exe.size() == 2)
-		std::cout << "cgi_exe size = 2  and .ext and exe =  |" << _cgi_exe[0] << "| |" << _cgi_exe[1] << "|\n";
+	if (_cgi_exe.size())
+		for (std::map<std::string, std::string>::const_iterator it = _cgi_exe.begin(); it != _cgi_exe.end(); it++)
+			std::cout << "cgi_exe size = 2  and .ext and exe =  |" << it->first << "| |" << it->second << "|\n";
 	else
 		std::cout << "cgi_exe size = " << _cgi_exe.size() << "\n";
 	
