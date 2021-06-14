@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/05/25 16:32:44 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 14:46:59 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ class HttpServer
 		
 		// Set readfd with the content of a socket's list
 		template <typename T>
-		void addSocketsToReadFdSet(std::list<T>& sockets)
+		void addSocketsToReadFdSet(const std::list<T>& sockets)
 		{
-			for (typename std::list<T>::iterator it = sockets.begin(); it != sockets.end(); ++it)
+			for (typename std::list<T>::const_iterator it = sockets.begin(); it != sockets.end(); ++it)
 				FD_SET(it->getFd(), &_readFds);
 		}
 

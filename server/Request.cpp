@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 16:14:53 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,7 @@ Request& Request::operator+=(const char* charBuffer)
 void Request::parsingCheck()
 {
     // Indicates end of request line / header line
-	size_t posCLRF;
-	posCLRF = !_body.isReceiving() ? _buffer.find(CLRF, _index) : 0;
+	size_t posCLRF = !_body.isReceiving() ? _buffer.find(CLRF, _index) : 0;
 
     while (!_body.isReceiving() && newLineReceived(posCLRF))
     {
@@ -199,24 +198,22 @@ void Request::parseRequestLine(size_t posCLRF)
 	if (posCLRF == _index)
 		throw StatusLine(400, REASON_400, "first line is empty");
 
-	std::string requestLine = _buffer.substr(_index, posCLRF - _index);
+    std::string requestLine = _buffer.substr(_index, posCLRF - _index);
 	
-	if (requestLine.find_first_of("\r\n\t\v\f") != std::string::npos)
+    if (requestLine.find_first_of("\r\n\t\v\f") != std::string::npos)
 		throw StatusLine(400, REASON_400, "whitespaces not allowed");
 	else if (std::count(requestLine.begin(), requestLine.end(), ' ') > 2)
 		throw StatusLine(400, REASON_400, "too many spaces");
-	
-	
+
 	// Splitting the request line
 	std::vector<std::string> tokens = splitWithSep(requestLine, ' ');
 		
 	if (tokens.size() != 3)
 		throw StatusLine(400, REASON_400, "a field from request line is missing");
 
-
 	// Parsing the request line
+    parseURI(tokens[1]);    
 	parseMethodToken(tokens[0]);
-	parseURI(tokens[1]);
 	parseHTTPVersion(tokens[2]);
 }
 
@@ -260,8 +257,8 @@ void Request::parseURI(std::string token)
 }
 
 void Request::parseHTTPVersion(const std::string& token)
-{   
-	if (token.compare(0, 5, "HTTP/") || token.compare(6, 1, ".") ||
+{
+	if (token.size() < 7 || token.compare(0, 5, "HTTP/") || token.compare(6, 1, ".") || 
 			!isdigit(static_cast<int>(token[5])) || !isdigit(static_cast<int>(token[7])))
 		throw StatusLine(400, REASON_400, "HTTP version not correct");
 			

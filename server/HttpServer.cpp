@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/04 17:43:42 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 16:18:44 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,18 +90,32 @@ void HttpServer::sendToClients()
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
 			int n = 0;
-			
+			Response *resp = &it->getResponsesQueued()->front();
+
 			// Doesn't handle the case if send can't send everything in one time. Send the first response
 			// of the queue
-			if ((n = send(it->getFd(), static_cast<const void*>(it->getResponsesQueued()->front().getBuffer().c_str()), 
-					it->getResponsesQueued()->front().getBuffer().size(), 0)) < 1)
+			if ((n = send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), 
+					resp->getBuffer().size(), 0)) < 1)
 				throw std::runtime_error("Fatal error: send function failed\n");
 			
-			printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent\n", 
-					it->getResponsesQueued()->front().getBuffer());
+			printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
+                    convertNbToString(resp->getCode()) + "\n", resp->getBuffer());
 			
-			// After sending the response, remove it from the queue
-			it->getResponsesQueued()->pop();
+            // // If an error occured, closing the connection
+            if (resp->getCode() >= 400)
+            {
+                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed due to error "
+                        + convertNbToString(resp->getCode()) + "\n");
+
+                std::list<ClientSocket>::iterator tmp = it--;
+
+                close(tmp->getFd());
+                _clientSocks.erase(tmp);
+            }
+            
+			// After sending the response without encoutering any error, removing it from the queue
+            else
+                it->getResponsesQueued()->pop();
 		}
 	}
 }

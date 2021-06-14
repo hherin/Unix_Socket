@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/09 13:11:25 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 16:02:53 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int main(int ac, char **av)
 		m_srv = conf.getConfigFile();
 	}
 	catch (std::exception &errmsg){
+        std::cerr << "BNJOUR\n";
 		std::cout << errmsg.what();
 		exit(EXIT_FAILURE);
 	}
@@ -45,18 +46,18 @@ int main(int ac, char **av)
 	HttpServer server;
 
 	// Creating sockets and binding them to a port
-	try
-	{
+	// try
+	// {
 		for (size_t i = 0; i < sockArray.size(); ++i)
 			server.addServerSocket(ServerSocket(sockArray[i], 5));
 			
 		server.etablishConnection(m_srv);
-	}
-	catch (std::exception& e)
-	{
-		printLog(" >> " + std::string(e.what()));
-		exit(EXIT_FAILURE);
-	}
+	// }
+	// catch (std::exception& e)
+	// {
+	// 	printLog(" >> Exception occured " + std::string(e.what()) + "\n");
+	// 	exit(EXIT_FAILURE);
+	// }
 
 	return 0;
 }

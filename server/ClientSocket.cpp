@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:04:44 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 16:19:44 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int ClientSocket::receiveRequest(const char* buffer)
 		// Response was created, clearing request object for next incoming request
 		_request.clear();
 	}
-	
+
 	return 0;
 }
 

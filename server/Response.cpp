@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/14 14:01:15 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 15:58:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,7 +327,7 @@ std::string Response::reconstructFullURI(int method,
 	
 	// If no root in location block, or root doesn't start with a '.', need to add it to find the file using
 	// recursive path
-	if (uri[0] == '/')
+	if (!uri.empty() && uri[0] == '/')
 		uri.insert(uri.begin(), '.');
 
 	// Checking if the path after root substitution is correct, and if it's a directory trying
@@ -343,7 +343,10 @@ std::string Response::reconstructFullURI(int method,
 }
 
 void Response::fillError(const StatusLine& sta)
-{
+{    
+    if (sta.getCode() != _staLine.getCode())
+        _staLine = sta;
+
 	_buffer.clear();
 	
 	// Filling buffer with error code + some basic headers
