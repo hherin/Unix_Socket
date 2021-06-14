@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 14:01:15 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,6 +324,11 @@ std::string Response::reconstructFullURI(int method,
 	// Replacing the part of the URI that matched with the root path if there is one existing
 	if (!loc.second->getRoot().empty())
 		addRoot(&uri, loc.second->getRoot(), loc.first);
+	
+	// If no root in location block, or root doesn't start with a '.', need to add it to find the file using
+	// recursive path
+	if (uri[0] == '/')
+		uri.insert(uri.begin(), '.');
 
 	// Checking if the path after root substitution is correct, and if it's a directory trying
 	// to add indexs. Case POST method, no 404 because it can create the file.
