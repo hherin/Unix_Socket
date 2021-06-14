@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 12:35:57 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 12:52:25 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,29 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	// ** set environment variable for the CGI **
 	// GET : QUERY_STRING + PATH_INFO 
 	// POST : PATH_INFO + CONTENT_length 
-	_envvar = new char*[3];
+	if ((_envvar = new char*[4]) == NULL)
+		throw std::runtime_error("Error on a cgi malloc\n");
 	_envvar[0] = strdup(("PATH_INFO=" + _path_info.first).c_str());
 	if (_req->getMethod() == GET){
 		tmpBuf = "QUERY_STRING=" + _req->getQuery();
 		_envvar[1] = strdup(tmpBuf.c_str());
+		_envvar[2] = strdup("REQUESTED_METHOD=GET");
 	}
 	else {
 		std::stringstream intToString;
 		intToString << _req->getBody().getBody().size();
 		tmpBuf = std::string("CONTENT_LENGTH=") + intToString.str();
 		_envvar[1] = strdup(tmpBuf.c_str());
-		std::cerr << "LENGTH BODY " << _envvar[1] << "\n";
-		std::cerr << "BODY ." << _req->getBody().getBody() << ".\n";
+		_envvar[2] = strdup("REQUESTED_METHOD=POST");
 	}
-	_envvar[2] = NULL;
+	_envvar[3] = NULL;
 
 	// ** Set args for execve **
 	// if run process for cgi -> only executable as argument
 	// else -> _exec_extension is a parameter file for executable _path_info.second
 	int nbAlloc = (!_exec_extension.compare(".cgi")) ? 2 : 3;	
-	_args = new char*[nbAlloc--];
+		if ((_args = new char*[nbAlloc--]) == NULL)
+	throw std::runtime_error("Error on a cgi malloc\n");
 	_args[nbAlloc--] = NULL;
 	_args[nbAlloc--] = (!_exec_extension.compare(".cgi")) ? strdup(_path_info.second.c_str()) : 
 															strdup(_exec_extension.c_str());
