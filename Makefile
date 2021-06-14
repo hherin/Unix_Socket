@@ -3,28 +3,28 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: hherin <hherin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/03 12:19:20 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/14 16:52:57 by hherin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	webserv
 
-SRCS		=	main.cpp 
+SRCS		=	srcs/main.cpp 
 				
 OBJS		=	${SRCS:.cpp=.o}
 
-HDRS		=	includes/webserv.hpp
+HDRS		=	srcs/includes/webserv.hpp
 
 CC			=	clang++
 
 FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
 
-LIBS		=	parser/lparser.a \
-				server/lserver.a \
-				utils/lutils.a
+LIBS		=	srcs/parser/lparser.a \
+				srcs/server/lserver.a \
+				srcs/utils/lutils.a
 
 SETDEBUG	=	0
 
