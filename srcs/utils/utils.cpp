@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/13 10:43:40 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 18:22:56 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ std::pair<std::string, std::string> *SplitPathForExec(std::string const &path)
 	pathAndFile.first.clear();
 	pathAndFile.second.clear();
 
-	// pathAndFile.first = ".";
+	pathAndFile.first = ".";
 	pathAndFile.first += path.substr(0, posLastSlash);
 	pathAndFile.second = ".";
 	pathAndFile.second += path.substr(posLastSlash);

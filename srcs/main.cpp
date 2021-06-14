@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 16:02:53 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/14 17:52:40 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int main(int ac, char **av)
 		m_srv = conf.getConfigFile();
 	}
 	catch (std::exception &errmsg){
-        std::cerr << "BNJOUR\n";
 		std::cout << errmsg.what();
 		exit(EXIT_FAILURE);
 	}

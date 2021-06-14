@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 17:21:29 by lucaslefran      ###   ########.fr       */
+/*   Updated: 2021/06/14 18:11:53 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 // ============================================================================
 // =========================== COPLIEN FORM ===================================
 
-Location::Location(ServerInfo *s) : _srv(s) { }
+Location::Location(ServerInfo *s) : _srv(s) 
+{
+	setStringArray("POST GET HEAD DELETE", _allow_methd);
+}
 
 Location::Location(Location const &loc) : _srv(loc._srv), _root(loc._root), 
 _upload_store(loc._upload_store), _allow_methd(loc._allow_methd), _index(loc._index),
@@ -85,6 +88,7 @@ void Location::setUploadStore(char const *u)
 
 void Location::setMethods(char const *n) 
 {
+	_allow_methd.clear();
 	setStringArray(n, _allow_methd);
 	const char *method_checking[] = { "POST", "GET", "HEAD", "DELETE"};
 	for (size_t i = 0; i < _allow_methd.size(); i++){

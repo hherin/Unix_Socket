@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cgi.cpp                                            :+:      :+:    :+:   */
+/*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 12:52:25 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 19:26:43 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cgi.hpp"
-
 
 /* =============================================================================
  =============================== COPLIEN FORM ================================*/
@@ -28,7 +27,7 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	// POST : PATH_INFO + CONTENT_length 
 	if ((_envvar = new char*[4]) == NULL)
 		throw std::runtime_error("Error on a cgi malloc\n");
-	_envvar[0] = strdup(("PATH_INFO=" + _path_info.first).c_str());
+	_envvar[0] = strdup(("PATH_INFO=" + _realUri).c_str());
 	if (_req->getMethod() == GET){
 		tmpBuf = "QUERY_STRING=" + _req->getQuery();
 		_envvar[1] = strdup(tmpBuf.c_str());
@@ -47,17 +46,17 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	// if run process for cgi -> only executable as argument
 	// else -> _exec_extension is a parameter file for executable _path_info.second
 	int nbAlloc = (!_exec_extension.compare(".cgi")) ? 2 : 3;	
-		if ((_args = new char*[nbAlloc--]) == NULL)
-	throw std::runtime_error("Error on a cgi malloc\n");
+	if ((_args = new char*[nbAlloc--]) == NULL)
+		throw std::runtime_error("Error on a cgi malloc\n");
 	_args[nbAlloc--] = NULL;
-	_args[nbAlloc--] = (!_exec_extension.compare(".cgi")) ? strdup(_path_info.second.c_str()) : 
-															strdup(_exec_extension.c_str());
-	(!nbAlloc) ? _args[0] = strdup(_path_info.second.c_str()) : 0;
-
+	_args[nbAlloc--] = strdup(_path_info.second.c_str());
+	(!nbAlloc) ? _args[0] = strdup(_exec_extension.c_str()) : 0;
+	std::cerr << "ARGSSSSS " <<  _args[0] << "\n";
+	(_exec_extension.compare(".cgi")) ? _openArgfile.open(_realUri) : _openArgfile.close();
 }
 
 CGI::CGI(CGI const &copy) : _emptyBody(copy._emptyBody), _req(copy._req),
-							 _exec_extension(copy._exec_extension), _realUri(copy._realUri),
+							_exec_extension(copy._exec_extension), _realUri(copy._realUri),
 							_path_info(copy._path_info)
 {
 	_envvar = new char*[2];
@@ -85,8 +84,8 @@ CGI::~CGI()
 	delete[] _envvar;
 
 	int i = 0;
-	while (_args[i++])
-		delete _args[i]; _args[i] = NULL;
+	while (_args[i++]){
+		delete _args[i]; _args[i] = NULL;}
 	delete[] _args;
 }
 
@@ -98,7 +97,7 @@ void CGI::executeCGI()
 	int fdOut[2];
 	int fdIN[2];
 	
-	if (pipe(fdOut) < 0 || (_req->getMethod() == POST && pipe(fdIN) < 0))
+	if (pipe(fdOut) < 0 || pipe(fdIN) < 0)
 		throw std::runtime_error("Error with pipe\n");
 	
 	pid_t pid = fork();
@@ -110,15 +109,24 @@ void CGI::executeCGI()
 		close(fdOut[0]);
 		close(fdOut[1]);
 		
-		if (_req->getMethod() == POST){
-			dup2(fdIN[0], STDIN_FILENO);
-			close(fdIN[0]);
-			close(fdIN[1]);
-		}
+
+		dup2(fdIN[0], STDIN_FILENO);
+		close(fdIN[0]);
+		close(fdIN[1]);
 
 		// change the repo into where the program is
 		chdir(_path_info.first.c_str());
+		
+		std::cerr << "path " << _path_info.second << ".\n";
+		int i = -1;
+		std::cerr << "ARGS : ";
+		while (_args[++i])
+			std::cerr << _args[i] << " | ";
 
+		i = 0;
+		std::cerr << "\nENVVAR : ";
+		while (_envvar[++i])
+			std::cerr << _envvar[i] << " | ";
 		if (execve(_path_info.second.c_str(), _args, _envvar) < 0){
 			std::cerr << "Error with execve from cgi\n";
 			exit(1);
@@ -131,9 +139,15 @@ void CGI::executeCGI()
 		if (_req->getMethod() == POST){
 			if (write(fdIN[1], _req->getBody().getBody().c_str(), _req->getBody().getBody().size()) < 0)
 				throw std::runtime_error("ERROR with write in cgi\n");
-			close(fdIN[0]);
-			close(fdIN[1]);
 		}
+		else{
+			std::string tmpBuf;
+			_openArgfile >> tmpBuf;
+			if (write(fdIN[1], tmpBuf.c_str(), tmpBuf.size()) < 0)
+				throw std::runtime_error("ERROR with write in cgi\n");
+		}
+		close(fdIN[1]);
+		close(fdIN[0]);
 		
 		char buf[2046];
 		std::string msgbody;	

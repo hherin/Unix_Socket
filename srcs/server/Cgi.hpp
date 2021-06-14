@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:50:03 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 09:30:04 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 17:47:07 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class CGI
 		char **_args;
 		Body *_emptyBody;
 		Request *_req;
+		std::ifstream _openArgfile;
 		std::string _exec_extension;
 		std::string _realUri;
 		std::pair<std::string, std::string> _path_info;
