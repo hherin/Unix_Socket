@@ -1,7 +1,6 @@
 *.o
 *.a
 webserv
-request*
 OUTPUT*
 ls_files
 parserConfig
