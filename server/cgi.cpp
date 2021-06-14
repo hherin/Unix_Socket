@@ -6,7 +6,7 @@
 /*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 10:14:56 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/14 12:35:57 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 /* =============================================================================
  =============================== COPLIEN FORM ================================*/
 
-
-// ADD FILE AS PARAMETERS IF .bla
 CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string& exec) 
 			: _envvar(NULL), _emptyBody(body), _req(req), _exec_extension(exec), _realUri(realUri)
 {	
@@ -25,7 +23,9 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	
 	_path_info = *SplitPathForExec(_realUri);
 	
-	// set environment variable for the CGI
+	// ** set environment variable for the CGI **
+	// GET : QUERY_STRING + PATH_INFO 
+	// POST : PATH_INFO + CONTENT_length 
 	_envvar = new char*[3];
 	_envvar[0] = strdup(("PATH_INFO=" + _path_info.first).c_str());
 	if (_req->getMethod() == GET){
@@ -42,8 +42,10 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	}
 	_envvar[2] = NULL;
 
-	int nbAlloc = (!_exec_extension.compare(".cgi")) ? 2 : 3;
-
+	// ** Set args for execve **
+	// if run process for cgi -> only executable as argument
+	// else -> _exec_extension is a parameter file for executable _path_info.second
+	int nbAlloc = (!_exec_extension.compare(".cgi")) ? 2 : 3;	
 	_args = new char*[nbAlloc--];
 	_args[nbAlloc--] = NULL;
 	_args[nbAlloc--] = (!_exec_extension.compare(".cgi")) ? strdup(_path_info.second.c_str()) : 
@@ -59,6 +61,12 @@ CGI::CGI(CGI const &copy) : _emptyBody(copy._emptyBody), _req(copy._req),
 	_envvar = new char*[2];
 	_envvar[0] = strdup(copy._envvar[0]);
 	_envvar[1] = strdup(copy._envvar[1]);
+
+	int nb = 0;
+	while (copy._args[nb++]);
+	_args = new char*[nb];
+	while (--nb > - 1)
+		copy._args[nb] = _args[nb];
 }
 
 CGI &CGI::operator=(CGI &copy)
@@ -73,36 +81,40 @@ CGI::~CGI()
 	delete _envvar[0]; _envvar[0] = NULL;
 	delete _envvar[1]; _envvar[1] = NULL;
 	delete[] _envvar;
+
+	int i = 0;
+	while (_args[i++])
+		delete _args[i]; _args[i] = NULL;
+	delete[] _args;
 }
+
 
 /* =============================================================================
  =============================== PUBLIC METHODS ===============================*/
 void CGI::executeCGI()
 {
-	int fdPipe[2];
-	int fdPost[2];
+	int fdOut[2];
+	int fdIN[2];
 	
-	if (pipe(fdPipe) < 0 || (_req->getMethod() == POST && pipe(fdPost) < 0))
+	if (pipe(fdOut) < 0 || (_req->getMethod() == POST && pipe(fdIN) < 0))
 		throw std::runtime_error("Error with pipe\n");
+	
 	pid_t pid = fork();
 	
 	if (!pid){
-		std::cout << "CHild process \n";
-		dup2(fdPipe[1], STDOUT_FILENO);
-		close(fdPipe[0]);
-		close(fdPipe[1]);
+		
+		// stdout is now a copy of fdOut[1] and in case post method, stdin is a copy of fdIn[0]
+		dup2(fdOut[1], STDOUT_FILENO);
+		close(fdOut[0]);
+		close(fdOut[1]);
 		
 		if (_req->getMethod() == POST){
-			dup2(fdPost[0], STDIN_FILENO);
-			close(fdPost[0]);
-			close(fdPost[1]);
+			dup2(fdIN[0], STDIN_FILENO);
+			close(fdIN[0]);
+			close(fdIN[1]);
 		}
-		// char tmp[10];
-		// read(0, tmp, 9);
-		// std::cerr << "write received :." << tmp << ".\n";
-		// The path and name of executable are separate in a pair
-		std::pair<std::string, std::string> path = *SplitPathForExec(_req->getPath());
 
+		// change the repo into where the program is
 		chdir(_path_info.first.c_str());
 
 		if (execve(_path_info.second.c_str(), _args, _envvar) < 0){
@@ -112,37 +124,30 @@ void CGI::executeCGI()
 	
 	}
 	else if (pid > 0){
-		std::cerr << "Parent process\n";
-int nb;
+		
+		close(fdOut[1]);
 		if (_req->getMethod() == POST){
-			if ((nb = write(fdPost[1], _req->getBody().getBody().c_str(), _req->getBody().getBody().size())) < 0)
+			if (write(fdIN[1], _req->getBody().getBody().c_str(), _req->getBody().getBody().size()) < 0)
 				throw std::runtime_error("ERROR with write in cgi\n");
-			std::cerr << "REturn of write " << nb << "\n";
-			close(fdPost[0]);
-			close(fdPost[1]);
+			close(fdIN[0]);
+			close(fdIN[1]);
 		}
-		// waitpid(pid, NULL, 0);
-		close(fdPipe[1]);
+		
 		char buf[2046];
-		std::string msgbody;
-		
-		std::cerr << "before reading\n";
-
-		
-		while (read(fdPipe[0], buf, 2046) == 2046)
+		std::string msgbody;	
+		while (read(fdOut[0], buf, 2046) == 2046)
 			msgbody += buf;
 		msgbody += buf;
 		
-		close(fdPipe[0]);
-		// close(fdPipe[0]);
-		std::cerr << "fdPipe now closed\n";
+		close(fdOut[0]);
 
 		_emptyBody->setBuff(msgbody);
-		// 
+		// remove the header part of the cgi output
 		_emptyBody->setSize(msgbody.size() - msgbody.find_first_of("\r\n\r\n") - 2); 
 	}
 	else{
-		close(fdPipe[1]); close(fdPipe[0]);
+		close(fdOut[1]); close(fdOut[0]);
+		if (_req->getMethod() == POST) { close(fdIN[0]); close(fdIN[1]); }
 		throw std::runtime_error("Error in fork occurs\n");
 	}
 }
