@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 18:56:49 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/14 18:22:56 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/14 20:51:36 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,10 +155,10 @@ std::string* getCgiExecutableName(const std::string& uri, const Location* loc)
 	
 	// Case target match an extension in the appropriate location block,
 	// we return the executable name
-	else if (loc && loc->getCgiExe().size() == 2 && 
-			!uri.compare(dotPos, std::string::npos, loc->getCgiExe().front()))
-		return new std::string(loc->getCgiExe().back());
-
+	std::map<std::string, std::string>::const_iterator it;
+	if (loc && (it = loc->getCgiExe().find(std::string(uri.c_str() + dotPos))) != loc->getCgiExe().end())
+		return new std::string(it->second);
+	
 	// Case the extension doesn't match anything
 	return 0;
 }
