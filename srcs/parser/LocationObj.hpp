@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 20:06:39 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/15 11:53:27 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Location
 			================= Variables ===============
 		*/
 		ServerInfo *_srv;
+		bool _autoindex;
 		std::string _root;
 		std::string _upload_store;
 		std::vector<std::string> _allow_methd;
@@ -53,6 +54,7 @@ class Location
 		std::vector<std::string> const &getMethods() const;
 		std::vector<std::string> const &getIndex() const;
 		std::map<std::string, std::string> const &getCgiExe() const;
+		bool const &getAutoIndex() const;
 		
 		/*	===========================================
 			================= SETTERS =================
@@ -72,6 +74,7 @@ class Location
 		void setMethods(char const*);
 		void setIndex(char const*);
 		void setCgiExe(char const *);
+		void setAutoIndex(char const *);
 		
 		/*	===========================================
 			============ Private methods ==============

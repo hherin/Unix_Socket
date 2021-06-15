@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 20:11:46 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/15 11:58:58 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 // ============================================================================
 // =========================== COPLIEN FORM ===================================
 
-Location::Location(ServerInfo *s) : _srv(s) 
+Location::Location(ServerInfo *s) : _srv(s), _autoindex(0)
 {
 	setStringArray("POST GET HEAD DELETE", _allow_methd);
 }
 
-Location::Location(Location const &loc) : _srv(loc._srv), _root(loc._root), 
+Location::Location(Location const &loc) : _srv(loc._srv), _autoindex(loc._autoindex), _root(loc._root), 
 _upload_store(loc._upload_store), _allow_methd(loc._allow_methd), _index(loc._index),
 _cgi_exe(loc._cgi_exe) {}
 
@@ -44,8 +44,9 @@ std::vector<std::string> const &Location::getMethods() const { return _allow_met
 
 std::vector<std::string> const &Location::getIndex() const { return _index; }
 
-std::map<std::string, std::string> const &Location::getCgiExe() const {return _cgi_exe; }
+std::map<std::string, std::string> const &Location::getCgiExe() const { return _cgi_exe; }
 
+bool const &Location::getAutoIndex() const { return _autoindex; }
 
 // ============================================================================
 // =============================== SETTERS ====================================
@@ -59,7 +60,7 @@ void	Location::setLocation(int nb, int const &pos, std::string const &buf)
 {
 	typedef void (Location::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &Location::setMethods, &Location::setIndex,
-                        &Location::setUploadStore, &Location::setRoot, &Location::setCgiExe};
+                        &Location::setUploadStore, &Location::setRoot, &Location::setCgiExe, &Location::setAutoIndex};
 
     const char *tmp = buf.c_str() + pos;
 	int i = 0;
@@ -112,6 +113,17 @@ void Location::setCgiExe(char const *c)
 	_cgi_exe.insert(std::pair<std::string, std::string>(cgiTmp[0], cgiTmp[1]));
 }
 
+void Location::setAutoIndex(char const *i)
+{
+	std::string tmp(i);
+	tmp = *wsTrim(tmp);
+	if (tmp.compare("on") && tmp.compare("off"))
+		throw std::runtime_error("Error autoIndex : " + std::string(i) + "isn't a good input\n");
+	else if (!tmp.compare("on"))
+		_autoindex = 1;
+	else
+		_autoindex = 0;
+}
 
 // ============================================================================
 // =============================== METHODS ====================================
