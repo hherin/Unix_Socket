@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/14 14:46:59 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/16 17:36:12 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ class HttpServer
 		void addSocketsToWriteFdSet(std::list<T>& sockets)
 		{
 			for (typename std::list<T>::iterator it = sockets.begin(); it != sockets.end(); ++it)
-				if (it->getResponsesQueued()->size())
+				if (!it->getResponse()->getBuffer().empty())
 					FD_SET(it->getFd(), &_writeFds);
 		}
 

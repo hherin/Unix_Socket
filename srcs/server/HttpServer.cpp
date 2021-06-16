@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 16:28:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/16 17:34:05 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,32 +90,29 @@ void HttpServer::sendToClients()
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
 			int n = 0;
-			Response *resp = &it->getResponsesQueued()->front();
+			Response *resp = it->getResponse();
 
 			// Doesn't handle the case if send can't send everything in one time. Send the first response
 			// of the queue
-			if ((n = send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), 
-					resp->getBuffer().size(), 0)) < 1)
-				throw std::runtime_error("Fatal error: send function failed\n");
+			n = send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), 
+					resp->getBuffer().size(), 0);
 			
-			printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
-                    convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
-			
-            // // If an error occured, closing the connection
-            if (resp->getCode() >= 400)
+			if (n != -1)
+                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
+                        convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
+			else
             {
-                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed due to error "
-                        + convertNbToString(resp->getCode()) + "\n");
-
-                std::list<ClientSocket>::iterator tmp = it--;
-
-                close(tmp->getFd());
-                _clientSocks.erase(tmp);
+                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed due to error ("
+                        "send function failed)\n");
             }
-            
-			// After sending the response without encoutering any error, removing it from the queue
-            else
-                it->getResponsesQueued()->pop();
+
+            // // If an error occured, closing the connection
+            printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
+
+            std::list<ClientSocket>::iterator tmp = it--;
+
+            close(tmp->getFd());
+            _clientSocks.erase(tmp);
 		}
 	}
 }
