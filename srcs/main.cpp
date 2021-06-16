@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 17:07:48 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 17:52:40 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/16 18:59:59 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,18 @@ int main(int ac, char **av)
 	HttpServer server;
 
 	// Creating sockets and binding them to a port
-	// try
-	// {
+	try
+	{
 		for (size_t i = 0; i < sockArray.size(); ++i)
 			server.addServerSocket(ServerSocket(sockArray[i], 5));
 			
 		server.etablishConnection(m_srv);
-	// }
-	// catch (std::exception& e)
-	// {
-	// 	printLog(" >> Exception occured " + std::string(e.what()) + "\n");
-	// 	exit(EXIT_FAILURE);
-	// }
+	}
+	catch (std::exception& e)
+	{
+		printLog(" >> Exception occured " + std::string(e.what()) + "\n");
+		exit(EXIT_FAILURE);
+	}
 
 	return 0;
 }
