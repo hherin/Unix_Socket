@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/14 16:19:44 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/16 17:01:03 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int ClientSocket::receiveRequest(const char* buffer)
 {
 	try
 	{
+		std::cerr << "BUFFER is: |" << buffer << "\n";
+
 		_request += buffer;
 		_request.parsingCheck();
 	}
