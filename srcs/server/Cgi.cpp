@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/14 22:22:05 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/16 16:22:32 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 		throw std::runtime_error("Error in getcwd command in cgi constructor\n");
 
 	_realUri = pwd + ("/" + realUri);
+
 	if (exec.compare(".cgi"))
-		_exec = pwd + ("/www/cgi-bin/" + exec);
+		_exec = pwd + (CGI_PATH + exec);
 	else
-		_exec = exec;
+		_exec = _realUri;
 	
 	if (_exec.compare(".cgi"))
 		_openArgfile.open(_realUri);
@@ -136,7 +137,6 @@ void CGI::executeCGI()
 		dup2(fdOut[1], STDOUT_FILENO);
 		close(fdOut[0]);
 		close(fdOut[1]);
-		
 
 		dup2(fdIN[0], STDIN_FILENO);
 		close(fdIN[0]);
@@ -144,7 +144,7 @@ void CGI::executeCGI()
 
 		// change the repo into where the program is
 		chdir(_path_info.first.c_str());
-		
+
 		if (execve(_args[0], _args, _envvar) < 0){
 			std::cerr << "Error with execve from cgi\n";
 			exit(1);
@@ -167,10 +167,13 @@ void CGI::executeCGI()
 		close(fdIN[1]);
 		close(fdIN[0]);
 		
-		char buf[2046];
+		char buf[BUFFER_SIZE_CGI_PIPE + 1] = {0};
 		std::string msgbody;	
-		while (read(fdOut[0], buf, 2046) == 2046)
+		while (read(fdOut[0], buf, BUFFER_SIZE_CGI_PIPE))
+		{
 			msgbody += buf;
+			memset(buf, 0, BUFFER_SIZE_CGI_PIPE + 1);
+		}
 		msgbody += buf;
 		
 		close(fdOut[0]);

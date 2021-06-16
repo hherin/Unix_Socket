@@ -30,7 +30,10 @@ enum methods { GET, HEAD, POST, DELETE };
 #define MAX_HEADER_LEN 8000
 
 // Number of octets that the request buffer can contain
-#define BUFFER_SIZE_REQUEST 1
+#define BUFFER_SIZE_REQUEST 2046
+
+// Number of octets that the read is reading from the stdout piped
+#define BUFFER_SIZE_CGI_PIPE 2046
 
 // End the line for status / request line and headers
 #define CLRF "\r\n"
@@ -41,6 +44,7 @@ enum methods { GET, HEAD, POST, DELETE };
 #define MAX_SEC_TIMEOUT 1000
 #define MAX_USEC_TIMEOUT 0
 
+#define CGI_PATH "/www/cgi-bin/"
 
 // The reason for each status line cose
 #define REASON_100 "Continue"

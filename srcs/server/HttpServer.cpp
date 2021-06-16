@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/14 16:18:44 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/16 15:34:10 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void HttpServer::sendToClients()
 				throw std::runtime_error("Fatal error: send function failed\n");
 			
 			printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
-                    convertNbToString(resp->getCode()) + "\n", resp->getBuffer());
+                    convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
 			
             // // If an error occured, closing the connection
             if (resp->getCode() >= 400)
