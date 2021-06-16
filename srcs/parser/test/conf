@@ -9,12 +9,15 @@ server {
     location /put_test  {
         allow_method  PUT
         root  ./www/tester/2
+        autoindex on
     }
     location /post_body {
         allow_method  POST
         root  ./www/tester/3
         index  index.html
         cgi  .bla gg
+        cgi  .ble gogo
+        autoindex off
     }
     location /directory {
         cgi  .bla gg
