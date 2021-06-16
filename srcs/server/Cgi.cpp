@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/16 16:22:32 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/16 16:28:09 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,21 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	// ** set environment variable for the CGI **
 	// GET : QUERY_STRING + PATH_INFO 
 	// POST : PATH_INFO + CONTENT_length 
-	if ((_envvar = new char*[6]) == NULL)
+	if ((_envvar = new char*[7]) == NULL)
 		throw std::runtime_error("Error on a cgi malloc\n");
 		
 	int i = 0;
 	_envvar[i++] = strdup(("PATH_INFO=" + _realUri).c_str());
 	_envvar[i++] = strdup("SERVER_PROTOCOL=HTTP/1.1");
+
+    // used for php-cgi
+	_envvar[i++] = strdup("REDIRECT_STATUS=200");
 	
 	if (_req->getMethod() == GET){
-		_envvar[i++] = strdup("REQUEST_METHOD=GET");
+
+        // stupid bug in php-cgi
+        if (!_exec.compare("php-cgi"))
+            _envvar[i++] = strdup("REQUEST_METHOD=GET");
 		
 		tmpBuf = "QUERY_STRING=" + _req->getQuery();
 		_envvar[i++] = strdup(tmpBuf.c_str());
@@ -65,7 +71,10 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	}
 	
 	else {
-		_envvar[i++] = strdup("REQUEST_METHOD=POST");	
+        
+        // stupid bug in php-cgi
+        if (!_exec.compare("php-cgi"))
+            _envvar[i++] = strdup("REQUEST_METHOD=POST");	
 		
 		std::stringstream intToString;
 		intToString << _req->getBody().getBody().size();
@@ -169,13 +178,13 @@ void CGI::executeCGI()
 		
 		char buf[BUFFER_SIZE_CGI_PIPE + 1] = {0};
 		std::string msgbody;	
-		while (read(fdOut[0], buf, BUFFER_SIZE_CGI_PIPE))
+		while (read(fdOut[0], buf, BUFFER_SIZE_CGI_PIPE) > 0)
 		{
 			msgbody += buf;
 			memset(buf, 0, BUFFER_SIZE_CGI_PIPE + 1);
 		}
 		msgbody += buf;
-		
+
 		close(fdOut[0]);
 
 		_emptyBody->setBuff(msgbody);

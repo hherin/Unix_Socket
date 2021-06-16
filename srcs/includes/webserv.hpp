@@ -44,6 +44,9 @@ enum methods { GET, HEAD, POST, DELETE };
 #define MAX_SEC_TIMEOUT 1000
 #define MAX_USEC_TIMEOUT 0
 
+#define CGI_BUFFER_SIZE 2046
+
+#define DEFAULT_PATH_ERROR_PAGES "./www/errors/"
 #define CGI_PATH "/www/cgi-bin/"
 
 // The reason for each status line cose
@@ -89,7 +92,5 @@ enum methods { GET, HEAD, POST, DELETE };
 #define REASON_503 "Service Unavailable"
 #define REASON_504 "Gateway Timeout"
 #define REASON_505 "HTTP Version Not Supported"
-
-#define DEFAULT_PATH_ERROR_PAGES "./www/errors/"
 
 #endif
