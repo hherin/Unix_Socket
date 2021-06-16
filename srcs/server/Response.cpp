@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/14 20:51:49 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/16 18:08:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,10 @@ void Response::fillBuffer()
 
 void Response::fillCgi(const std::string& realUri, std::string* cgiName)
 {
+    struct stat st;
+    if (stat(realUri.c_str(), &st) == -1)
+        throw StatusLine(404, REASON_404, "fillCgi method: " + realUri);
+
 	Body cgiRep;
 	CGI cgi(&cgiRep, _req, realUri, *cgiName);
 	
