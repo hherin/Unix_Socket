@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mainConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/11 15:49:39 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/15 12:09:12 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int main(int ac, char **av)
 				for (std::map<std::string, Location>::iterator it2 = loc.begin(); it2 != loc.end(); it2++){
 					
 					std::cout << "LOC " << it2->first << ": \n";
-					
+					std::cout << "AutoIndex : " << it2->second.getAutoIndex() << std::endl;
 					(it2->second.getRoot().size()) ? std::cout << "root : " << it2->second.getRoot() << std::endl : 0;
 					std::vector<std::string> v1 = it2->second.getMethods();
 					(it2->second.getMethods().size()) ? std::cout << "methods : " : 0;
@@ -64,10 +64,11 @@ int main(int ac, char **av)
 						std::cout << v2[i] << " ";
 					(it2->second.getIndex().size()) ? std::cout << std::endl : 0;
 
-					std::vector<std::string> v3 = it2->second.getCgiExe();
-					(it2->second.getCgiExe().size()) ? std::cout << "cgi : " : 0;
-					for (size_t i = 0; i < v3.size(); i++)
-						std::cout << v3[i] << " ";
+					std::map<std::string, std::string> v3 = it2->second.getCgiExe();
+					(it2->second.getCgiExe().size()) ? std::cout << "cgi : \n" : 0;
+					for (std::map<std::string, std::string>::const_iterator it = v3.begin(); it != v3.end(); it++){
+						std::cout << "* " << it->first << " " << it->second << "\n";
+					}
 					(it2->second.getCgiExe().size()) ? std::cout << std::endl : 0;				
 					std::cout << "\n\n";
 

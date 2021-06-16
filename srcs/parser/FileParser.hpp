@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   FileParser.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 16:02:25 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/11 15:50:36 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/15 11:51:16 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 enum e_srv { LIS, ERR, SRV_N, BODY, HOST};
 
-enum e_loc { METHO, IDX, STORE, ROOT, CGI_EXE};
+enum e_loc { METHO, IDX, STORE, ROOT, CGI_EXE, AUTOIDX};
 
 
 class FileParser 
