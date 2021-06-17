@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
+#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/06/17 14:03:35 by heleneherin      ###   ########.fr        #
+#    Updated: 2021/06/17 16:37:25 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
