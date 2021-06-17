@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 17:01:03 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/17 15:35:05 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ ClientSocket::~ClientSocket() {}
 
 ClientSocket::ClientSocket(const ClientSocket& c) :
 		_fd(c._fd), _infoVirServs(c._infoVirServs), 
-		_request(c._request), _respQueue(c._respQueue) {}
+		_request(c._request), _response(c._response) {}
 
 ClientSocket& ClientSocket::operator=(ClientSocket a)
 {
@@ -38,7 +38,7 @@ int ClientSocket::getFd() const								{ return _fd; }
 
 Request* ClientSocket::getRequest()							{ return &_request; }
 
-std::queue<Response>* ClientSocket::getResponsesQueued()	{ return &_respQueue; }
+Response* ClientSocket::getResponse()	            { return &_response; }
 
 
 /* ------------------------------------------------------------- */
@@ -61,11 +61,11 @@ int ClientSocket::receiveRequest(const char* buffer)
 		printLog(" >> FD " + convertNbToString(getFd()) + ": Request received\n",
 				_request.getBuffer());
 
-		_respQueue.push(Response(&_request, staLine, _infoVirServs));
-		_respQueue.back().fillBuffer();
-		
-		// Response was created, clearing request object for next incoming request
-		_request.clear();
+        // Constructing response
+        _response.setRequest(&_request);
+        _response.setStatusLine(staLine);
+        _response.setInfoVirtualServs(_infoVirServs);
+		_response.fillBuffer();
 	}
 
 	return 0;
@@ -80,5 +80,5 @@ void swap(ClientSocket& a, ClientSocket& b)
 	std::swap(a._fd, b._fd);
 	std::swap(a._infoVirServs, b._infoVirServs);
 	std::swap(a._request, b._request);
-	std::swap(a._respQueue, b._respQueue);
+	std::swap(a._response, b._response);
 }

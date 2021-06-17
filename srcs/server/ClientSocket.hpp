@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/08 18:04:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/16 17:33:48 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class ClientSocket
 		const std::vector<ServerInfo>*	_infoVirServs;	// Servers blocks from config file that match a specific port
 		
 		Request							_request;		// Object containing the request
-		std::queue<Response>			_respQueue;		// Queue containing the responses created from request object
+		Response            			_response;		// Queue containing the responses created from request object
 
 	public:
 
@@ -51,14 +51,9 @@ class ClientSocket
 		/* ------------------------------------------------------------- */
 		/* -------------------------- GETTERS -------------------------- */
 
-		// Return socket id
 		int getFd() const;
-
-		// Return request
 		Request* getRequest();
-
-		// Return responses queue
-		std::queue<Response>* getResponsesQueued();
+		Response* getResponse();
 	
 	
 		/* ------------------------------------------------------------- */

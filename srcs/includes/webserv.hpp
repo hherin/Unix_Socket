@@ -30,10 +30,10 @@ enum methods { GET, HEAD, POST, DELETE };
 #define MAX_HEADER_LEN 8000
 
 // Number of octets that the request buffer can contain
-#define BUFFER_SIZE_REQUEST 2046
+#define REQUEST_BUFFER_SIZE 2046
 
 // Number of octets that the read is reading from the stdout piped
-#define BUFFER_SIZE_CGI_PIPE 2046
+#define CGI_PIPE_BUFFER_SIZE 2046
 
 // End the line for status / request line and headers
 #define CLRF "\r\n"
@@ -45,6 +45,8 @@ enum methods { GET, HEAD, POST, DELETE };
 #define MAX_USEC_TIMEOUT 0
 
 #define CGI_BUFFER_SIZE 2046
+
+#define SEND_BUFFER_SIZE 65536
 
 #define DEFAULT_PATH_ERROR_PAGES "./www/errors/"
 #define CGI_PATH "/www/cgi-bin/"

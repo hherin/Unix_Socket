@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 16:28:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/16 19:21:10 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,32 +90,85 @@ void HttpServer::sendToClients()
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
 			int n = 0;
-			Response *resp = &it->getResponsesQueued()->front();
+			Response *resp = it->getResponse();
+
+            // const char *toSend = resp->getBuffer().c_str();
+            size_t leftToSend = resp->getBuffer().size();
+            size_t sizeToSend;
 
 			// Doesn't handle the case if send can't send everything in one time. Send the first response
 			// of the queue
-			if ((n = send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), 
-					resp->getBuffer().size(), 0)) < 1)
-				throw std::runtime_error("Fatal error: send function failed\n");
-			
-			printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
-                    convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
-			
-            // // If an error occured, closing the connection
-            if (resp->getCode() >= 400)
-            {
-                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed due to error "
-                        + convertNbToString(resp->getCode()) + "\n");
 
-                std::list<ClientSocket>::iterator tmp = it--;
+            // int fd = open("/Users/llefranc/Rendu/42cursus/Unix_Socket/www/tests/test_cgi/img/negroni.png", O_RDONLY);
+            // char buffer[SEND_BUFFER_SIZE + 1] = {0};
 
-                close(tmp->getFd());
-                _clientSocks.erase(tmp);
-            }
+            // size_t headersPos = resp->getBuffer().find("\r\n\r\n");
+
+            // std::cout << "HEADERS:|" << resp->getBuffer().substr(0, headersPos + 4) << "|\n-------------\n";
+            // send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), headersPos, 0);
+
+            // do
+			// {
+            //     // (void)toSend;
+            //     std::cerr << "hello\n";
+            //     memset(buffer, 0, SEND_BUFFER_SIZE + 1);
+            //     sizeToSend = read(fd, buffer, SEND_BUFFER_SIZE);
+            //     std::cerr << "size read = " << sizeToSend << "\n";
+
+            //     sizeToSend = (leftToSend > SEND_BUFFER_SIZE) ? SEND_BUFFER_SIZE : leftToSend;
+            //     std::cerr << "hello3\n";
+                
+            //     n = write(it->getFd(),static_cast<const void*>(buffer), sizeToSend );
+            //     // n = send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()),
+            //     //          it->getResponse()->getBuffer().size(), 0);
+            //     std::cerr << "hello4\n";
+
+            //     leftToSend -= sizeToSend;
+            //     std::cerr << "size to send: " << sizeToSend << " and send " << n << " octets, left to send: " << leftToSend << "\n";
+                
+            // } while (n != -1 && leftToSend);
+			
+
+            do
+			{
+                // (void)toSend;
+                // std::cerr << "hello\n";
+                // memset(buffer, 0, SEND_BUFFER_SIZE + 1);
+                // sizeToSend = read(fd, buffer, SEND_BUFFER_SIZE);
+                // std::cerr << "size read = " << sizeToSend << "\n";
+
+                sizeToSend = (leftToSend > SEND_BUFFER_SIZE) ? SEND_BUFFER_SIZE : leftToSend;
+                // std::cerr << "hello3\n";
+                
+                // n = write(it->getFd(),static_cast<const void*>(buffer), sizeToSend );
+                n = send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()),
+                         it->getResponse()->getBuffer().size(), 0);
+                // std::cerr << "hello4\n";
+
+                leftToSend -= sizeToSend;
+                std::cerr << "size to send: " << sizeToSend << " and send " << n << " octets, left to send: " << leftToSend << "\n";
+                
+            } while (n != -1 && leftToSend);
+        //    and buffer size is " << it->getResponse()->getBuffer().size() << "\n";
+            std::cerr << "coucou\n";
             
-			// After sending the response without encoutering any error, removing it from the queue
-            else
-                it->getResponsesQueued()->pop();
+			if (n != -1)
+                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
+                        // convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
+                        convertNbToString(resp->getCode()) + ")\n");
+			else
+            {
+                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed due to error ("
+                        "send function failed)\n");
+            }
+
+            // // If an error occured, closing the connection
+            printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
+
+            std::list<ClientSocket>::iterator tmp = it--;
+
+            close(tmp->getFd());
+            _clientSocks.erase(tmp);
 		}
 	}
 }
@@ -126,9 +179,9 @@ void HttpServer::requestHandler()
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			char buffer[BUFFER_SIZE_REQUEST + 1]; // CHANGER ICI LA TAILLE DU BUFFER
-			bzero(buffer, BUFFER_SIZE_REQUEST + 1);
-			int n = recv(it->getFd(), buffer, BUFFER_SIZE_REQUEST, 0);
+			char buffer[REQUEST_BUFFER_SIZE + 1]; // CHANGER ICI LA TAILLE DU BUFFER
+			bzero(buffer, REQUEST_BUFFER_SIZE + 1);
+			int n = recv(it->getFd(), buffer, REQUEST_BUFFER_SIZE, 0);
 
 			if (n < 0)
 				throw std::runtime_error("Fatal error: recv function failed\n"); // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug

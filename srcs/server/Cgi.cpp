@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/16 18:17:13 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/17 15:34:54 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,12 +176,12 @@ void CGI::executeCGI()
 		close(fdIN[1]);
 		close(fdIN[0]);
 		
-		char buf[BUFFER_SIZE_CGI_PIPE + 1] = {0};
+		char buf[CGI_PIPE_BUFFER_SIZE + 1] = {0};
 		std::string msgbody;	
-		while (read(fdOut[0], buf, BUFFER_SIZE_CGI_PIPE) > 0)
+		while (read(fdOut[0], buf, CGI_PIPE_BUFFER_SIZE) > 0)
 		{
 			msgbody += buf;
-			memset(buf, 0, BUFFER_SIZE_CGI_PIPE + 1);
+			memset(buf, 0, CGI_PIPE_BUFFER_SIZE + 1);
 		}
 		msgbody += buf;
 
