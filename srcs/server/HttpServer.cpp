@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 16:03:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 16:16:40 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,10 @@ void HttpServer::sendToClients()
             
             std::list<ClientSocket>::iterator tmp = it--;
             closeConnection(&tmp);
+
+            // Case no other sockets waiting
+			if (!--_nbReadyFds)
+				break;
 		}
 	}
 }
@@ -174,21 +178,19 @@ void HttpServer::requestHandler()
                 std::list<ClientSocket>::iterator tmp = it--;
                 closeConnection(&tmp);
             }
-				
+
 			// Client closed the connection
 			else if (!n)
 			{
 				printLog(" >> FD " + convertNbToString(it->getFd()) + ": recv function returned 0, connection closed\n");
                 std::list<ClientSocket>::iterator tmp = it--;
                 closeConnection(&tmp);
-
-				continue ;
 			}
 
 			// Concatenate buffer to actual stored request
             else
                 it->receiveRequest(buffer);
-				
+	
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)
 				break;
@@ -211,7 +213,7 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			int newClient;
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
 				throw std::runtime_error("Fatal error: accept function failed\n");  // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
-			
+
 			// Setting the fd in non-blocking mode, then saving it
 			fcntl(newClient, F_SETFL, O_NONBLOCK);
 			addClientSocket(newClient, it->getPort(), mSrv);
