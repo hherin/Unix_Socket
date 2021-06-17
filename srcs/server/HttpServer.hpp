@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:21:22 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 17:36:12 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 15:21:55 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class HttpServer
 		// Infinite loop, sets fd_set with all fds for passive accept sockets + connected clients
 		void etablishConnection(std::map<int, std::vector<ServerInfo> >& mSrv);
 
+        void closeConnection(std::list<ClientSocket>::iterator it);
 
 	private:
 

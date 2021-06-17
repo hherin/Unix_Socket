@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 19:21:10 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 15:30:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ void HttpServer::sendToClients()
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
 			int n = 0;
-			Response *resp = it->getResponse();
 
             // const char *toSend = resp->getBuffer().c_str();
-            size_t leftToSend = resp->getBuffer().size();
-            size_t sizeToSend;
+            // size_t sizeToSend;
+
+            /* NEED TO FIX THIS */
 
 			// Doesn't handle the case if send can't send everything in one time. Send the first response
 			// of the queue
@@ -128,47 +128,31 @@ void HttpServer::sendToClients()
                 
             // } while (n != -1 && leftToSend);
 			
+			const std::string *buffer = &it->getResponse()->getBuffer();
+            size_t leftToSend = buffer->size();
+            size_t octetsSent = 0;
 
             do
 			{
-                // (void)toSend;
-                // std::cerr << "hello\n";
-                // memset(buffer, 0, SEND_BUFFER_SIZE + 1);
-                // sizeToSend = read(fd, buffer, SEND_BUFFER_SIZE);
-                // std::cerr << "size read = " << sizeToSend << "\n";
+                n = send(it->getFd(), static_cast<const void*>(buffer->c_str() + octetsSent),
+                        buffer->size(), 0);
 
-                sizeToSend = (leftToSend > SEND_BUFFER_SIZE) ? SEND_BUFFER_SIZE : leftToSend;
-                // std::cerr << "hello3\n";
-                
-                // n = write(it->getFd(),static_cast<const void*>(buffer), sizeToSend );
-                n = send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()),
-                         it->getResponse()->getBuffer().size(), 0);
-                // std::cerr << "hello4\n";
-
-                leftToSend -= sizeToSend;
-                std::cerr << "size to send: " << sizeToSend << " and send " << n << " octets, left to send: " << leftToSend << "\n";
+                octetsSent += n;
+                leftToSend -= n;
                 
             } while (n != -1 && leftToSend);
-        //    and buffer size is " << it->getResponse()->getBuffer().size() << "\n";
-            std::cerr << "coucou\n";
             
 			if (n != -1)
                 printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
                         // convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
-                        convertNbToString(resp->getCode()) + ")\n");
+                        convertNbToString(it->getResponse()->getCode()) + "), connection closed\n");
 			else
             {
-                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed due to error ("
-                        "send function failed)\n");
+                printLog(" >> FD " + convertNbToString(it->getFd()) + 
+                        ": Failed to send response, connection closed\n");
             }
-
-            // // If an error occured, closing the connection
-            printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
-
-            std::list<ClientSocket>::iterator tmp = it--;
-
-            close(tmp->getFd());
-            _clientSocks.erase(tmp);
+            
+            closeConnection(it--);
 		}
 	}
 }
@@ -186,14 +170,11 @@ void HttpServer::requestHandler()
 			if (n < 0)
 				throw std::runtime_error("Fatal error: recv function failed\n"); // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 				
-			// Closing the connection (in ClientSocket destructor)
+			// Closing the connection
 			else if (!n)
 			{
 				printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
-
-				// Need to use a tmp iterator because otherwise it is invalidated after erase
-				std::list<ClientSocket>::iterator tmp = it++;
-				_clientSocks.erase(tmp);
+                closeConnection(it++);
 
 				continue ;
 			}
@@ -237,6 +218,11 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 	}
 }
 
+void HttpServer::closeConnection(std::list<ClientSocket>::iterator it)
+{
+    close(it->getFd());
+    _clientSocks.erase(it);
+}
 
 /* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
