@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/06/02 15:05:31 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/17 14:03:35 by heleneherin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	lutils.a
 
-SRCS		=	utils.cpp 
+SRCS		=	utils.cpp autoindex.cpp
 
 OBJS		=	${SRCS:.cpp=.o}
 
