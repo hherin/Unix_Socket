@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/16 18:08:58 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 18:14:15 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,7 +291,7 @@ std::string Response::addIndex(const std::string& uri, const std::vector<std::st
 			return uriWithIndex;
 	}
 	
-	throw StatusLine(301, REASON_301, "trying to access a directory addIndex method");
+	throw StatusLine(403, REASON_403, "trying to access a directory addIndex method");
 }
 
 void Response::checkMethods(int method, const std::vector<std::string>& methodsAllowed) const
@@ -322,8 +322,8 @@ std::string Response::reconstructFullURI(int method,
 		// Checking if the file exist or if it's a directory. Case POST method, no 404 because it can create the file.
 		if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
-		if (fileExist && S_ISDIR(infFile.st_mode))
-			throw StatusLine(301, REASON_301, "trying to access a directory case no match with"
+		if (fileExist && S_ISDIR(infFile.st_mode) && !((method == GET || method == HEAD) && loc.second->getAutoIndex()))
+			throw StatusLine(403, REASON_403, "trying to access a directory case no match with"
 					" location block in reconstructlFullURI method");
 
 		return uri;

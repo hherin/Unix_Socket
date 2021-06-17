@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 17:42:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/17 15:38:25 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 18:07:26 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void autoIndexDisplayer(std::string const &uri, std::string &displayList)
 	std::string cmd = "php " + (getcwd(NULL, 0) + ("/autoindex.php " + uri)) ;
 	std::system(cmd.c_str());
 	char buf[CGI_BUFFER_SIZE + 1] = {0};
-	while (read(fd[0], buf, CGI_BUFFER_SIZE) == CGI_BUFFER_SIZE){	
+	while (read(fd[0], buf, CGI_BUFFER_SIZE) > 0){	
 		displayList += buf;
 		memset(buf, 0, CGI_BUFFER_SIZE + 1);
 	}
