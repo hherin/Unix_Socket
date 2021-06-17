@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/17 18:14:15 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 20:12:53 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@
 Response::Response() {}
 
 Response::Response(Request* req, const StatusLine& staLine, const std::vector<ServerInfo>* infoVirServs) :
-	_infoVirServs(infoVirServs), _req(req), _staLine(staLine) {}
+	_infoVirServs(infoVirServs), _req(req), _staLine(staLine), _autoIndex(false) {}
 
 Response::Response(const Response& c) : 
-	_infoVirServs(c._infoVirServs), _req(c._req), _staLine(c._staLine), _body(c._body), _buffer(c._buffer) {}
+	_infoVirServs(c._infoVirServs), _req(c._req), _staLine(c._staLine), _buffer(c._buffer),
+    _autoIndex(c._autoIndex) {}
 
 Response::~Response() {}
 
@@ -77,7 +78,6 @@ const std::string& Response::getBuffer() const
 void Response::clear()
 {
 	_staLine.clear();
-	_body.clear();
 	_buffer.clear();
 }
 
@@ -118,16 +118,29 @@ void Response::fillBuffer()
 			fillServerHeader();
 			fillDateHeader();
 			
-			FileParser body(realUri.c_str(), true); // CAHNGER
+            if (!_autoIndex)
+            {
+                FileParser body(realUri.c_str(), true); // CAHNGER
 
-			// Setting size after storing the body in FileParser object, then setting Last-Modified header
-			fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
-			fillLastModifiedHeader(realUri.c_str());
-			_buffer += CLRF;
+                // Setting size after storing the body in FileParser object, then setting Last-Modified header
+                fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
+                fillLastModifiedHeader(realUri.c_str());
+                _buffer += CLRF;
 
-			// For GET, writing the body previously stored to the buffer
-			if (_req->getMethod() == GET)
-				_buffer += body.getRequestFile();
+                // For GET, writing the body previously stored to the buffer
+                if (_req->getMethod() == GET)
+                    _buffer += body.getRequestFile();
+            }
+
+            // Filling autoindex
+			else
+            {
+                std::string autoIndexPage;
+                autoIndexDisplayer(realUri, &autoIndexPage);
+
+                fillContentlengthHeader(convertNbToString(autoIndexPage.size()));
+                _buffer += CLRF + autoIndexPage;
+            }
 		}
 
 		else if (_req->getMethod() == POST)
@@ -322,7 +335,7 @@ std::string Response::reconstructFullURI(int method,
 		// Checking if the file exist or if it's a directory. Case POST method, no 404 because it can create the file.
 		if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
 			throw StatusLine(404, REASON_404, "case no match with location block in reconstructlFullURI method: " + uri);
-		if (fileExist && S_ISDIR(infFile.st_mode) && !((method == GET || method == HEAD) && loc.second->getAutoIndex()))
+		if (fileExist && S_ISDIR(infFile.st_mode))
 			throw StatusLine(403, REASON_403, "trying to access a directory case no match with"
 					" location block in reconstructlFullURI method");
 
@@ -342,9 +355,15 @@ std::string Response::reconstructFullURI(int method,
 	// to add indexs. Case POST method, no 404 because it can create the file.
 	if (stat(uri.c_str(), &infFile) == -1 && !(fileExist = false) && method != POST)
 		throw StatusLine(404, REASON_404, "reconstructFullURI method: " + uri);
-	if (fileExist && S_ISDIR(infFile.st_mode))
+
+    // Case we match a directory and an autoindex isn't set. We try all the possible indexs, if none
+    // works addIndex throw a 403 error StatusLine object
+	if (fileExist && S_ISDIR(infFile.st_mode) && !((method == GET || method == HEAD) && loc.second->getAutoIndex()))
 		uri = addIndex(uri, loc.second->getIndex());
-	
+    
+    else if (fileExist && S_ISDIR(infFile.st_mode) && ((method == GET || method == HEAD) && loc.second->getAutoIndex()))
+        _autoIndex = true;
+        
 	checkMethods(method, loc.second->getMethods());
 
 	return uri;
@@ -409,6 +428,6 @@ void swap(Response& a, Response& b)
 	std::swap(a._infoVirServs, b._infoVirServs);
 	std::swap(a._req, b._req);
 	swap(a._staLine, b._staLine);
-	std::swap(a._body, b._body);
 	std::swap(a._buffer, b._buffer);
+    std::swap(a._autoIndex, b._autoIndex);
 }

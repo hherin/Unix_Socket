@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 14:19:48 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 14:03:07 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/17 19:36:49 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@
 #include <vector>
 #include <iostream>
 #include <unistd.h>
+
 #include "../parser/LocationObj.hpp"
+#include "../server/msg_format/StatusLine.hpp"
 
 class Location; 
 class ServerInfo;
+class StatusLine;
 
 // Converts a char upper case to lower case
 char asciiToLower(char in);
@@ -66,5 +69,7 @@ void printLog(const std::string &msg, const std::string& addInfo = "");
 // Split the path string into :
 // first = path to the requested file | second = name of executable
 std::pair<std::string, std::string> *SplitPathForExec(std::string const &path);
+
+void autoIndexDisplayer(std::string const &uri, std::string* displayList);
 
 #endif
