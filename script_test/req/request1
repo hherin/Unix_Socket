@@ -1,0 +1,5 @@
+GET / HTTP/1.1
+host:dragoon
+content-lenght:7
+
+salut

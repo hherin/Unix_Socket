@@ -1,0 +1,37 @@
+GET /ok HTTP/1.1
+
+HEAD /ok HTTP/1.1
+
+DELETE /ok HTTP/1.1
+
+POST /ok HTTP/1.1
+
+PUT /ok HTTP/1.1
+
+GET false HTTP/1.1
+
+HEAD false HTTP/1.1
+
+DELETE false HTTP/1.1
+
+POST false HTTP/1.1
+
+PUT false HTTP/1.1
+
+GET /ok HTT/1.1
+
+GET /ok HTTP/1.2
+
+GET /ok HTTP/
+
+GET /ok /HTTP/1.1
+
+GET /okhdasvdk HTTP/1.1
+
+GET /ok HTTP/1. 1
+
+GET /ok HTTP/1.1
+
+GET /okHTTP/1.1
+
+GET    /ok HTTP/1.1

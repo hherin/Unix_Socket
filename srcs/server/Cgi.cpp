@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/16 18:27:40 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 15:35:14 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ void CGI::executeCGI()
 	else{
 		close(fdOut[1]); close(fdOut[0]);
 		if (_req->getMethod() == POST) { close(fdIN[0]); close(fdIN[1]); }
-			throw std::runtime_error("Error in fork occurs\n");
+		throw std::runtime_error("Error in fork occurs\n");
 	}
 }
 
