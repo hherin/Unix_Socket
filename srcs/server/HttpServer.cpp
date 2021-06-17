@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 15:30:58 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 16:03:48 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,41 +152,47 @@ void HttpServer::sendToClients()
                         ": Failed to send response, connection closed\n");
             }
             
-            closeConnection(it--);
+            std::list<ClientSocket>::iterator tmp = it--;
+            closeConnection(&tmp);
 		}
 	}
 }
 
 void HttpServer::requestHandler()
 {
-	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end();)
+	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end(); ++it)
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
-			char buffer[REQUEST_BUFFER_SIZE + 1]; // CHANGER ICI LA TAILLE DU BUFFER
+			char buffer[REQUEST_BUFFER_SIZE + 1];
 			bzero(buffer, REQUEST_BUFFER_SIZE + 1);
 			int n = recv(it->getFd(), buffer, REQUEST_BUFFER_SIZE, 0);
 
 			if (n < 0)
-				throw std::runtime_error("Fatal error: recv function failed\n"); // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
+            {
+                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Error on recv function, connection closed\n");
+                std::list<ClientSocket>::iterator tmp = it--;
+                closeConnection(&tmp);
+            }
 				
-			// Closing the connection
+			// Client closed the connection
 			else if (!n)
 			{
-				printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
-                closeConnection(it++);
+				printLog(" >> FD " + convertNbToString(it->getFd()) + ": recv function returned 0, connection closed\n");
+                std::list<ClientSocket>::iterator tmp = it--;
+                closeConnection(&tmp);
 
 				continue ;
 			}
 
 			// Concatenate buffer to actual stored request
-			it->receiveRequest(buffer);
+            else
+                it->receiveRequest(buffer);
 				
 			// Case no other sockets waiting
 			if (!--_nbReadyFds)
 				break;
 		}
-		++it;
 	}
 }
 
@@ -218,10 +224,10 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 	}
 }
 
-void HttpServer::closeConnection(std::list<ClientSocket>::iterator it)
+void HttpServer::closeConnection(std::list<ClientSocket>::iterator *it)
 {
-    close(it->getFd());
-    _clientSocks.erase(it);
+    close((*it)->getFd());
+    _clientSocks.erase(*it);
 }
 
 /* ------------------------------------------------------------- */
