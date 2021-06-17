@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 15:17:21 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 15:30:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ void HttpServer::sendToClients()
 			
 			const std::string *buffer = &it->getResponse()->getBuffer();
             size_t leftToSend = buffer->size();
-
             size_t octetsSent = 0;
 
             do
@@ -153,10 +152,7 @@ void HttpServer::sendToClients()
                         ": Failed to send response, connection closed\n");
             }
             
-            // Closing the connection
-            std::list<ClientSocket>::iterator tmp = it--;
-            close(tmp->getFd());
-            _clientSocks.erase(tmp);
+            closeConnection(it--);
 		}
 	}
 }
@@ -174,14 +170,11 @@ void HttpServer::requestHandler()
 			if (n < 0)
 				throw std::runtime_error("Fatal error: recv function failed\n"); // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
 				
-			// Closing the connection (in ClientSocket destructor)
+			// Closing the connection
 			else if (!n)
 			{
 				printLog(" >> FD " + convertNbToString(it->getFd()) + ": Connection closed\n");
-
-				// Need to use a tmp iterator because otherwise it is invalidated after erase
-				std::list<ClientSocket>::iterator tmp = it++;
-				_clientSocks.erase(tmp);
+                closeConnection(it++);
 
 				continue ;
 			}
@@ -225,6 +218,11 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 	}
 }
 
+void HttpServer::closeConnection(std::list<ClientSocket>::iterator it)
+{
+    close(it->getFd());
+    _clientSocks.erase(it);
+}
 
 /* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */
