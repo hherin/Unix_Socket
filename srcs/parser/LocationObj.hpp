@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/15 11:53:27 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/17 15:33:15 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Location
 		bool _autoindex;
 		std::string _root;
 		std::string _upload_store;
+		std::string _redirect;
 		std::vector<std::string> _allow_methd;
 		std::vector<std::string> _index;
 		std::map<std::string, std::string> _cgi_exe;

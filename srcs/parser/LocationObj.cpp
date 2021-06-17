@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/15 11:58:58 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/17 15:34:35 by heleneherin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Location::Location(ServerInfo *s) : _srv(s), _autoindex(0)
 }
 
 Location::Location(Location const &loc) : _srv(loc._srv), _autoindex(loc._autoindex), _root(loc._root), 
-_upload_store(loc._upload_store), _allow_methd(loc._allow_methd), _index(loc._index),
+_upload_store(loc._upload_store), _redirect(loc._redirect), _allow_methd(loc._allow_methd), _index(loc._index),
 _cgi_exe(loc._cgi_exe) {}
 
 Location &Location::operator=(Location const &loc)
