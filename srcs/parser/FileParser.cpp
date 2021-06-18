@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/15 11:59:52 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 10:04:19 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ void FileParser::newLocation(ServerInfo &srv)
 			n_loc.setLocation(CGI_EXE, 4, _buf);
 		else if (!_buf.compare(0, 10, "autoindex "))
 			n_loc.setLocation(AUTOIDX, 10, _buf);
+		else if (!_buf.compare(0, 9, "redirect "))
+			n_loc.setLocation(REDIRECT, 9, _buf);
 		else if (!_buf.compare(0, 1, "}")) continue;
 		else throw std::runtime_error(errParseMessage("error line : ", _buf.c_str(), ". Wrong input in block location\n"));
 	}

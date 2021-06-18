@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/15 11:58:58 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 10:03:43 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ Location::Location(ServerInfo *s) : _srv(s), _autoindex(0)
 }
 
 Location::Location(Location const &loc) : _srv(loc._srv), _autoindex(loc._autoindex), _root(loc._root), 
-_upload_store(loc._upload_store), _allow_methd(loc._allow_methd), _index(loc._index),
+_upload_store(loc._upload_store), _redirect(loc._redirect), _allow_methd(loc._allow_methd), _index(loc._index),
 _cgi_exe(loc._cgi_exe) {}
 
 Location &Location::operator=(Location const &loc)
 {
-    Location tmp(loc);
-    myswap(tmp, *this);
-    return *this;
+	Location tmp(loc);
+	myswap(tmp, *this);
+	return *this;
 }
 
 Location::~Location() { }
@@ -48,6 +48,8 @@ std::map<std::string, std::string> const &Location::getCgiExe() const { return _
 
 bool const &Location::getAutoIndex() const { return _autoindex; }
 
+std::string const &Location::getRedirect() const { return _redirect; }
+
 // ============================================================================
 // =============================== SETTERS ====================================
 
@@ -60,13 +62,14 @@ void	Location::setLocation(int nb, int const &pos, std::string const &buf)
 {
 	typedef void (Location::*MemFuncPtr)(const char*);
 	MemFuncPtr F[] = { &Location::setMethods, &Location::setIndex,
-                        &Location::setUploadStore, &Location::setRoot, &Location::setCgiExe, &Location::setAutoIndex};
+						&Location::setUploadStore, &Location::setRoot, &Location::setCgiExe, 
+						&Location::setAutoIndex, &Location::setRedirect};
 
-    const char *tmp = buf.c_str() + pos;
+	const char *tmp = buf.c_str() + pos;
 	int i = 0;
 
 	while (isspace(tmp[i]))
-        i++;
+		i++;
 
 	(this->*F[nb])(tmp + i);
 }
@@ -100,6 +103,15 @@ void Location::setMethods(char const *n)
 				throw std::runtime_error("Error : method " + std::string(_allow_methd[i]) + " is not accepted\n");
 		}
 	}
+}
+
+void Location::setRedirect(char const *r) 
+{
+	std::vector<std::string> v;
+	setStringArray(r, v);
+	if (v.size() != 1)
+		throw std::runtime_error("Error : " + std::string(r) + " - too many input for redirect\n");
+	_redirect = v[0];
 }
 
 void Location::setIndex(char const *n) { setStringArray(n, _index); }
@@ -155,7 +167,7 @@ void Location::printLocation(const std::string& locName) const
 template <class T>
 void Location::myswap(T t1, T t2)
 {
-    T tmp = t1;
-    t1 = t2;
-    t2 = tmp;
+	T tmp = t1;
+	t1 = t2;
+	t2 = tmp;
 }

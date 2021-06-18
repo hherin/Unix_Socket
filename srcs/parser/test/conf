@@ -10,6 +10,7 @@ server {
         allow_method  PUT
         root  ./www/tester/2
         autoindex on
+        redirect /rr/dd/eef/ff
     }
     location /post_body {
         allow_method  POST

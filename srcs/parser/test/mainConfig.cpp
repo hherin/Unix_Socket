@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:29:01 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/15 12:09:12 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 10:08:09 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ int main(int ac, char **av)
 						std::cout << "* " << it->first << " " << it->second << "\n";
 					}
 					(it2->second.getCgiExe().size()) ? std::cout << std::endl : 0;				
+					(it2->second.getRedirect().size()) ? std::cout << it2->second.getRedirect() << "\n" : 0;
 					std::cout << "\n\n";
 
-					
 				}
 			std::cout << "=====================================\n\n";
 			}
