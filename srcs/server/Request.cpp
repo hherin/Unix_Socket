@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:39 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 17:00:25 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 11:34:43 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@ int Request::getMethod() const											{ return _reqLine.getMethod(); }
 const std::string& Request::getPath() const								{ return _reqLine.getPath(); }
 
 const std::string& Request::getQuery() const							{ return _reqLine.getQuery(); }
+
+
+/* ------------------------------------------------------------- */
+/* --------------------------- SETTERS ------------------------- */	
+
+void Request::setPath(const std::string& path)     { _reqLine.setPath(path); }
 
 
 /* ------------------------------------------------------------- */

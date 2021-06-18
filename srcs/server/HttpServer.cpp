@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 17:32:09 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:28:08 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void HttpServer::sendToClients()
             // sending the rest
             do
 			{
-                n = send(it->getFd(), static_cast<const void*>(buffer->c_str() + octetsSent),
+                n = send(it->getFd(), static_cast<const void*>(buffer->c_str() + octetsSent), 
                         leftToSend, 0);
 
                 octetsSent += n;

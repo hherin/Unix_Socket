@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/17 20:12:53 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 11:55:06 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,18 @@ void Response::fillBuffer()
 			else
 				std::cout << "LOCATION: no match\n";
 		#endif
+
+        if (!loc.second->getRedirect().empty())
+        {
+            std::string redirectedUri = _req->getPath();
+
+            addRoot(&redirectedUri, loc.second->getRedirect(), loc.first);
+
+            _req->setPath(std::string("http://localhost:" + 
+                    convertNbToString(loc.second->getServerBlock()->getPort()) + redirectedUri));
+
+            throw StatusLine(301, REASON_301, "http redirection");
+        }
 
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
 		std::string *cgiName = getCgiExecutableName(realUri, loc.second);
@@ -251,6 +263,11 @@ void Response::fillLastModifiedHeader(const char* uri)
 			convertNbToString(lm->tm_min) + ":" + convertNbToString(lm->tm_sec) + " GMT" + CLRF;
 }
 
+void Response::fillLocationHeader(const std::string& redirectedUri)
+{
+    _buffer += "Location:" + redirectedUri + CLRF;
+}
+
 void Response::fillStatusLine(const StatusLine& staLine)
 {
 	_buffer = "HTTP/1.1 " + convertNbToString(staLine.getCode()) + " " + staLine.getReason();
@@ -380,6 +397,9 @@ void Response::fillError(const StatusLine& sta)
 	fillStatusLine(sta);
 	fillServerHeader();
 	fillDateHeader();
+
+    if (_staLine.getCode() == 301)
+        fillLocationHeader(_req->getPath());
 
 	// Value of host header field in request
 	const std::string* hostField = &_req->getHeaders().find("host")->second;
