@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/17 19:29:38 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 11:37:57 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,9 @@ class Response
 
 		// Fills buffer with Last-Modified header (last modification of a file)
 		void fillLastModifiedHeader(const char* uri);
+
+        //
+        void fillLocationHeader(const std::string& redirectedUri);
 
 		// Fills buffer with status line
 		void fillStatusLine(const StatusLine& staLine);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 17:06:51 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/14 09:59:48 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/18 11:34:20 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,12 @@ class Request
 		int getMethod() const;
 		const std::string& getPath() const;
 		const std::string& getQuery() const;
+
+        
+        /* ------------------------------------------------------------- */
+		/* --------------------------- SETTERS ------------------------- */
+
+        void setPath(const std::string& path);
 
 
 		/* ------------------------------------------------------------- */
