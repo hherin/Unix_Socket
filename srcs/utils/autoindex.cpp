@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 17:42:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 10:19:13 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 10:40:11 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void autoIndexDisplayer(std::string const &uri, std::string* displayList)
 
 	std::string exec_path = "php " + (path + ("/srcs/utils/autoindex.php " + std::string("./"))) ;
 	std::system(exec_path.c_str());
-
+	chdir(path);
+	
 	// Restoring STDOUT and closing the last fd[1], so read will get EOF signal
 	dup2(coutSave, STDOUT_FILENO);
 	close(coutSave);
