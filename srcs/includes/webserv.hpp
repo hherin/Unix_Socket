@@ -20,6 +20,12 @@
 
 #include "../utils/utils.hpp"
 
+#ifdef __gnu_linux__
+    #define MTIMESPEC st_mtim
+#else
+    #define MTIMESPEC st_mtimespec
+#endif
+
 enum methods { GET, HEAD, POST, DELETE };
 
 // Number of methods implemented in webserv

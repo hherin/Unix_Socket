@@ -202,7 +202,9 @@ void Response::fillCgi(const std::string& realUri, std::string* cgiName)
 {
     struct stat st;
     if (stat(realUri.c_str(), &st) == -1)
+	{
         throw StatusLine(404, REASON_404, "fillCgi method: " + realUri);
+	}
 
 	Body cgiRep;
 	CGI cgi(&cgiRep, _req, realUri, *cgiName);
@@ -253,7 +255,7 @@ void Response::fillLastModifiedHeader(const char* uri)
 	if (stat(uri, &infFile) == -1)
 		throw StatusLine(404, REASON_404, "fillLastModifiedHeader method");
 
-	struct tm* lm = localtime(&infFile.st_mtimespec.tv_sec);
+	struct tm* lm = localtime(&infFile.MTIMESPEC.tv_sec);
 
 	const std::string day[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 	const std::string mon[12] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -301,7 +303,7 @@ void Response::addRoot(std::string* uri, const std::string& root, const std::str
 	uri->erase(uri->begin(), it);
 	
 	// To correctly append indexs if last '/' is missing
-	if (root.back() != '/')
+	if (root[root.size() - 1] != '/')
 		uri->insert(uri->begin(), '/');
 		
 	uri->insert(0, root);
@@ -377,10 +379,12 @@ std::string Response::reconstructFullURI(int method,
     // works addIndex throw a 403 error StatusLine object
 	if (fileExist && S_ISDIR(infFile.st_mode) && !((method == GET || method == HEAD) && loc.second->getAutoIndex()))
 		uri = addIndex(uri, loc.second->getIndex());
-    
+
     else if (fileExist && S_ISDIR(infFile.st_mode) && ((method == GET || method == HEAD) && loc.second->getAutoIndex()))
-        _autoIndex = true;
-        
+    {
+	    _autoIndex = true;
+    }
+
 	checkMethods(method, loc.second->getMethods());
 
 	return uri;
@@ -389,8 +393,10 @@ std::string Response::reconstructFullURI(int method,
 void Response::fillError(const StatusLine& sta)
 {    
     if (sta.getCode() != _staLine.getCode())
-        _staLine = sta;
-
+    {
+	    _staLine = sta;
+	}
+	
 	_buffer.clear();
 	
 	// Filling buffer with error code + some basic headers

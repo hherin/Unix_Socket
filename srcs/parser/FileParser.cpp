@@ -30,7 +30,7 @@ FileParser::FileParser(const char *filepath, bool s) : _bracket(0), _cli_srv(0),
 
 FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
 _m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
-{ _file.open(_filePath); }
+{ _file.open(_filePath.c_str()); }
 
 FileParser &FileParser::operator=(FileParser const&copy)
 {
