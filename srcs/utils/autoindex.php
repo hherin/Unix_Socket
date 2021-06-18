@@ -39,7 +39,6 @@
 
   $dirlist = getFileList("{$argv[1]}");
 
-
   echo "<table border=\"1\">\n";
   echo "<thead>\n";
   echo "<tr><th>Name</th><th>Type</th><th>Size</th><th>Last Modified</th></tr>\n";

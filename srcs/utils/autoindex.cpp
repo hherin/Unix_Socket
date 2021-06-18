@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 17:42:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 09:44:47 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 10:19:13 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,17 @@ void autoIndexDisplayer(std::string const &uri, std::string* displayList)
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[1]);
 	
-    char *path;
-    if (!(path = getcwd(NULL, 0)))
-        throw StatusLine(500, REASON_500, "getcwd function in autoIndexDisplayer failed\n");
+	char *path;
+	if (!(path = getcwd(NULL, 0)))
+		throw StatusLine(500, REASON_500, "getcwd function in autoIndexDisplayer failed\n");
+	chdir(uri.c_str());
 
-	std::string exec_path = "php " + (path + ("/srcs/utils/autoindex.php " + uri)) ;
+	std::string exec_path = "php " + (path + ("/srcs/utils/autoindex.php " + std::string("./"))) ;
 	std::system(exec_path.c_str());
 
-    // Restoring STDOUT and closing the last fd[1], so read will get EOF signal
-    dup2(coutSave, STDOUT_FILENO);
-    close(coutSave);
+	// Restoring STDOUT and closing the last fd[1], so read will get EOF signal
+	dup2(coutSave, STDOUT_FILENO);
+	close(coutSave);
 
 	char buf[CGI_BUFFER_SIZE + 1] = {0};
 
@@ -43,5 +44,5 @@ void autoIndexDisplayer(std::string const &uri, std::string* displayList)
 	*displayList += buf;
 
 	close(fd[0]);
-    free(path);
+	free(path);
 }
