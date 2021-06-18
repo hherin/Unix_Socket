@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 12:46:54 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 14:50:39 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Response::clear()
 void Response::fillBuffer()
 {
 	// If an error occured during request parsing
-	if (_staLine.getCode() >= 300)
+	if (_staLine.getCode() >= 400)
 		return fillError(_staLine);
 
 	try
@@ -120,77 +120,29 @@ void Response::fillBuffer()
             throw StatusLine(301, REASON_301, "http redirection");
         }
 
+        // Modifying URI with root and index directive if any, checking for the allowed methods
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
+
+        // Checking if the targeted file is a CGI based on his extension
 		std::string *cgiName = getCgiExecutableName(realUri, loc.second);
 
+        // Execute the appropriate method and fills the response buffer with status line + 
+        // headers + body (if any). If an error occurs during this process, it will throw 
+        // a StatusLine object with the appropriate error code.
 		if (cgiName && (_req->getMethod() == GET || _req->getMethod() == POST))
-			fillCgi(realUri, cgiName);
-
+			execCgi(realUri, cgiName);
 		else if (_req->getMethod() == GET || _req->getMethod() == HEAD)
-		{
-			// Storing status line and some headers in buffer
-			fillStatusLine(_staLine);
-			fillServerHeader();
-			fillDateHeader();
-			
-            if (!_autoIndex)
-            {
-                FileParser body(realUri.c_str(), true); // CAHNGER
-
-                // Setting size after storing the body in FileParser object, then setting Last-Modified header
-                fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
-                fillLastModifiedHeader(realUri.c_str());
-                _buffer += CLRF;
-
-                // For GET, writing the body previously stored to the buffer
-                if (_req->getMethod() == GET)
-                    _buffer += body.getRequestFile();
-            }
-
-            // Filling autoindex
-			else
-            {
-                std::string autoIndexPage;
-                autoIndexDisplayer(realUri, &autoIndexPage);
-
-                fillContentlengthHeader(convertNbToString(autoIndexPage.size()));
-                _buffer += CLRF + autoIndexPage;
-            }
-		}
-
+            execGet(realUri);
 		else if (_req->getMethod() == POST)
-		{
-			// Need to create file so changing code 200 ("OK") to 201 ("created")
-			struct stat infoFile;
-			if (stat(realUri.c_str(), &infoFile) == -1)
-				_staLine = StatusLine(201, REASON_201);
-			
-			// Creating a new file or appending to existing file post request payload. If 
-			// opening failed, throws StatusLine object with error 500 (internal error)
-			postToFile(realUri);
-			
-			// Storing status line and some headers in buffer
-			fillStatusLine(_staLine);
-			fillServerHeader();
-			fillDateHeader();
-		}
-
+            execPost(realUri);
 		else if (_req->getMethod() == DELETE)
-		{
-			if (remove(realUri.c_str()))
-				throw (StatusLine(500, REASON_500, "remove function failed in DELETE method"));
-
-			// Storing status line and some headers in buffer
-			fillStatusLine(_staLine);
-			fillServerHeader();
-			fillDateHeader();
-		}
+            execDelete(realUri);
 
 		else
 			throw (StatusLine(400, REASON_400, "request method do not exist"));
 	}
 
-	// If an error occured during URI reconstruction and file searching
+	// If an error occured during the reponse creation
 	catch (const StatusLine& errorStaLine)
 	{
 		fillError(errorStaLine);
@@ -201,11 +153,11 @@ void Response::fillBuffer()
 /* ------------------------------------------------------------- */
 /* ----------------------- PRIVATE METHODS --------------------- */
 
-void Response::fillCgi(const std::string& realUri, std::string* cgiName)
+void Response::execCgi(const std::string& realUri, std::string* cgiName)
 {
     struct stat st;
     if (stat(realUri.c_str(), &st) == -1)
-        throw StatusLine(404, REASON_404, "fillCgi method: " + realUri);
+        throw StatusLine(404, REASON_404, "execCgi method: " + realUri);
 
 	Body cgiRep;
 	CGI cgi(&cgiRep, _req, realUri, *cgiName);
@@ -450,6 +402,66 @@ void Response::postToFile(const std::string& uri)
 		throw (StatusLine(500, REASON_500, "failed to open file in post method"));
 	
 	postFile << _req->getBody().getBody();
+}
+
+void Response::execGet(const std::string& realUri)
+{
+    // Storing status line and some headers in buffer
+    fillStatusLine(_staLine);
+    fillServerHeader();
+    fillDateHeader();
+    
+    if (!_autoIndex)
+    {
+        FileParser body(realUri.c_str(), true); // CAHNGER
+
+        // Setting size after storing the body in FileParser object, then setting Last-Modified header
+        fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
+        fillLastModifiedHeader(realUri.c_str());
+        _buffer += CLRF;
+
+        // For GET, writing the body previously stored to the buffer
+        if (_req->getMethod() == GET)
+            _buffer += body.getRequestFile();
+    }
+
+    // Filling autoindex
+    else
+    {
+        std::string autoIndexPage;
+        autoIndexDisplayer(realUri, &autoIndexPage);
+
+        fillContentlengthHeader(convertNbToString(autoIndexPage.size()));
+        _buffer += CLRF + autoIndexPage;
+    }
+}
+
+void Response::execPost(const std::string& realUri)
+{
+    // Need to create file so changing code 200 ("OK") to 201 ("created")
+    struct stat infoFile;
+    if (stat(realUri.c_str(), &infoFile) == -1)
+        _staLine = StatusLine(201, REASON_201);
+    
+    // Creating a new file or appending to existing file post request payload. If 
+    // opening failed, throws StatusLine object with error 500 (internal error)
+    postToFile(realUri);
+    
+    // Storing status line and some headers in buffer
+    fillStatusLine(_staLine);
+    fillServerHeader();
+    fillDateHeader();
+}
+
+void Response::execDelete(const std::string& realUri)
+{
+    if (remove(realUri.c_str()))
+        throw (StatusLine(500, REASON_500, "remove function failed in DELETE method"));
+
+    // Storing status line and some headers in buffer
+    fillStatusLine(_staLine);
+    fillServerHeader();
+    fillDateHeader();    
 }
 
 
