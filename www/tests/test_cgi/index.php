@@ -18,8 +18,8 @@
       <footer>
         <div class="footer">
           <h1>Made by</h1>
-          <img src="img/biquetdte_hherin.jpeg" width="200" height="200" class="rounded-circle">
-          <img src="img/llefrdanc.jpg" width="200" height="200" class="rounded-circle">
+          <img src="img/biquette_hherin.jpg" width="200" height="200" class="rounded-circle">
+          <img src="img/llefranc.jpg" width="200" height="200" class="rounded-circle">
         </div>
       </footer>
 

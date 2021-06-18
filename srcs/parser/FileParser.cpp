@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 10:04:19 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 11:59:05 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ void FileParser::parseConfigFile()
 // check bracket la ou il faut pas
 void FileParser::newLocation(ServerInfo &srv)
 {
-	Location n_loc(&srv);
+	Location n_loc(srv.getPort());
 	std::string uri;
 	int brack = 0;
-	
+
 	bracketRegulator(brack, _buf);
 
 	// Processing of the first line of location

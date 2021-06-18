@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 11:48:58 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:01:00 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Location
 		/*	===========================================
 			================= Variables ===============
 		*/
-		ServerInfo *_srv;
+		int _port;
 		bool _autoindex;
 		std::string _root;
 		std::string _upload_store;
@@ -42,7 +42,7 @@ class Location
 			=============== Coplien Form ==============
 		*/
 		
-		Location(ServerInfo*);
+		Location(int);
 		Location(Location const &);
 		Location &operator=(Location const &);
 		~Location();
@@ -51,7 +51,7 @@ class Location
 			================= GETTERS =================
 		*/
 
-        ServerInfo* getServerBlock() const;
+        int const &getPort() const;
 		std::string const &getRoot() const;
 		std::string const &getUploadStore() const;
 		std::vector<std::string> const &getMethods() const;

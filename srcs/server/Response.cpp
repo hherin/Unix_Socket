@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 11:55:06 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 14:50:39 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Response::clear()
 void Response::fillBuffer()
 {
 	// If an error occured during request parsing
-	if (_staLine.getCode() >= 300)
+	if (_staLine.getCode() >= 400)
 		return fillError(_staLine);
 
 	try
@@ -105,89 +105,44 @@ void Response::fillBuffer()
 				std::cout << "LOCATION: no match\n";
 		#endif
 
-        if (!loc.second->getRedirect().empty())
+        // Doing an HTTP redirection (301) if redirect field filled in matched location block
+        if (loc.second && !loc.second->getRedirect().empty())
         {
+            // Replacing location name in the URI with the redirect string set in config file
             std::string redirectedUri = _req->getPath();
+            replaceLocInUri(&redirectedUri, loc.second->getRedirect(), loc.first);
 
-            addRoot(&redirectedUri, loc.second->getRedirect(), loc.first);
-
+            // Replacing previous requested URI with redirected URI for next client request
+            // (Location header in 301 response will be set with this URI)
             _req->setPath(std::string("http://localhost:" + 
-                    convertNbToString(loc.second->getServerBlock()->getPort()) + redirectedUri));
+                    convertNbToString(loc.second->getPort()) + redirectedUri));
 
             throw StatusLine(301, REASON_301, "http redirection");
         }
 
+        // Modifying URI with root and index directive if any, checking for the allowed methods
 		std::string realUri = reconstructFullURI(_req->getMethod(), loc, _req->getPath());
+
+        // Checking if the targeted file is a CGI based on his extension
 		std::string *cgiName = getCgiExecutableName(realUri, loc.second);
 
+        // Execute the appropriate method and fills the response buffer with status line + 
+        // headers + body (if any). If an error occurs during this process, it will throw 
+        // a StatusLine object with the appropriate error code.
 		if (cgiName && (_req->getMethod() == GET || _req->getMethod() == POST))
-			fillCgi(realUri, cgiName);
-
+			execCgi(realUri, cgiName);
 		else if (_req->getMethod() == GET || _req->getMethod() == HEAD)
-		{
-			// Storing status line and some headers in buffer
-			fillStatusLine(_staLine);
-			fillServerHeader();
-			fillDateHeader();
-			
-            if (!_autoIndex)
-            {
-                FileParser body(realUri.c_str(), true); // CAHNGER
-
-                // Setting size after storing the body in FileParser object, then setting Last-Modified header
-                fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
-                fillLastModifiedHeader(realUri.c_str());
-                _buffer += CLRF;
-
-                // For GET, writing the body previously stored to the buffer
-                if (_req->getMethod() == GET)
-                    _buffer += body.getRequestFile();
-            }
-
-            // Filling autoindex
-			else
-            {
-                std::string autoIndexPage;
-                autoIndexDisplayer(realUri, &autoIndexPage);
-
-                fillContentlengthHeader(convertNbToString(autoIndexPage.size()));
-                _buffer += CLRF + autoIndexPage;
-            }
-		}
-
+            execGet(realUri);
 		else if (_req->getMethod() == POST)
-		{
-			// Need to create file so changing code 200 ("OK") to 201 ("created")
-			struct stat infoFile;
-			if (stat(realUri.c_str(), &infoFile) == -1)
-				_staLine = StatusLine(201, REASON_201);
-			
-			// Creating a new file or appending to existing file post request payload. If 
-			// opening failed, throws StatusLine object with error 500 (internal error)
-			postToFile(realUri);
-			
-			// Storing status line and some headers in buffer
-			fillStatusLine(_staLine);
-			fillServerHeader();
-			fillDateHeader();
-		}
-
+            execPost(realUri);
 		else if (_req->getMethod() == DELETE)
-		{
-			if (remove(realUri.c_str()))
-				throw (StatusLine(500, REASON_500, "remove function failed in DELETE method"));
-
-			// Storing status line and some headers in buffer
-			fillStatusLine(_staLine);
-			fillServerHeader();
-			fillDateHeader();
-		}
+            execDelete(realUri);
 
 		else
 			throw (StatusLine(400, REASON_400, "request method do not exist"));
 	}
 
-	// If an error occured during URI reconstruction and file searching
+	// If an error occured during the reponse creation
 	catch (const StatusLine& errorStaLine)
 	{
 		fillError(errorStaLine);
@@ -198,7 +153,7 @@ void Response::fillBuffer()
 /* ------------------------------------------------------------- */
 /* ----------------------- PRIVATE METHODS --------------------- */
 
-void Response::fillCgi(const std::string& realUri, std::string* cgiName)
+void Response::execCgi(const std::string& realUri, std::string* cgiName)
 {
     struct stat st;
     if (stat(realUri.c_str(), &st) == -1)
@@ -288,7 +243,7 @@ void printLoc(const Location* loc)
 		std::cout << "index: " << *it << "\n";
 }
 
-void Response::addRoot(std::string* uri, const std::string& root, const std::string& locName)
+void Response::replaceLocInUri(std::string* uri, const std::string& root, const std::string& locName)
 {
 	// Creating an iterator pointing just after the part that matched the location
 	std::string::iterator it = uri->begin() + locName.size();
@@ -363,7 +318,7 @@ std::string Response::reconstructFullURI(int method,
 
 	// Replacing the part of the URI that matched with the root path if there is one existing
 	if (!loc.second->getRoot().empty())
-		addRoot(&uri, loc.second->getRoot(), loc.first);
+		replaceLocInUri(&uri, loc.second->getRoot(), loc.first);
 	
 	// If no root in location block, or root doesn't start with a '.', need to add it to find the file using
 	// relative path
@@ -404,6 +359,7 @@ void Response::fillError(const StatusLine& sta)
 	fillServerHeader();
 	fillDateHeader();
 
+    // Case HTTP redirection
     if (_staLine.getCode() == 301)
         fillLocationHeader(_req->getPath());
 
@@ -411,22 +367,31 @@ void Response::fillError(const StatusLine& sta)
 	const std::string* hostField = &_req->getHeaders().find("host")->second;
 	const std::string hostValue(hostField->substr(0, hostField->find(':')));
 
-	// // Looking in each virtual server names if one match host header field value
+	// Looking in each virtual server names if one match host header field value, if
+    // not using default server
 	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
+    if (!servMatch)
+        servMatch = &_infoVirServs->front();
 
 	std::string pathError;
 	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
 
-	if (servMatch && !servMatch->getError().empty())
+    // Custom error pages if set in config file
+	if (!servMatch->getError().empty())
 	{
-		pathError = servMatch->getError() + errorCodeHTML;
+        // Adding relative file access if not well filled in config file
+        pathError = (servMatch->getError()[0] == '/') ? 
+                "." + servMatch->getError() + errorCodeHTML: servMatch->getError() + errorCodeHTML;
+
 		struct stat infFile;
 		if (stat(pathError.c_str(), &infFile) == -1)
 			pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
 	}
+    
 	else
 		pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
 
+    // Filling buffer
 	FileParser body(pathError.c_str(), true);
 
 	fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
@@ -443,6 +408,66 @@ void Response::postToFile(const std::string& uri)
 		throw (StatusLine(500, REASON_500, "failed to open file in post method"));
 	
 	postFile << _req->getBody().getBody();
+}
+
+void Response::execGet(const std::string& realUri)
+{
+    // Storing status line and some headers in buffer
+    fillStatusLine(_staLine);
+    fillServerHeader();
+    fillDateHeader();
+    
+    if (!_autoIndex)
+    {
+        FileParser body(realUri.c_str(), true); // CAHNGER
+
+        // Setting size after storing the body in FileParser object, then setting Last-Modified header
+        fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
+        fillLastModifiedHeader(realUri.c_str());
+        _buffer += CLRF;
+
+        // For GET, writing the body previously stored to the buffer
+        if (_req->getMethod() == GET)
+            _buffer += body.getRequestFile();
+    }
+
+    // Filling autoindex
+    else
+    {
+        std::string autoIndexPage;
+        autoIndexDisplayer(realUri, &autoIndexPage);
+
+        fillContentlengthHeader(convertNbToString(autoIndexPage.size()));
+        _buffer += CLRF + autoIndexPage;
+    }
+}
+
+void Response::execPost(const std::string& realUri)
+{
+    // Need to create file so changing code 200 ("OK") to 201 ("created")
+    struct stat infoFile;
+    if (stat(realUri.c_str(), &infoFile) == -1)
+        _staLine = StatusLine(201, REASON_201);
+    
+    // Creating a new file or appending to existing file post request payload. If 
+    // opening failed, throws StatusLine object with error 500 (internal error)
+    postToFile(realUri);
+    
+    // Storing status line and some headers in buffer
+    fillStatusLine(_staLine);
+    fillServerHeader();
+    fillDateHeader();
+}
+
+void Response::execDelete(const std::string& realUri)
+{
+    if (remove(realUri.c_str()))
+        throw (StatusLine(500, REASON_500, "remove function failed in DELETE method"));
+
+    // Storing status line and some headers in buffer
+    fillStatusLine(_staLine);
+    fillServerHeader();
+    fillDateHeader();    
 }
 
 

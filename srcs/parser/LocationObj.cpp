@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 11:49:40 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:01:10 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 // ============================================================================
 // =========================== COPLIEN FORM ===================================
 
-Location::Location(ServerInfo *s) : _srv(s), _autoindex(0)
+Location::Location(int s) : _port(s), _autoindex(0)
 {
 	setStringArray("POST GET HEAD DELETE", _allow_methd);
 }
 
-Location::Location(Location const &loc) : _srv(loc._srv), _autoindex(loc._autoindex), _root(loc._root), 
+Location::Location(Location const &loc) : _port(loc._port), _autoindex(loc._autoindex), _root(loc._root), 
 _upload_store(loc._upload_store), _redirect(loc._redirect), _allow_methd(loc._allow_methd), _index(loc._index),
 _cgi_exe(loc._cgi_exe) {}
 
@@ -36,7 +36,7 @@ Location::~Location() { }
 // ============================================================================
 // =============================== GETTERS ====================================
 
-ServerInfo* Location::getServerBlock() const { return _srv; }
+int const &Location::getPort() const { return _port; }
 
 std::string const &Location::getRoot() const { return _root; }
 

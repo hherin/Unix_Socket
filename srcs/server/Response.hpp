@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 11:37:57 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 14:41:42 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ class Response
 		// Fills buffer with Last-Modified header (last modification of a file)
 		void fillLastModifiedHeader(const char* uri);
 
-        //
+        // Fills buffer with Location header (for HTTP redirection)
         void fillLocationHeader(const std::string& redirectedUri);
 
 		// Fills buffer with status line
@@ -111,7 +111,7 @@ class Response
 				const std::pair<const std::string, const Location*>& loc, std::string uri);
 
 		// Replaces the location name that matched with root directive
-		void addRoot(std::string* uri, const std::string& root, const std::string& locName);
+		void replaceLocInUri(std::string* uri, const std::string& root, const std::string& locName);
 
 		// Try to add all the indexs until one path is correct. If none are correct, throws a StatusLine
 		// object with a 301 error code
@@ -129,7 +129,14 @@ class Response
 		// appends it at the end)
 		void postToFile(const std::string& uri);
 
-		void fillCgi(const std::string& realUri, std::string* cgiName);
+        // Execute CGI and sets the buffer with status line / headers / cgi output as payload
+		void execCgi(const std::string& realUri, std::string* cgiName);
+
+        void execGet(const std::string& realUri);
+
+        void execPost(const std::string& realUri);
+
+        void execDelete(const std::string& realUri);
 
 
 	public:
