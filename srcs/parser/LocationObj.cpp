@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 10:03:43 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 11:49:40 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ Location::~Location() { }
 
 // ============================================================================
 // =============================== GETTERS ====================================
+
+ServerInfo* Location::getServerBlock() const { return _srv; }
 
 std::string const &Location::getRoot() const { return _root; }
 

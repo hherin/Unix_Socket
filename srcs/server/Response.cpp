@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 11:38:54 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 11:55:06 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ void Response::fillBuffer()
 
             addRoot(&redirectedUri, loc.second->getRedirect(), loc.first);
 
-            // RAJOUTER ICI LE BON PORT
-            _req->setPath(std::string("http://localhost:" + convertNbToString(8080) + redirectedUri));
+            _req->setPath(std::string("http://localhost:" + 
+                    convertNbToString(loc.second->getServerBlock()->getPort()) + redirectedUri));
 
             throw StatusLine(301, REASON_301, "http redirection");
         }

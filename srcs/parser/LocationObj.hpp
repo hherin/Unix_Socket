@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 10:05:59 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 11:48:58 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ class Location
 		/*	===========================================
 			================= GETTERS =================
 		*/
+
+        ServerInfo* getServerBlock() const;
 		std::string const &getRoot() const;
 		std::string const &getUploadStore() const;
 		std::vector<std::string> const &getMethods() const;
