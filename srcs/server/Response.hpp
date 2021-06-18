@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:14:47 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 11:37:57 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:16:29 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ class Response
 				const std::pair<const std::string, const Location*>& loc, std::string uri);
 
 		// Replaces the location name that matched with root directive
-		void addRoot(std::string* uri, const std::string& root, const std::string& locName);
+		void replaceLocInUri(std::string* uri, const std::string& root, const std::string& locName);
 
 		// Try to add all the indexs until one path is correct. If none are correct, throws a StatusLine
 		// object with a 301 error code

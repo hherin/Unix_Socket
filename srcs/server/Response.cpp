@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 12:10:30 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 12:46:54 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,15 @@ void Response::fillBuffer()
 				std::cout << "LOCATION: no match\n";
 		#endif
 
+        // Doing an HTTP redirection (301) if redirect field filled in matched location block
         if (loc.second && !loc.second->getRedirect().empty())
         {
+            // Replacing location name in the URI with the redirect string set in config file
             std::string redirectedUri = _req->getPath();
+            replaceLocInUri(&redirectedUri, loc.second->getRedirect(), loc.first);
 
-            addRoot(&redirectedUri, loc.second->getRedirect(), loc.first);
-
+            // Replacing previous requested URI with redirected URI for next client request
+            // (Location header in 301 response will be set with this URI)
             _req->setPath(std::string("http://localhost:" + 
                     convertNbToString(loc.second->getPort()) + redirectedUri));
 
@@ -286,7 +289,7 @@ void printLoc(const Location* loc)
 		std::cout << "index: " << *it << "\n";
 }
 
-void Response::addRoot(std::string* uri, const std::string& root, const std::string& locName)
+void Response::replaceLocInUri(std::string* uri, const std::string& root, const std::string& locName)
 {
 	// Creating an iterator pointing just after the part that matched the location
 	std::string::iterator it = uri->begin() + locName.size();
@@ -361,7 +364,7 @@ std::string Response::reconstructFullURI(int method,
 
 	// Replacing the part of the URI that matched with the root path if there is one existing
 	if (!loc.second->getRoot().empty())
-		addRoot(&uri, loc.second->getRoot(), loc.first);
+		replaceLocInUri(&uri, loc.second->getRoot(), loc.first);
 	
 	// If no root in location block, or root doesn't start with a '.', need to add it to find the file using
 	// relative path
@@ -398,6 +401,7 @@ void Response::fillError(const StatusLine& sta)
 	fillServerHeader();
 	fillDateHeader();
 
+    // Case HTTP redirection
     if (_staLine.getCode() == 301)
         fillLocationHeader(_req->getPath());
 
@@ -405,22 +409,31 @@ void Response::fillError(const StatusLine& sta)
 	const std::string* hostField = &_req->getHeaders().find("host")->second;
 	const std::string hostValue(hostField->substr(0, hostField->find(':')));
 
-	// // Looking in each virtual server names if one match host header field value
+	// Looking in each virtual server names if one match host header field value, if
+    // not using default server
 	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
+    if (!servMatch)
+        servMatch = &_infoVirServs->front();
 
 	std::string pathError;
 	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
 
-	if (servMatch && !servMatch->getError().empty())
+    // Custom error pages if set in config file
+	if (!servMatch->getError().empty())
 	{
-		pathError = servMatch->getError() + errorCodeHTML;
+        // Adding relative file access if not well filled in config file
+        pathError = (servMatch->getError()[0] == '/') ? 
+                "." + servMatch->getError() + errorCodeHTML: servMatch->getError() + errorCodeHTML;
+
 		struct stat infFile;
 		if (stat(pathError.c_str(), &infFile) == -1)
 			pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
 	}
+    
 	else
 		pathError = DEFAULT_PATH_ERROR_PAGES + errorCodeHTML;
 
+    // Filling buffer
 	FileParser body(pathError.c_str(), true);
 
 	fillContentlengthHeader(convertNbToString(body.getRequestFileSize()));
