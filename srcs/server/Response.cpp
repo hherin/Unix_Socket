@@ -361,7 +361,9 @@ void Response::fillError(const StatusLine& sta)
 
     // Case HTTP redirection
     if (_staLine.getCode() == 301)
+	{
         fillLocationHeader(_req->getPath());
+	}
 
 	// Value of host header field in request
 	const std::string* hostField = &_req->getHeaders().find("host")->second;
@@ -371,8 +373,10 @@ void Response::fillError(const StatusLine& sta)
     // not using default server
 	const ServerInfo* servMatch = findVirtServ(_infoVirServs, hostValue);
     if (!servMatch)
+	{
         servMatch = &_infoVirServs->front();
-
+	}
+	
 	std::string pathError;
 	std::string errorCodeHTML = "/" + convertNbToString(sta.getCode()) + ".html";
 

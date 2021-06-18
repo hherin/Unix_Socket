@@ -32,7 +32,7 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 		_exec = _realUri;
 	
 	if (_exec.compare(".cgi"))
-		_openArgfile.open(_realUri);
+		_openArgfile.open(_realUri.c_str());
 
 	// ** set environment variable for the CGI **
 	// GET : QUERY_STRING + PATH_INFO 
