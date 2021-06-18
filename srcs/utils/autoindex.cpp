@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   autoindex.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 17:42:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/17 16:09:59 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/18 09:44:47 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.hpp"
 #include "../includes/webserv.hpp"
 
-void autoIndexDisplayer(std::string const &uri, std::string &displayList)
+void autoIndexDisplayer(std::string const &uri, std::string* displayList)
 {
 	int fd[2];
 	
@@ -22,15 +22,26 @@ void autoIndexDisplayer(std::string const &uri, std::string &displayList)
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[1]);
 	
-	std::string cmd = "php " + (getcwd(NULL, 0) + ("/autoindex.php " + uri)) ;
-	std::system(cmd.c_str());
+    char *path;
+    if (!(path = getcwd(NULL, 0)))
+        throw StatusLine(500, REASON_500, "getcwd function in autoIndexDisplayer failed\n");
+
+	std::string exec_path = "php " + (path + ("/srcs/utils/autoindex.php " + uri)) ;
+	std::system(exec_path.c_str());
+
+    // Restoring STDOUT and closing the last fd[1], so read will get EOF signal
+    dup2(coutSave, STDOUT_FILENO);
+    close(coutSave);
+
 	char buf[CGI_BUFFER_SIZE + 1] = {0};
-	while (read(fd[0], buf, CGI_BUFFER_SIZE) == CGI_BUFFER_SIZE){	
-		displayList += buf;
+
+	while (read(fd[0], buf, CGI_BUFFER_SIZE) > 0){	
+		*displayList += buf;
 		memset(buf, 0, CGI_BUFFER_SIZE + 1);
 	}
-	displayList += buf;
 
-	close(fd[0]);	
-	dup2(coutSave, STDOUT_FILENO);
+	*displayList += buf;
+
+	close(fd[0]);
+    free(path);
 }

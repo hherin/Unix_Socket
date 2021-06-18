@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 16:03:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/17 17:32:09 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,12 @@ void HttpServer::sendToClients()
             size_t leftToSend = buffer->size();
             size_t octetsSent = 0;
 
+            // Trying to send everything in one shot, if send failed to send everything, looping and
+            // sending the rest
             do
 			{
                 n = send(it->getFd(), static_cast<const void*>(buffer->c_str() + octetsSent),
-                        buffer->size(), 0);
+                        leftToSend, 0);
 
                 octetsSent += n;
                 leftToSend -= n;
@@ -154,13 +156,16 @@ void HttpServer::sendToClients()
             
             std::list<ClientSocket>::iterator tmp = it--;
             closeConnection(&tmp);
+
+			// Exit for loop if no other sockets are ready
+			--_nbReadyFds;
 		}
 	}
 }
 
 void HttpServer::requestHandler()
 {
-	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end(); ++it)
+	for (std::list<ClientSocket>::iterator it = _clientSocks.begin(); it != _clientSocks.end() && _nbReadyFds; ++it)
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
@@ -174,31 +179,28 @@ void HttpServer::requestHandler()
                 std::list<ClientSocket>::iterator tmp = it--;
                 closeConnection(&tmp);
             }
-				
+
 			// Client closed the connection
 			else if (!n)
 			{
 				printLog(" >> FD " + convertNbToString(it->getFd()) + ": recv function returned 0, connection closed\n");
                 std::list<ClientSocket>::iterator tmp = it--;
                 closeConnection(&tmp);
-
-				continue ;
 			}
 
 			// Concatenate buffer to actual stored request
             else
                 it->receiveRequest(buffer);
-				
-			// Case no other sockets waiting
-			if (!--_nbReadyFds)
-				break;
+	
+			// Exit for loop if no other sockets are ready
+			--_nbReadyFds;
 		}
 	}
 }
 
 void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv)
 {
-	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end(); ++it)
+	for (std::list<ServerSocket>::iterator it = _serverSocks.begin(); it != _serverSocks.end() && _nbReadyFds; ++it)
 	{
 		if (FD_ISSET(it->getFd(), &_readFds))
 		{
@@ -211,15 +213,14 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			int newClient;
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
 				throw std::runtime_error("Fatal error: accept function failed\n");  // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
-			
+
 			// Setting the fd in non-blocking mode, then saving it
 			fcntl(newClient, F_SETFL, O_NONBLOCK);
 			addClientSocket(newClient, it->getPort(), mSrv);
 			printLog(" >> FD " + convertNbToString(newClient) + ": Client socket created\n");
 
-			// Case no other sockets waiting
-			if (!--_nbReadyFds)
-				break;
+			// Exit for loop if no other sockets are ready
+			--_nbReadyFds;
 		}	
 	}
 }
