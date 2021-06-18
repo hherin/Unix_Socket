@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 11:55:06 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:10:30 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,14 +105,14 @@ void Response::fillBuffer()
 				std::cout << "LOCATION: no match\n";
 		#endif
 
-        if (!loc.second->getRedirect().empty())
+        if (loc.second && !loc.second->getRedirect().empty())
         {
             std::string redirectedUri = _req->getPath();
 
             addRoot(&redirectedUri, loc.second->getRedirect(), loc.first);
 
             _req->setPath(std::string("http://localhost:" + 
-                    convertNbToString(loc.second->getServerBlock()->getPort()) + redirectedUri));
+                    convertNbToString(loc.second->getPort()) + redirectedUri));
 
             throw StatusLine(301, REASON_301, "http redirection");
         }
