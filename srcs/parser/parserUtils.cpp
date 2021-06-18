@@ -91,5 +91,5 @@ void setStringArray(char const *n, std::vector<std::string> &v)
         v.push_back(token);
         token = strtok(NULL, "\t\v\f\r ");
     }
-    delete tmp;
+    free(tmp);
 }

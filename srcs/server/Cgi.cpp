@@ -98,12 +98,12 @@ CGI::~CGI()
 {
 	int i = -1;
 	while (_envvar[++i]){
-		delete _envvar[i]; _envvar[i] = NULL;}
+		free(_envvar[i]); _envvar[i] = NULL;}
 	delete[] _envvar;
 	
 	i = 0;
 	while (_args[i++]){
-		delete _args[i]; _args[i] = NULL;}
+		free(_args[i]); _args[i] = NULL;}
 	delete[] _args;
 }
 
