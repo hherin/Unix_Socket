@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/17 15:33:15 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/18 10:05:59 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class Location
 		std::vector<std::string> const &getMethods() const;
 		std::vector<std::string> const &getIndex() const;
 		std::map<std::string, std::string> const &getCgiExe() const;
+		std::string const &getRedirect() const;
 		bool const &getAutoIndex() const;
 		
 		/*	===========================================
@@ -76,6 +77,7 @@ class Location
 		void setIndex(char const*);
 		void setCgiExe(char const *);
 		void setAutoIndex(char const *);
+		void setRedirect(char const *);
 		
 		/*	===========================================
 			============ Private methods ==============
