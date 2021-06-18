@@ -1,18 +1,13 @@
 #!/usr/bin/php
 
 <?PHP
-  function getFileList($dir)
+  function getFileList()
   {
     // array to hold return value
     $retval = [];
 
-    // add trailing slash if missing
-    if(substr($dir, -1) != "/") {
-      $dir .= "/";
-    }
-
     // open pointer to directory and read list of files
-    $d = @dir($dir) or die("getFileList: Failed opening directory {$dir} for reading");
+    $d = @dir("./") or die("getFileList: Failed opening directory for reading");
     while(FALSE !== ($entry = $d->read())) {
       // skip hidden files
       if($entry{0} == ".") continue;
@@ -37,7 +32,7 @@
     return $retval;
   }
 
-  $dirlist = getFileList("{$argv[1]}");
+  $dirlist = getFileList();
 
   echo "<table border=\"1\">\n";
   echo "<thead>\n";

@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 17:42:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 10:40:11 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 10:45:26 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void autoIndexDisplayer(std::string const &uri, std::string* displayList)
 		throw StatusLine(500, REASON_500, "getcwd function in autoIndexDisplayer failed\n");
 	chdir(uri.c_str());
 
-	std::string exec_path = "php " + (path + ("/srcs/utils/autoindex.php " + std::string("./"))) ;
+	std::string exec_path = "php " + (path + std::string("/srcs/utils/autoindex.php ")) ;
 	std::system(exec_path.c_str());
 	chdir(path);
 	
