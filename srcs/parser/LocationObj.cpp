@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:17:35 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 12:01:10 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/21 16:32:33 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Location::Location(int s) : _port(s), _autoindex(0)
 }
 
 Location::Location(Location const &loc) : _port(loc._port), _autoindex(loc._autoindex), _root(loc._root), 
-_upload_store(loc._upload_store), _redirect(loc._redirect), _allow_methd(loc._allow_methd), _index(loc._index),
+_upload_path(loc._upload_path), _redirect(loc._redirect), _allow_methd(loc._allow_methd), _index(loc._index),
 _cgi_exe(loc._cgi_exe) {}
 
 Location &Location::operator=(Location const &loc)
@@ -40,7 +40,7 @@ int const &Location::getPort() const { return _port; }
 
 std::string const &Location::getRoot() const { return _root; }
 
-std::string const &Location::getUploadStore() const { return _upload_store; }
+std::string const &Location::getUploadPath() const { return _upload_path; }
 
 std::vector<std::string> const &Location::getMethods() const { return _allow_methd; }
 
@@ -88,8 +88,8 @@ void Location::setUploadStore(char const *u)
 {
 	std::string cString = u;
 	if (numberOfWords(u) != 1)
-		throw std::runtime_error("Error : " + std::string(cString) + " - put only one upload_store input\n");
-	_upload_store = *wsTrim(cString);
+		throw std::runtime_error("Error : " + std::string(cString) + " - put only one upload_path input\n");
+	_upload_path = *wsTrim(cString);
 }
 
 void Location::setMethods(char const *n) 

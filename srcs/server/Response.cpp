@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:23:57 by lucaslefran       #+#    #+#             */
-/*   Updated: 2021/06/18 14:50:39 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/21 16:33:33 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,8 +317,11 @@ std::string Response::reconstructFullURI(int method,
 	}
 
 	// Replacing the part of the URI that matched with the root path if there is one existing
-	if (!loc.second->getRoot().empty())
+	if (!loc.second->getRoot().empty() && !(method == POST && !loc.second->getUploadPath().empty()))
 		replaceLocInUri(&uri, loc.second->getRoot(), loc.first);
+
+	else if (method == POST && !loc.second->getUploadPath().empty())
+		replaceLocInUri(&uri, loc.second->getUploadPath(), loc.first);
 	
 	// If no root in location block, or root doesn't start with a '.', need to add it to find the file using
 	// relative path

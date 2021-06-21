@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationObj.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 15:08:11 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 12:01:00 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/21 16:32:33 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Location
 		int _port;
 		bool _autoindex;
 		std::string _root;
-		std::string _upload_store;
+		std::string _upload_path;
 		std::string _redirect;
 		std::vector<std::string> _allow_methd;
 		std::vector<std::string> _index;
@@ -53,7 +53,7 @@ class Location
 
         int const &getPort() const;
 		std::string const &getRoot() const;
-		std::string const &getUploadStore() const;
+		std::string const &getUploadPath() const;
 		std::vector<std::string> const &getMethods() const;
 		std::vector<std::string> const &getIndex() const;
 		std::map<std::string, std::string> const &getCgiExe() const;

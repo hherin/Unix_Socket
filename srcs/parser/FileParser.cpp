@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   FileParser.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 11:59:05 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/21 16:38:34 by lucaslefran      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void FileParser::newLocation(ServerInfo &srv)
 			n_loc.setLocation(METHO, 13, _buf);
 		else if (!_buf.compare(0, 6, "index "))
 			n_loc.setLocation(IDX, 6, _buf);
-		else if (!_buf.compare(0, 13, "upload_store "))
-			n_loc.setLocation(STORE, 13, _buf);
+		else if (!_buf.compare(0, 12, "upload_path "))
+			n_loc.setLocation(STORE, 12, _buf);
 		else if (!_buf.compare(0, 5, "root "))
 			n_loc.setLocation(ROOT, 5, _buf);
 		else if (!_buf.compare(0, 4, "cgi "))
