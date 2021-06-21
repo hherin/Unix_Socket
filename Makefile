@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/17 16:37:21 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/21 17:45:08 by lucaslefran      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ HDRS		=	srcs/includes/webserv.hpp
 
 CC			=	clang++
 
-FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
+FLAGS		=	-Wall -Werror -Wextra
 
 LIBS		=	srcs/parser/lparser.a \
 				srcs/server/lserver.a \

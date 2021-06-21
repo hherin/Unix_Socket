@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
+#    By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/27 14:27:30 by hherin            #+#    #+#              #
-#    Updated: 2021/06/17 16:37:25 by llefranc         ###   ########.fr        #
+#    Updated: 2021/06/21 17:45:18 by lucaslefran      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ OBJS		=	${SRCS:.cpp=.o}
 
 HDRS		=	utils.hpp
 
-FLAGS		=	-Wall -Werror -Wextra -std=c++98 -fsanitize=address
+FLAGS		=	-Wall -Werror -Wextra
 
 all			:	${NAME}
 
