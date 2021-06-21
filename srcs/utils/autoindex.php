@@ -1,34 +1,29 @@
 #!/usr/bin/php
 
 <?PHP
-  function getFileList($dir)
+  function getFileList()
   {
     // array to hold return value
     $retval = [];
 
-    // add trailing slash if missing
-    if(substr($dir, -1) != "/") {
-      $dir .= "/";
-    }
-
     // open pointer to directory and read list of files
-    $d = @dir($dir) or die("getFileList: Failed opening directory {$dir} for reading");
+    $d = @dir("./") or die("getFileList: Failed opening directory for reading");
     while(FALSE !== ($entry = $d->read())) {
       // skip hidden files
       if($entry{0} == ".") continue;
-      if(is_dir("{$dir}{$entry}")) {
+      if(is_dir("{$entry}")) {
         $retval[] = [
-          'name' => "{$dir}{$entry}/",
-          'type' => filetype("{$dir}{$entry}"),
+          'name' => "{$entry}/",
+          'type' => filetype("{$entry}"),
           'size' => 0,
-          'lastmod' => filemtime("{$dir}{$entry}")
+          'lastmod' => filemtime("{$entry}")
         ];
-      } elseif(is_readable("{$dir}{$entry}")) {
+      } elseif(is_readable("{$entry}")) {
         $retval[] = [
-          'name' => "{$dir}{$entry}",
-          'type' => mime_content_type("{$dir}{$entry}"),
-          'size' => filesize("{$dir}{$entry}"),
-          'lastmod' => filemtime("{$dir}{$entry}")
+          'name' => "{$entry}",
+          'type' => mime_content_type("{$entry}"),
+          'size' => filesize("{$entry}"),
+          'lastmod' => filemtime("{$entry}")
         ];
       }
     }
@@ -37,8 +32,7 @@
     return $retval;
   }
 
-  $dirlist = getFileList("{$argv[1]}");
-
+  $dirlist = getFileList();
 
   echo "<table border=\"1\">\n";
   echo "<thead>\n";

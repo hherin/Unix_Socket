@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/17 15:41:37 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/18 09:47:36 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 		_exec = _realUri;
 	
 	if (_exec.compare(".cgi"))
-		_openArgfile.open(_realUri);
+		_openArgfile.open(_realUri.c_str());
 
 	// ** set environment variable for the CGI **
 	// GET : QUERY_STRING + PATH_INFO 
@@ -94,36 +94,16 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 	
 }
 
-// CGI::CGI(CGI const &copy) : _emptyBody(copy._emptyBody), _req(copy._req),
-// 							_exec(copy._exec), _realUri(copy._realUri),
-// 							_path_info(copy._path_info)
-// {
-// 	_envvar[0] = strdup(copy._envvar[0]);
-// 	_envvar[1] = strdup(copy._envvar[1]);
-
-// 	int nb = 0;
-// 	while (copy._args[nb++]);
-// 	while (--nb > - 1)
-// 		_args[nb] = copy._args[nb];
-// }
-
-// CGI &CGI::operator=(CGI &copy)
-// {
-// 	CGI tmp(*this);
-// 	mySwap(tmp, copy);
-// 	return *this;
-// }
-
 CGI::~CGI()
 {
 	int i = -1;
 	while (_envvar[++i]){
-		delete _envvar[i]; _envvar[i] = NULL;}
+		free(_envvar[i]); _envvar[i] = NULL;}
 	delete[] _envvar;
 	
 	i = 0;
 	while (_args[i++]){
-		delete _args[i]; _args[i] = NULL;}
+		free(_args[i]); _args[i] = NULL;}
 	delete[] _args;
 }
 
@@ -153,7 +133,7 @@ void CGI::executeCGI()
 
 		// change the repo into where the program is
 		chdir(_path_info.first.c_str());
-
+	
 		if (execve(_args[0], _args, _envvar) < 0){
 			std::cerr << "Error with execve from cgi\n";
 			exit(1);
@@ -192,7 +172,6 @@ void CGI::executeCGI()
 		// // remove the header part of the cgi output
 		_emptyBody->setSize(msgbody.size() - (msgbody.find("\r\n\r\n") + 4)); 
 	}
-	
 	else{
 		close(fdOut[1]); close(fdOut[0]);
 		if (_req->getMethod() == POST) { close(fdIN[0]); close(fdIN[1]); }

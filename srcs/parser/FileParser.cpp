@@ -6,7 +6,7 @@
 /*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 14:06:51 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/15 11:59:52 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/18 11:59:05 by hherin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ FileParser::FileParser(const char *filepath, bool s) : _bracket(0), _cli_srv(0),
 
 FileParser::FileParser(FileParser const&copy) :  _buf(copy._buf), _bracket(copy._bracket), 
 _m_srv(copy._m_srv), _requestFile(copy._requestFile), _cli_srv(copy._cli_srv), _filePath(copy._filePath)
-{ _file.open(_filePath); }
+{ _file.open(_filePath.c_str()); }
 
 FileParser &FileParser::operator=(FileParser const&copy)
 {
@@ -85,10 +85,10 @@ void FileParser::parseConfigFile()
 // check bracket la ou il faut pas
 void FileParser::newLocation(ServerInfo &srv)
 {
-	Location n_loc(&srv);
+	Location n_loc(srv.getPort());
 	std::string uri;
 	int brack = 0;
-	
+
 	bracketRegulator(brack, _buf);
 
 	// Processing of the first line of location
@@ -123,6 +123,8 @@ void FileParser::newLocation(ServerInfo &srv)
 			n_loc.setLocation(CGI_EXE, 4, _buf);
 		else if (!_buf.compare(0, 10, "autoindex "))
 			n_loc.setLocation(AUTOIDX, 10, _buf);
+		else if (!_buf.compare(0, 9, "redirect "))
+			n_loc.setLocation(REDIRECT, 9, _buf);
 		else if (!_buf.compare(0, 1, "}")) continue;
 		else throw std::runtime_error(errParseMessage("error line : ", _buf.c_str(), ". Wrong input in block location\n"));
 	}
