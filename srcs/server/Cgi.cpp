@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hherin <hherin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 15:53:45 by hherin            #+#    #+#             */
-/*   Updated: 2021/06/18 09:47:36 by hherin           ###   ########.fr       */
+/*   Updated: 2021/06/23 14:31:24 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ CGI::CGI(Body *body, Request *req, const std::string &realUri, const std::string
 
 	// ** Set args for execve **
 	if ((_args = new char*[3]) == NULL)
-		throw std::runtime_error("Error on a cgi malloc\n");
+		throw StatusLine(500, REASON_500, "malloc failed in CGI constructor");
 		
 	_args[0] = strdup(_exec.c_str());
 	_args[1] = (!exec.compare(".cgi")) ? NULL : strdup(_realUri.c_str());
@@ -116,7 +116,7 @@ void CGI::executeCGI()
 	int fdIN[2];
 	
 	if (pipe(fdOut) < 0 || pipe(fdIN) < 0)
-		throw std::runtime_error("Error with pipe\n");
+		throw StatusLine(500, REASON_500, "pipe failed in executeCGI method");
 	
 	pid_t pid = fork();
 	
@@ -135,8 +135,7 @@ void CGI::executeCGI()
 		chdir(_path_info.first.c_str());
 	
 		if (execve(_args[0], _args, _envvar) < 0){
-			std::cerr << "Error with execve from cgi\n";
-			exit(1);
+			exit(EXECVE_FAIL);
 		}
 	
 	}
@@ -145,17 +144,23 @@ void CGI::executeCGI()
 		close(fdOut[1]);
 		if (_req->getMethod() == POST){
 			if (write(fdIN[1], _req->getBody().getBody().c_str(), _req->getBody().getBody().size()) < 0)
-				throw std::runtime_error("ERROR with write in cgi\n");
+				throw StatusLine(500, REASON_500, "write failed in executeCGI method");
 		}
 		
 		else{
 			if (write(fdIN[1], _getBuffFile.c_str(), _getBuffFile.size()) < 0)
-				throw std::runtime_error("ERROR with write in cgi\n");
+				throw StatusLine(500, REASON_500, "write failed in executeCGI method");
 		}
 		
 		close(fdIN[1]);
 		close(fdIN[0]);
 		
+        // Checking if execve correctly worked
+        int status = 0;
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status) && WEXITSTATUS(status) == EXECVE_FAIL)
+            throw StatusLine(500, REASON_500, "execve failed in executeCGI method");
+        
 		char buf[CGI_PIPE_BUFFER_SIZE + 1] = {0};
 		std::string msgbody;	
 		while (read(fdOut[0], buf, CGI_PIPE_BUFFER_SIZE) > 0)
@@ -169,13 +174,13 @@ void CGI::executeCGI()
 
 		_emptyBody->setBuff(msgbody);
 		
-		// // remove the header part of the cgi output
+		// remove the header part of the cgi output
 		_emptyBody->setSize(msgbody.size() - (msgbody.find("\r\n\r\n") + 4)); 
 	}
 	else{
 		close(fdOut[1]); close(fdOut[0]);
 		if (_req->getMethod() == POST) { close(fdIN[0]); close(fdIN[1]); }
-		throw std::runtime_error("Error in fork occurs\n");
+		throw StatusLine(500, REASON_500, "fork failed executeCGI method");
 	}
 }
 

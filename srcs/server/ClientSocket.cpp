@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 15:41:30 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/23 14:24:35 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ int ClientSocket::receiveRequest(const char* buffer)
 {
 	try
 	{
-		std::cerr << "BUFFER is: |" << buffer << "\n";
-
 		_request += buffer;
 		_request.parsingCheck();
 	}
@@ -58,8 +56,8 @@ int ClientSocket::receiveRequest(const char* buffer)
 	// object containing the full request
 	catch (const StatusLine& staLine)
 	{
-		printLog(" >> FD " + convertNbToString(getFd()) + ": Request received\n",
-				_request.getBuffer());
+		printLog(" >> FD " + convertNbToString(getFd()) + ": Request received\n");
+		printLog(" >> FD " + convertNbToString(getFd()) + ": URI: " + _request.getPath() + "\n");
 
         // Constructing response
         _response.setRequest(&_request);

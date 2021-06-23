@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/18 10:28:08 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/23 13:31:37 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,43 +91,6 @@ void HttpServer::sendToClients()
 		{
 			int n = 0;
 
-            // const char *toSend = resp->getBuffer().c_str();
-            // size_t sizeToSend;
-
-            /* NEED TO FIX THIS */
-
-			// Doesn't handle the case if send can't send everything in one time. Send the first response
-			// of the queue
-
-            // int fd = open("/Users/llefranc/Rendu/42cursus/Unix_Socket/www/tests/test_cgi/img/negroni.png", O_RDONLY);
-            // char buffer[SEND_BUFFER_SIZE + 1] = {0};
-
-            // size_t headersPos = resp->getBuffer().find("\r\n\r\n");
-
-            // std::cout << "HEADERS:|" << resp->getBuffer().substr(0, headersPos + 4) << "|\n-------------\n";
-            // send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), headersPos, 0);
-
-            // do
-			// {
-            //     // (void)toSend;
-            //     std::cerr << "hello\n";
-            //     memset(buffer, 0, SEND_BUFFER_SIZE + 1);
-            //     sizeToSend = read(fd, buffer, SEND_BUFFER_SIZE);
-            //     std::cerr << "size read = " << sizeToSend << "\n";
-
-            //     sizeToSend = (leftToSend > SEND_BUFFER_SIZE) ? SEND_BUFFER_SIZE : leftToSend;
-            //     std::cerr << "hello3\n";
-                
-            //     n = write(it->getFd(),static_cast<const void*>(buffer), sizeToSend );
-            //     // n = send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()),
-            //     //          it->getResponse()->getBuffer().size(), 0);
-            //     std::cerr << "hello4\n";
-
-            //     leftToSend -= sizeToSend;
-            //     std::cerr << "size to send: " << sizeToSend << " and send " << n << " octets, left to send: " << leftToSend << "\n";
-                
-            // } while (n != -1 && leftToSend);
-			
 			const std::string *buffer = &it->getResponse()->getBuffer();
             size_t leftToSend = buffer->size();
             size_t octetsSent = 0;
@@ -146,7 +109,6 @@ void HttpServer::sendToClients()
             
 			if (n != -1)
                 printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
-                        // convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
                         convertNbToString(it->getResponse()->getCode()) + "), connection closed\n");
 			else
             {
