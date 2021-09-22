@@ -9,7 +9,7 @@ Premiers pas vers la programmation Unix Socket.
 [Expect cmd](https://likegeeks.com/expect-command/)
 
 ### Definition
-<details>
+
 Les sockets permettent la **communication entre deux processus** sur une ou plusieurs machines
 
 
@@ -17,36 +17,36 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 2 des 4 types dont on va s'interesser:
 - _Stream sockets_ : ils utilisent le protocole TCP pour le transport des données. La livraison est toujours garantie.
 - _Datagram sockets_ : ils utilisent le protocole UDP. Il n'y a pas de connexion eentre le serveur et le client et la livraison n'est pas garantie.
-<details>
+
 
 
 
 ## :white_circle: Comment créer un process client
-<details>
+
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
-    :heavy_check_mark: Créer un socket via le system call **socket()**
+   Créer un socket via le system call **socket()**
 
-    :heavy_check_mark: Connecter le socket a l'adresse du serveur via **connect()**
+   Connecter le socket a l'adresse du serveur via **connect()**
 
-    :heavy_check_mark: Envoyer la requête et recevoir les donner avec **read() write()**
-<details>
+   Envoyer la requête et recevoir les donner avec **read() write()**
+
 
 
 
 ## :white_circle: Comment créer un process serveur
-<details>
+
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
-    :heavy_check_mark: Créer un socket via le system call **socket()**
+   Créer un socket via le system call **socket()**
 
-    :heavy_check_mark: Lie le socket a une adresse : **bind()**. Dans le cas d'un socket serveur sur internet, l'adresse correspond au port de la machine hôte.
+   Lie le socket a une adresse : **bind()**. Dans le cas d'un socket serveur sur internet, l'adresse correspond au port de la machine hôte.
 
-    :heavy_check_mark: Se met sur écoute pour une nouvelle connexion : **listen()**
+   Se met sur écoute pour une nouvelle connexion : **listen()**
 
-    :heavy_check_mark: Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
+   Accepte la connexion : **accept()**. le serveur est bloqué a cette étape tant que la connexion avec un client n'est pas faite.
 
-    :heavy_check_mark: Envoie et recooid les données via les system call **read() write()**
+   Envoie et recooid les données via les system call **read() write()**
 
 
 
@@ -54,15 +54,15 @@ Diagram des interactions Client-Serveur
 
 ![alt text](https://www.tutorialspoint.com/unix_sockets/images/socket_client_server.gif)
 
-<details>
+
 
 ## :white_circle: Acces aux infos d'adressage et port
-<details>
+
 Diverses structures seront utilisées.
-<details>
+
 ### :white_small_square: sockaddr - infos du socket
 
-<details>
+
 ```
 struct sockaddr {
    unsigned short   sa_family;
@@ -75,12 +75,12 @@ struct sockaddr {
 |sa_family | AF_INET \| AF_UNIX \| AF_NS \| AF_IMPLINK | It represents an address family. In most of the Internet-based applications, we use AF_INET.
 | sa_data | Protocol-specific Address | The content of the 14 bytes of protocol specific address are interpreted according to the type of address. For the Internet family, we will use port number IP address, which is represented by sockaddr_in structure defined below. |
 
-<details>
+
 
 
 ### :white_small_square: sockaddr in - Une aide pour faire reference aux elements du socket
 
-<details>
+
 ```
 struct sockaddr_in {
    short int            sin_family;
@@ -99,11 +99,11 @@ struct sockaddr_in {
 | sin_addr | IP Address | A 32-bit IP address in Network Byte Order. |
 | sin_zero | Not Used | You just set this value to NULL as this is not being used. |
 
-<details>
+
 
 ### :white_small_square: in addr - Utilisé dans la structure au dessus
 
-<details>
+
 ```
 struct in_addr {
    unsigned long s_addr;
@@ -116,11 +116,11 @@ struct in_addr {
 | --- | --- | ---| 
 | s_addr | service port | A 32-bit IP address in Network Byte Order. |
 
-<details>
+
 
 ### :white_small_square: hostent - Garde les infos de l'hôte.
 
-<details>
+
 ```
 struct hostent {
    char *h_name; 
@@ -144,13 +144,13 @@ struct hostent {
 
 >  h_addr is defined as h_addr_list\[0\] to keep backward compatibility.
 
-<details>
+
 
 
 ### :white_small_square: Servent - Garde les informations reliées au service et ports associées
 
 
-<details>
+
 ```
 struct servent {
    char  *s_name; 
@@ -167,18 +167,18 @@ struct servent {
 | s_aliases | ALIAS | It holds the list of service aliases. Most of the time this will be set to NULL. |
 | s_port | 80 | It will have associated port number. For example, for HTTP, this will be 80. |
 | s_proto | TCP \/ UDP | It is set to the protocol used. Internet services are provided using either TCP or UDP. |
-<details>
+
 
 ### TIPS
-<details>
+
 Ces structures sont une part integrante de tout _network program_. 
 
 Elles sont passées par reference (pointeurs) aux fonctions avec leur tailles.
-<details>
+
 
 
 ## :white_circle: Ports et Services
-<details>
+
 Quand un processus client cherche a se connecter au serveur, il doit avoir un moyen d'identifier celui-ci. 
 
 Meme si le client connait l'adresse ip du serveur, il doit aussi avoir connaissance du port.
@@ -187,10 +187,10 @@ L'assignement des ports se situe dans le fichier /etc/services. => checker que l
 
 [Plus de detail ici](https://www.tutorialspoint.com/unix_sockets/ports_and_services.htm)
 
-<details>
+
 
 ## :white_circle: Fonction manipulation adresse IP
-<details>
+
 ```
 inet_addr(const char *strptr);
 ```
@@ -201,17 +201,17 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 
 **Retour :** adresse 32-bit binary IPv4 en Network Byte Order (octet de gauche a droite) ou INADDR_NONE si erreur.
 
-<details>
+
 
 ## :white_circle: Core Function
-<details>
+
 Focntions pour ecrire un client et serveur TCP
 
 
 
-<details>
+
 ### :white_small_square: socket()
-<details>
+
 ```
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -256,12 +256,12 @@ _Protocole_ - utiliser un specifiaque protocole en dessous, ou 0 pour selectionn
 | IPPROTO_UDP | UDP transport protocol| 
 | IPPROTO_SCTP | SCTP transport protocol |
 
-<details>
+
 
 
 ### :white_small_square: connect()
 
-<details>
+
 Utilisé par le TCP client pour se connecter au TCP serveur
 
 ```
@@ -282,12 +282,12 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 
 - addrlen : sizeof(struct sockaddr)
 
-<details>
+
 
 
 ### :white_small_square: bind()
 
-<details>
+
 Donne une address au socket
 
 ```
@@ -318,12 +318,12 @@ server.sin_port = 0;
 server.sin_addr.s_addr = INADDR_ANY;
 ```
 
-<details>
+
 
 
 ### :white_small_square: listen()
 
-<details>
+
 2 actions :
 - converti le socket deconnecté en socket passif, le kernel doit donc acepter la prochane demande de connexion sur ce socket
 - le second argument de la fonction specifie le nombre max de connection le kernel doit aligner sur ce socket
@@ -343,12 +343,12 @@ int listen(int sockfd,int backlog);
 - sockfd : socket descripteur 
 - backlog : nbr de connexion autorisée
 
-<details>
+
 
 
 ### :white_small_square: accept()
 
-<details>
+
 Appelé par le server TCP, accepte la prochaine connexion dans la queue.
 
 ```
@@ -365,12 +365,12 @@ int accept (int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
 - cliaddr : pointeur vers la struct sockaddr (IP + port)
 - addrlen : sizeof(struct sockaddr)
 
-<details>
+
 
 
 ### :white_small_square: send()
 
-<details>
+
 Utiliser pour envoyer des données a travers le stream socket. On peut aussi utiliser write() pour ecrire/envoyer 
 
 ```
@@ -385,12 +385,12 @@ int send(int sockfd, const void *msg, int len, int flags);
 - len : taille du message
 - flags : mis a 0
 
-<details>
+
 
 
 ### :white_small_square: recv()
 
-<details>
+
 Utlisée pour recevoir les données. On peut utiliser read() pour lire/recevoir les données
 
 ```
@@ -405,12 +405,12 @@ int recv(int sockfd, void *buf, int len, unsigned int flags);
 - len :taille max du buffer
 - flags : mis a 0
 
-<details>
+
 
 
 ### :white_small_square: select()
 
-<details>
+
 Cette fonction indique quel descripteur de fichier est pret pour la lecture ou l'ecriture ou s'il y a une erreur.
 
 A l'appel de cette fonction, un socket qui n'a pas de requete ne recevra pas immediatement les donnees d'un autre socket.
@@ -421,7 +421,7 @@ int select(int  nfds, fd_set  *readfds, fd_set  *writefds, fd_set *errorfds, str
 ```
 
 **Retour:** 0 si succes -1 sinon
-<details>
+
 
 https://www.tutorialspoint.com/unix_sockets/socket_helper_functions.htm
 cgi info >> https://www.oreilly.com/library/view/cgi-programming-on/9781565921689/07_chapter-04.html
