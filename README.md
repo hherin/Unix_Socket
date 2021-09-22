@@ -8,10 +8,31 @@ Premiers pas vers la programmation Unix Socket.
 
 [Expect cmd](https://likegeeks.com/expect-command/)
 
-## TABLE DES MATIERES
-1. [Comment créer un processus client](#comment-créer-un-processus-client)
-2. [Comment créer un process serveur](#comment-créer-un-processus-serveur)
-3. [Acces aux infos d'adressage et port](#acces-aux-infos-d'adressage-et-port)
+TABLE DES MATIERES
+=================
+
+* [UNIX_SOCKETT](#unix_sockett)
+      * [Definition](#definition)
+   * [Comment créer un process client](#comment-créer-un-process-client)
+   * [Comment créer un process serveur](#comment-créer-un-process-serveur)
+   * [Acces aux infos d'adressage et port](#acces-aux-infos-dadressage-et-port)
+      * [sockaddr - infos du socket](#white_small_square-sockaddr---infos-du-socket)
+      * [sockaddr in - Une aide pour faire reference aux elements du socket](#white_small_square-sockaddr-in---une-aide-pour-faire-reference-aux-elements-du-socket)
+      * [in addr - Utilisé dans la structure au dessus](#white_small_square-in-addr---utilisé-dans-la-structure-au-dessus)
+      * [hostent - Garde les infos de l'hôte.](#white_small_square-hostent---garde-les-infos-de-lhôte)
+      * [Servent - Garde les informations reliées au service et ports associées](#white_small_square-servent---garde-les-informations-reliées-au-service-et-ports-associées)
+      * [TIPS](#tips)
+   * [Ports et Services](#ports-et-services)
+   * [Fonction manipulation adresse IP](#fonction-manipulation-adresse-ip)
+   * [Core Function](#core-function)
+      * [socket()](#white_small_square-socket)
+      * [connect()](#white_small_square-connect)
+      * [bind()](#white_small_square-bind)
+      * [listen()](#white_small_square-listen)
+      * [accept()](#white_small_square-accept)
+      * [send()](#white_small_square-send)
+      * [recv()](#white_small_square-recv)
+      * [select()](#white_small_square-select)
 
 ### Definition
 
