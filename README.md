@@ -8,6 +8,9 @@ Premiers pas vers la programmation Unix Socket.
 
 [Expect cmd](https://likegeeks.com/expect-command/)
 
+## TABLE DES MATIERES
+1. [Comment créer un processus client](#comment-créer-un-processus-client)
+
 ### Definition
 
 Les sockets permettent la **communication entre deux processus** sur une ou plusieurs machines
@@ -21,7 +24,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-## :white_circle: Comment créer un process client
+## Comment créer un process client
 
 - le client envoie une requete dans l'attente d'un retour du serveur.
 
@@ -34,7 +37,7 @@ Les sockets permettent la **communication entre deux processus** sur une ou plus
 
 
 
-## :white_circle: Comment créer un process serveur
+## Comment créer un process serveur
 
 - Le serveur recoit la requête du client, la traite puis rassemble toutes les informations. Envoie ces derniers au clients et enfin se rend disponible pour une nouvelle requête a traiter.
 
@@ -56,14 +59,14 @@ Diagram des interactions Client-Serveur
 
 
 
-## :white_circle: Acces aux infos d'adressage et port
+## Acces aux infos d'adressage et port
 
 Diverses structures seront utilisées.
 
 ### :white_small_square: sockaddr - infos du socket
 
 
-```
+```C
 struct sockaddr {
    unsigned short   sa_family;
    char             sa_data[14];
@@ -81,7 +84,7 @@ struct sockaddr {
 ### :white_small_square: sockaddr in - Une aide pour faire reference aux elements du socket
 
 
-```
+```C
 struct sockaddr_in {
    short int            sin_family;
    unsigned short int   sin_port;
@@ -104,7 +107,7 @@ struct sockaddr_in {
 ### :white_small_square: in addr - Utilisé dans la structure au dessus
 
 
-```
+```C
 struct in_addr {
    unsigned long s_addr;
 };
@@ -121,7 +124,7 @@ struct in_addr {
 ### :white_small_square: hostent - Garde les infos de l'hôte.
 
 
-```
+```C
 struct hostent {
    char *h_name; 
    char **h_aliases; 
@@ -151,7 +154,7 @@ struct hostent {
 
 
 
-```
+```C
 struct servent {
    char  *s_name; 
    char  **s_aliases; 
@@ -177,7 +180,7 @@ Elles sont passées par reference (pointeurs) aux fonctions avec leur tailles.
 
 
 
-## :white_circle: Ports et Services
+## Ports et Services
 
 Quand un processus client cherche a se connecter au serveur, il doit avoir un moyen d'identifier celui-ci. 
 
@@ -189,9 +192,9 @@ L'assignement des ports se situe dans le fichier /etc/services. => checker que l
 
 
 
-## :white_circle: Fonction manipulation adresse IP
+## Fonction manipulation adresse IP
 
-```
+```C
 inet_addr(const char *strptr);
 ```
 
@@ -203,7 +206,7 @@ Converti la chaine de caractère en une adresse IP a point standardisée : xxx.x
 
 
 
-## :white_circle: Core Function
+## Core Function
 
 Focntions pour ecrire un client et serveur TCP
 
@@ -212,7 +215,7 @@ Focntions pour ecrire un client et serveur TCP
 
 ### :white_small_square: socket()
 
-```
+```C
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -264,7 +267,7 @@ _Protocole_ - utiliser un specifiaque protocole en dessous, ou 0 pour selectionn
 
 Utilisé par le TCP client pour se connecter au TCP serveur
 
-```
+```C
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -290,7 +293,7 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 
 Donne une address au socket
 
-```
+```C
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -313,7 +316,7 @@ int bind(int sockfd, struct sockaddr *my_addr,int addrlen);
 
 Si le port = 0, le système a donc choisi un port aleatoire et INADDR_ANY est set sur l'IP (=> assignement aleatoire adresse IP)
 
-```
+```C
 server.sin_port = 0;  		     
 server.sin_addr.s_addr = INADDR_ANY;
 ```
@@ -330,7 +333,7 @@ server.sin_addr.s_addr = INADDR_ANY;
 
 
 
-```
+```C
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -351,7 +354,7 @@ int listen(int sockfd,int backlog);
 
 Appelé par le server TCP, accepte la prochaine connexion dans la queue.
 
-```
+```C
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -373,7 +376,7 @@ int accept (int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
 
 Utiliser pour envoyer des données a travers le stream socket. On peut aussi utiliser write() pour ecrire/envoyer 
 
-```
+```C
 int send(int sockfd, const void *msg, int len, int flags);
 ```
 
@@ -393,7 +396,7 @@ int send(int sockfd, const void *msg, int len, int flags);
 
 Utlisée pour recevoir les données. On peut utiliser read() pour lire/recevoir les données
 
-```
+```C
 int recv(int sockfd, void *buf, int len, unsigned int flags);
 ```
 
