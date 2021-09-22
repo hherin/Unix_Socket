@@ -57,6 +57,8 @@ enum methods { GET, HEAD, POST, DELETE };
 #define DEFAULT_PATH_ERROR_PAGES "./www/errors/"
 #define CGI_PATH "/www/cgi-bin/"
 
+#define EXECVE_FAIL 255
+
 // The reason for each status line cose
 #define REASON_100 "Continue"
 #define REASON_101 "Switching Protocols"

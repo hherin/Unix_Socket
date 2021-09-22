@@ -18,7 +18,7 @@
       <footer>
         <div class="footer">
           <h1>Made by</h1>
-          <img src="img/biquette_hherin.jpg" width="200" height="200" class="rounded-circle">
+          <img src="img/hherin.jpg" width="200" height="200" class="rounded-circle">
           <img src="img/llefranc.jpg" width="200" height="200" class="rounded-circle">
         </div>
       </footer>

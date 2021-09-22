@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:02:08 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/16 17:33:48 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/06/23 18:29:54 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class ClientSocket
 		
 		Request							_request;		// Object containing the request
 		Response            			_response;		// Queue containing the responses created from request object
+        size_t                          _bytesSent;
 
 	public:
 
@@ -54,14 +55,17 @@ class ClientSocket
 		int getFd() const;
 		Request* getRequest();
 		Response* getResponse();
-	
-	
+        size_t getNbBytesSent();
+
+
 		/* ------------------------------------------------------------- */
 		/* --------------------------- METHODS ------------------------- */
 
 		// Add buffer into request, and request will parse the new line delimited by CRLF
 		int receiveRequest(const char* buffer);
 	
+        void updateNbBytesSent(size_t n);
+
 
 		/* ------------------------------------------------------------- */
 		/* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */

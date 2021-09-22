@@ -6,7 +6,7 @@
 /*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 16:14:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/18 10:28:08 by llefranc         ###   ########.fr       */
+/*   Updated: 2021/07/01 14:24:20 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,73 +89,30 @@ void HttpServer::sendToClients()
 	{
 		if (FD_ISSET(it->getFd(), &_writeFds))
 		{
-			int n = 0;
-
-            // const char *toSend = resp->getBuffer().c_str();
-            // size_t sizeToSend;
-
-            /* NEED TO FIX THIS */
-
-			// Doesn't handle the case if send can't send everything in one time. Send the first response
-			// of the queue
-
-            // int fd = open("/Users/llefranc/Rendu/42cursus/Unix_Socket/www/tests/test_cgi/img/negroni.png", O_RDONLY);
-            // char buffer[SEND_BUFFER_SIZE + 1] = {0};
-
-            // size_t headersPos = resp->getBuffer().find("\r\n\r\n");
-
-            // std::cout << "HEADERS:|" << resp->getBuffer().substr(0, headersPos + 4) << "|\n-------------\n";
-            // send(it->getFd(), static_cast<const void*>(resp->getBuffer().c_str()), headersPos, 0);
-
-            // do
-			// {
-            //     // (void)toSend;
-            //     std::cerr << "hello\n";
-            //     memset(buffer, 0, SEND_BUFFER_SIZE + 1);
-            //     sizeToSend = read(fd, buffer, SEND_BUFFER_SIZE);
-            //     std::cerr << "size read = " << sizeToSend << "\n";
-
-            //     sizeToSend = (leftToSend > SEND_BUFFER_SIZE) ? SEND_BUFFER_SIZE : leftToSend;
-            //     std::cerr << "hello3\n";
-                
-            //     n = write(it->getFd(),static_cast<const void*>(buffer), sizeToSend );
-            //     // n = send(it->getFd(), static_cast<const void*>(it->getResponse()->getBuffer().c_str()),
-            //     //          it->getResponse()->getBuffer().size(), 0);
-            //     std::cerr << "hello4\n";
-
-            //     leftToSend -= sizeToSend;
-            //     std::cerr << "size to send: " << sizeToSend << " and send " << n << " octets, left to send: " << leftToSend << "\n";
-                
-            // } while (n != -1 && leftToSend);
-			
 			const std::string *buffer = &it->getResponse()->getBuffer();
-            size_t leftToSend = buffer->size();
-            size_t octetsSent = 0;
+            
+            long n = send(it->getFd(), static_cast<const void*>(buffer->c_str() + it->getNbBytesSent()), 
+                           buffer->size() - it->getNbBytesSent(), 0);
 
-            // Trying to send everything in one shot, if send failed to send everything, looping and
-            // sending the rest
-            do
-			{
-                n = send(it->getFd(), static_cast<const void*>(buffer->c_str() + octetsSent), 
-                        leftToSend, 0);
-
-                octetsSent += n;
-                leftToSend -= n;
+            if (n != -1)
+                it->updateNbBytesSent(n);
                 
-            } while (n != -1 && leftToSend);
-            
-			if (n != -1)
-                printLog(" >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
-                        // convertNbToString(resp->getCode()) + ")\n", resp->getBuffer());
-                        convertNbToString(it->getResponse()->getCode()) + "), connection closed\n");
-			else
+            // If an error occured or we have send everything, we close the connection. Else is still
+            // some part of the buffer need to be send, going again through the select.
+            if (n == -1 || it->getNbBytesSent() == buffer->size())
             {
-                printLog(" >> FD " + convertNbToString(it->getFd()) + 
-                        ": Failed to send response, connection closed\n");
+                if (n == -1)
+                    printLog("\033[1;31m >> FD " + convertNbToString(it->getFd()) + 
+                        ": Failed to send response, connection closed\033[0m\n");
+                else
+                {
+                    printLog("\033[1;32m >> FD " + convertNbToString(it->getFd()) + ": Response sent (code: " +
+                        convertNbToString(it->getResponse()->getCode()) + "), connection closed\033[0m\n");
+                }
+                        
+                std::list<ClientSocket>::iterator tmp = it--;
+                closeConnection(&tmp);
             }
-            
-            std::list<ClientSocket>::iterator tmp = it--;
-            closeConnection(&tmp);
 
 			// Exit for loop if no other sockets are ready
 			--_nbReadyFds;
@@ -212,12 +169,12 @@ void HttpServer::connectNewClients(std::map<int, std::vector<ServerInfo> >& mSrv
 			// Creates a new socket for a client connection
 			int newClient;
 			if ((newClient = accept(it->getFd(), (struct sockaddr *)&addrCli, (socklen_t *)&lenCli)) < 0)
-				throw std::runtime_error("Fatal error: accept function failed\n");  // A peaufiner, il ne faut surement pas compleement exit des qu'une fonction bug
+				throw std::runtime_error("Fatal error: accept function failed\n");
 
 			// Setting the fd in non-blocking mode, then saving it
 			fcntl(newClient, F_SETFL, O_NONBLOCK);
 			addClientSocket(newClient, it->getPort(), mSrv);
-			printLog(" >> FD " + convertNbToString(newClient) + ": Client socket created\n");
+			printLog("\033[1;36m >> FD " + convertNbToString(newClient) + ": Client socket created\033[0m\n");
 
 			// Exit for loop if no other sockets are ready
 			--_nbReadyFds;
@@ -230,6 +187,7 @@ void HttpServer::closeConnection(std::list<ClientSocket>::iterator *it)
     close((*it)->getFd());
     _clientSocks.erase(*it);
 }
+
 
 /* ------------------------------------------------------------- */
 /* --------------- NON-MEMBER FUNCTION OVERLOADS --------------- */

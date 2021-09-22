@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lucaslefrancq <lucaslefrancq@student.42    +#+  +:+       +#+         #
+#    By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/01 12:56:40 by hherin            #+#    #+#              #
-#    Updated: 2021/06/21 17:45:08 by lucaslefran      ###   ########.fr        #
+#    Updated: 2021/06/23 14:30:27 by llefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ debug		:	fclean ${NAME}
 %.o			:	%.cpp
 				@${CC} -DDEBUG=${SETDEBUG} ${FLAGS} -o $@ -c $<
 				
-${NAME}		:	${LIBS} ${OBJS}	
+${NAME}		:	${LIBS} ${OBJS}	${HDRS}
 				@${CC} -o ${NAME} ${OBJS} ${LIBS} ${FLAGS}
 				@echo "webserv is ready";
 # ifeq ($(SETDEBUG), 0)

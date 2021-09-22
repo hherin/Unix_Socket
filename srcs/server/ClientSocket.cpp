@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientSocket.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heleneherin <heleneherin@student.42.fr>    +#+  +:+       +#+        */
+/*   By: llefranc <llefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 15:04:02 by llefranc          #+#    #+#             */
-/*   Updated: 2021/06/17 15:41:30 by heleneherin      ###   ########.fr       */
+/*   Updated: 2021/06/23 18:29:54 by llefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 /* ------------------------ COPLIEN FORM ----------------------- */
 
 ClientSocket::ClientSocket(int fd, const std::vector<ServerInfo>* infoVirServs) :
-		_fd(fd), _infoVirServs(infoVirServs), _request(infoVirServs) {}
+		_fd(fd), _infoVirServs(infoVirServs), _request(infoVirServs), _bytesSent() {}
 
 ClientSocket::~ClientSocket() {}
 
 ClientSocket::ClientSocket(const ClientSocket& c) :
 		_fd(c._fd), _infoVirServs(c._infoVirServs), 
-		_request(c._request), _response(c._response) {}
+		_request(c._request), _response(c._response), _bytesSent(c._bytesSent) {}
 
 ClientSocket& ClientSocket::operator=(ClientSocket a)
 {
@@ -34,11 +34,13 @@ ClientSocket& ClientSocket::operator=(ClientSocket a)
 /* ------------------------------------------------------------- */
 /* -------------------------- GETTERS -------------------------- */
 
-int ClientSocket::getFd() const								{ return _fd; }
+int ClientSocket::getFd() const						{ return _fd; }
 
-Request* ClientSocket::getRequest()							{ return &_request; }
+Request* ClientSocket::getRequest()	        		{ return &_request; }
 
-Response* ClientSocket::getResponse()	            { return &_response; }
+Response* ClientSocket::getResponse()               { return &_response; }
+
+size_t ClientSocket::getNbBytesSent()                 { return _bytesSent; }
 
 
 /* ------------------------------------------------------------- */
@@ -48,8 +50,6 @@ int ClientSocket::receiveRequest(const char* buffer)
 {
 	try
 	{
-		std::cerr << "BUFFER is: |" << buffer << "\n";
-
 		_request += buffer;
 		_request.parsingCheck();
 	}
@@ -58,8 +58,8 @@ int ClientSocket::receiveRequest(const char* buffer)
 	// object containing the full request
 	catch (const StatusLine& staLine)
 	{
-		printLog(" >> FD " + convertNbToString(getFd()) + ": Request received\n",
-				_request.getBuffer());
+		printLog(" >> FD " + convertNbToString(getFd()) + ": Request received\n");
+		printLog(" >> FD " + convertNbToString(getFd()) + ": URI: " + _request.getPath() + "\n");
 
         // Constructing response
         _response.setRequest(&_request);
@@ -69,6 +69,11 @@ int ClientSocket::receiveRequest(const char* buffer)
 	}
 
 	return 0;
+}
+
+void ClientSocket::updateNbBytesSent(size_t n)
+{
+    _bytesSent += n;
 }
 
 
@@ -81,4 +86,5 @@ void swap(ClientSocket& a, ClientSocket& b)
 	std::swap(a._infoVirServs, b._infoVirServs);
 	std::swap(a._request, b._request);
 	std::swap(a._response, b._response);
+	std::swap(a._bytesSent, b._bytesSent);
 }
