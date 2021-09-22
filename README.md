@@ -10,6 +10,8 @@ Premiers pas vers la programmation Unix Socket.
 
 ## TABLE DES MATIERES
 1. [Comment créer un processus client](#comment-créer-un-processus-client)
+2. [Comment créer un process serveur](#comment-créer-un-processus-serveur)
+3. [Acces aux infos d'adressage et port](#acces-aux-infos-d'adressage-et-port)
 
 ### Definition
 
